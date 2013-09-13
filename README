@@ -1,0 +1,8 @@
+Central repository for generation of SUSY SMS events 
+Startin from undecayed (gluino-gluino or stop-stop production) LHE files from MadGraph
+to specific SMS decay chains 
+
+Supported models are
+T1tttt, T1bbbb, T1ttbb, T1tbbb, T1tttb, T1ttcc, T1t1t,
+T2tt, T2tb, T2tb,
+T5tttt
