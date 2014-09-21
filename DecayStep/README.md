@@ -1,0 +1,14 @@
+# A guide to decaying LHE files
+
+You want to study a certain process, but there is no sample available? 
+No need to despair, using this guide you will be able to make your own decayed LHE events, starting from existing "undecayed" LHE files.
+If there are no undecayed files available for the hard process you want to start from, e.g. gluino pair production, you will first have to generate those yourself as well. Instructions on how to do that can be found elsewhere. 
+
+The procedure to perform the decay is slightly different depending on whether you want to use Pythia6 or Pythia8 for the decay. 
+As the default parton shower and hadronization for the 13TeV Monte Carlo will be done using Pythia8, I will for now focus on that approach. 
+
+## Decaying LHE files using Pythia8 standalone
+
+I have found that it is easiest to perform the decay using a standalone version of pythia8. 
+In principle it should be possible to do it using CMSSW, but I have not figured out a way to do it yet. Once I do, I will update these instructions. 
+
