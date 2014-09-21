@@ -1,0 +1,3 @@
+Beams:frameType = 4                ! use LHEF input
+Beams:LHEF = INFILE
+PartonLevel:all = off
