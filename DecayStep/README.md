@@ -46,7 +46,7 @@ DECAY  1000022  0.0
 ```
 
 If you will be decaying a lot of files, you probably want to automate this with a small script. 
-I put an example script in this repository, called `process_undecayed_lhe.py`. Depending on your particular setup, you will probably have to make quite a few changes. There are many comments in the script, so it should be rather straight-forward to adapt to your needs.
+I put an example script in this repository, called `process_undecayed_lhe.py`. Depending on your particular setup, you will probably have to make quite a few changes. There are many comments in the script, so it should be rather straight-forward to adapt to your needs. 
 
 ### Decaying the file
 
@@ -75,6 +75,7 @@ make main01
 If that worked without problems, you are ready to get started and decay your own files. 
 To make that very easy, I have prepared a few files. 
 You can find them in the directory PythiaScripts. They should be copied into the examples folder of your Pythia8 setup. 
+Please note that the LHE files you want to decay need to have the full SLHA information in the header.
 
 I will now give some details on each of the files, and will then show you how to run the decay step. 
 
@@ -83,7 +84,7 @@ I will now give some details on each of the files, and will then show you how to
   * It takes as argument a config file (see below) and the name for the output file
 2. **template.cmnd**
   * This is the template of the config file that will be passed to the pythia executable
-  * It specifies which file to use as input file, how many events to process, and turns on the parton shower and hadronization
+  * It specifies which file to use as input file, how many events to process, and turns off the parton shower and hadronization
 3. **runDecay.py**
   * This is the scripts that calls pythia to do the decay
   * It has two options:
@@ -104,7 +105,7 @@ Now you are ready to postprocess those decayed files to the required level (see 
 Postprocessing of the decayed files is needed when you have used LHE files that include the production of extra partons at the matrix element level, or if you want to have the files processed in official production. 
 
 Releases before CMSSW7X cannot handle LHE files with different headers in one request.
-So for the usual scan approach, in which we combine multiple mass points in one dataset, we need to make sure that *all headers are the same*. 
+So for the usual scan approach, in which we combine multiple mass points in one dataset, we need to make sure that **all headers are the same**. 
 To do that we remove the original header and put in place a new version, in which all differences have been removed. 
 For LHE files that were produced using MadGraph and then possibly decayed using Pythia, the following things need to be removed or set to a dummy value: 
 * `MGGenerationInfo` block. This can be removed completely
@@ -113,10 +114,10 @@ For LHE files that were produced using MadGraph and then possibly decayed using 
 Another complication when processing multiple mass points together, is that you loose track of which event belongs to which mass point. To remedy that we add an additional comment line to each event, containing the model and the mass point information. This can then be retreived from the LHEEventProduct. 
 
 If you produced events up to X extra partons, Madgraph will have added a line to the output LHE file containing clustering information that is needed by the parton shower program, in this case pythia, to do the proper jet matching. 
-When running the decay step, this line is removed and in the case of pythia8, replaced by another line (the exact meaning of that line is unclear). 
+When running the decay step, this line is removed and in case of pythia8, replaced by another line (the exact meaning of that line is unclear). 
 Until the new Madgraph-Pythia8 matching interface is fully setup and validated, I would recommend to stick to the old way of doing things (as for pythia6), and replace the new line with the old line from the undecayed file. While doing this you need to take care to copy things between the same events. 
 
-I have provided a small script that will do all of these things, process_decayed_lhe.py.
-
+I have provided a small script that will do all of these things, `process_decayed_lhe.py`.
+As before, you will probably have to make some changes to this file, but there are plenty of comments to help you along. 
 
 In case you want to do a private production on file without jet matching, you can skip this step and go straight ahead to FastSim or FullSim. 
