@@ -22,6 +22,31 @@ I will now go through each of these steps in detail below. I suggest you read th
 
 ### Preparation of the undecayed files
 
+The undecayed files you want to use will most likely not have the exact SLHA you want specified in their header.
+The masses of all the particles will not be what you want, and the decay will probably not be specified at all. 
+So, it is up to you to add this information. 
+The exact way in which you do this does not matter so much. As long as the final result is an LHE file that has the full SLHA information in the header. 
+
+You can for example just open the undecayed file in a text editor, and change the masses by hand. You can also add the DECAY blocks you want. 
+MASS and DECAY blocks look like this: 
+```
+BLOCK MASS  # Mass Spectrum
+# PDG code           mass       particle
+...
+   1000006     1.00000000E+05   # ~t_1
+   2000006     1.10000000E+05   # ~t_2
+   1000021     1000             # ~g
+   1000022     100              # ~chi_10 
+...
+```
+```
+DECAY  1000021  1.0 
+   1.0  3  1000022 5 -5     # ~g -> ~chi_10 b bbar 
+DECAY  1000022  0.0
+```
+
+If you will be decaying a lot of files, you probably want to automate this with a small script. 
+I put an example script in this repository, called `process_undecayed_lhe.py`. Depending on your particular setup, you will probably have to make quite a few changes. There are many comments in the script, so it should be rather straight-forward to adapt to your needs.
 
 ### Decaying the file
 
@@ -56,14 +81,13 @@ I will now give some details on each of the files, and will then show you how to
 1. **main20.cc**
   * This is the Pythia8 program that will do the decay
   * It takes as argument a config file (see below) and the name for the output file
-  * By default it will process 100k events. You can easily change
 2. **template.cmnd**
   * This is the template of the config file that will be passed to the pythia executable
   * It specifies which file to use as input file, how many events to process, and turns on the parton shower and hadronization
 3. **runDecay.py**
   * This is the scripts that calls pythia to do the decay
   * It has two options:
-    1. `-d` :  the location of the directory that contains all the undecayed lhe files that need to be decayed. The files in that directory need to have undergone the prep step as explained before, and have the string `undecayed` as part of the name. 
+    1. `-d` :  the location of the directory that contains all the undecayed lhe files that need to be decayed. If the files in that directory have the string `undecayed` as part of the name, that will be changed to `decayed`. Otherwise the name of the output file will be kept the same as that of the inputfile. 
     2. `-n` : the number of events to process
   * Several directories will be made, for the config files, the log files and the resulting decayed files
 
@@ -76,3 +100,23 @@ Now you are ready to postprocess those decayed files to the required level (see 
 
 
 ### Postprocess the decayed file
+
+Postprocessing of the decayed files is needed when you have used LHE files that include the production of extra partons at the matrix element level, or if you want to have the files processed in official production. 
+
+Releases before CMSSW7X cannot handle LHE files with different headers in one request.
+So for the usual scan approach, in which we combine multiple mass points in one dataset, we need to make sure that *all headers are the same*. 
+To do that we remove the original header and put in place a new version, in which all differences have been removed. 
+For LHE files that were produced using MadGraph and then possibly decayed using Pythia, the following things need to be removed or set to a dummy value: 
+* `MGGenerationInfo` block. This can be removed completely
+* Masses of the sparticles, you can put them to a dummy value
+
+Another complication when processing multiple mass points together, is that you loose track of which event belongs to which mass point. To remedy that we add an additional comment line to each event, containing the model and the mass point information. This can then be retreived from the LHEEventProduct. 
+
+If you produced events up to X extra partons, Madgraph will have added a line to the output LHE file containing clustering information that is needed by the parton shower program, in this case pythia, to do the proper jet matching. 
+When running the decay step, this line is removed and in the case of pythia8, replaced by another line (the exact meaning of that line is unclear). 
+Until the new Madgraph-Pythia8 matching interface is fully setup and validated, I would recommend to stick to the old way of doing things (as for pythia6), and replace the new line with the old line from the undecayed file. While doing this you need to take care to copy things between the same events. 
+
+I have provided a small script that will do all of these things, process_decayed_lhe.py.
+
+
+In case you want to do a private production on file without jet matching, you can skip this step and go straight ahead to FastSim or FullSim. 
