@@ -48,7 +48,7 @@ make main01
 ```
 
 If that worked without problems, you are ready to get started and decay your own files. 
-To do that I have prepared a few files that should make it very easy to that. 
+To make that very easy, I have prepared a few files. 
 You can find them in the directory PythiaScripts. They should be copied into the examples folder of your Pythia8 setup. 
 
 I will now give some details on each of the files, and will then show you how to run the decay step. 
