@@ -30,7 +30,6 @@ The first step will of course be setting up a standalone version of Pythia8. You
 http://home.thep.lu.se/~torbjorn/Pythia.html 
 
 Currently the latest version is 8.186. In principle you should just follow the instructions in the "Installation" section of that webpage. 
-
 For convenience, this is what I did to get set up on lxplus. There is no need to setup a CMSSW environment beforehand. 
 
 ```
@@ -40,7 +39,7 @@ cd pythia8186
 make
 ```
 
-At this point you should have a working version of Pythia8. Now you can go into the "examples" folder and verify that you can compile and run one of the examples there. 
+At this point you should have a working version of Pythia8. Now you can go into the `examples` folder and verify that you can compile and run one of the examples there. 
 
 ```
 cd examples
@@ -55,8 +54,25 @@ You can find them in the directory PythiaScripts. They should be copied into the
 I will now give some details on each of the files, and will then show you how to run the decay step. 
 
 1. **main20.cc**
+  * This is the Pythia8 program that will do the decay
+  * It takes as argument a config file (see below) and the name for the output file
+  * By default it will process 100k events. You can easily change
 2. **template.cmnd**
+  * This is the template of the config file that will be passed to the pythia executable
+  * It specifies which file to use as input file, how many events to process, and turns on the parton shower and hadronization
 3. **runDecay.py**
+  * This is the scripts that calls pythia to do the decay
+  * It has two options:
+    1. `-d` :  the location of the directory that contains all the undecayed lhe files that need to be decayed. The files in that directory need to have undergone the prep step as explained before, and have the string `undecayed` as part of the name. 
+    2. `-n` : the number of events to process
+  * Several directories will be made, for the config files, the log files and the resulting decayed files
+
+Now that you know a bit about what each file does, you can simply start running by doing
+```
+python runDecay.py -d <input_dir> -n <nevents>
+```
+All `.lhe` files in the `input_dir` will be decayed and put in the `results` directory. 
+Now you are ready to postprocess those decayed files to the required level (see next section).
 
 
 ### Postprocess the decayed file
