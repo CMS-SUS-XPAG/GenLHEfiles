@@ -7,10 +7,10 @@ If there are no undecayed files available for the hard process you want to start
 The procedure to perform the decay is slightly different depending on whether you want to use Pythia6 or Pythia8 for the decay. 
 As the default parton shower and hadronization for the 13TeV Monte Carlo will be done using Pythia8, I will for now focus on that approach. 
 
-## Decaying LHE files using Pythia8 standalone
+## Decaying LHE files using Pythia8
 
-I have found that it is easiest to perform the decay using a standalone version of pythia8. 
-In principle it should be possible to do it using CMSSW, but I have not figured out a way to do it yet. Once I do, I will update these instructions. 
+You can either use Pythia8 standalone, or within CMSSW. Both approaches will be explained. 
+(Many thanks to Giovanni Petrucciani for the Makefile to set things up within CMSSW)
 
 There are several steps involved. Some can be omitted if the files are not intended to go through official production. 
 
@@ -50,6 +50,8 @@ I put an example script in this repository, called `process_undecayed_lhe.py`. D
 
 ### Decaying the file
 
+#### Using Pythia8 standalone
+
 The first step will of course be setting up a standalone version of Pythia8. You can download the latest version from the pythia webpage: 
 
 http://home.thep.lu.se/~torbjorn/Pythia.html 
@@ -74,7 +76,8 @@ make main01
 
 If that worked without problems, you are ready to get started and decay your own files. 
 To make that very easy, I have prepared a few files. 
-You can find them in the directory PythiaScripts. They should be copied into the examples folder of your Pythia8 setup. 
+You can find them in the directory PythiaScripts. They should be copied into the examples folder of your Pythia8 setup. You should not copy PythiaScripts/Makefile if you are using a standalone version of Pythia8. 
+
 Please note that the LHE files you want to decay need to have the full SLHA information in the header.
 
 I will now give some details on each of the files, and will then show you how to run the decay step. 
@@ -97,8 +100,19 @@ Now that you know a bit about what each file does, you can simply start running 
 python runDecay.py -d <input_dir> -n <nevents>
 ```
 All `.lhe` files in the `input_dir` will be decayed and put in the `results` directory. 
-Now you are ready to postprocess those decayed files to the required level (see next section).
+Now you are ready to postprocess those decayed files to the required level (see section on Postprocessing).
 
+#### Using CMSSW
+
+You can skip the steps to install a standalone version of pythia8, and just create a CMSSW area
+```
+cmsrel CMSSW_5_3_22
+cd CMSSW_5_3_22/src
+cmsenv
+```
+
+Then just copy the files from the directory PythiaScripts to your CMSSW_5_3_22/src directory and type `make`. 
+Now you are ready to decay your lhe files. Just follow the steps at the end of the section on standalone Pythia8.
 
 ### Postprocess the decayed file
 
