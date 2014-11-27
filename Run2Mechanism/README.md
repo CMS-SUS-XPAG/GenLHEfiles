@@ -38,7 +38,67 @@ next step. If your desired process is not there, or you want to look at differen
 masses, then you will need to produce the undecayed LHE files yourself by following
 the instructions in this section. 
 
-**TO DO: Add Madgraph instructions**
+The relevant scripts for this step are: 
+
+ -  `SUSY_generation.sh`
+ -  `run_scan.py`
+
+I will explain the general procedure and the details on these two scripts in the 
+following subsections. There is also an example provided that should run on lxbatch
+without problems.  
+
+#### General procedure
+
+#### SUSY_generation.sh
+
+#### run_scan.py
+
+*Prerequisites*: the script will only work if you have access to python 2.7 and numpy. 
+An easy way to achieve this is to set up a CMSSW7X area. 
+
+This is the script that will take care of the job submission. 
+There are a number of options related to the actual submission, and a number related to
+the masses of the particle you want to scan. 
+For this first version only the very basic setup is supported, namely pair-production of
+sparticles, without subsequent decays. 
+
+The list of options: 
+
+- `--name`: Process name (default='gluino'). Cards should be appropriately named, 
+            e.g. <name>_run_card.dat 
+- `--pdg`: PDG id of the particle to be pair-produced (default=1000021). 
+           This should be consistent with the process definition in the proc_card 
+- `--mass`: White space separated list of masses to produce events for (default=1000) 
+- `--massrange`: Mass range to produce events for. Format: MIN MAX STEP (no default). 
+                 The value in MAX is not included in the range.
+- `-n, --nevents`: Number of events to produce per run (default=10000)
+- `-nruns`: Number of runs, useful if you want to produce a lot of events (default=1) 
+- `-ncores`: Number of cores to use for event generation (default=1)
+- `-protocol`: Submission protocol: bsub or qsub (default='bsub')
+- `-q, --queue`: Queue to submit to (default='1nd')
+- `--nosubmit`: Flag to turn of submission, job scripts are still created 
+
+
+
+
+#### Example
+
+I have provided some example MadGraph cards in the `cards` directory. 
+
+- `gluino_proc_card.dat`: This process card specifies gluino pair production with 
+                          0 or 1 extra partons. You can uncomment the appropriate line
+                          in the card to also include 2 extra partons. For this example
+                          I would not recommend this, however, as it will increase the
+                          running time substantially.
+                          I have also excluded (with the `$` operator) any diagrams 
+			  containing any other sparticle, as they will not contribute
+                          anyways as they have been chosen to be decoupled. 
+- `gluino_param_card.dat`: This parameter card should be useable for most simplified
+  			   models. It puts all masses to a very high scale. The relevant
+ 			   masses will be set during run time as previously explained.
+- `gluino_run_card.dat`: Basic run card for LO production. It includes the weights for 
+  			 various scale and PDF choices. MLM matching is turned on with
+			 `xqcut = 30`. 
 
 
 ## Step 2: Process undecayed LHE files
@@ -69,7 +129,7 @@ Coordination Meeting. This is where the priority of the request will be discusse
 
 The last input that should be provided to the gencontacts, is the qcut values that 
 should be used with your request. This value needs to be put in the Generator Fragment, 
-such that Pythia8 will now how to properly match the matrix element and the parton 
+such that Pythia8 will know how to properly match the matrix element and the parton 
 shower. Please note that this is only needed if you have produced several multiplicities
 of additional partons in the Madgraph step. The default for the SUSY group is to produce
 up to 2 additional partons, so most requests will need to have a corresponding qcut. 
