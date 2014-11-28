@@ -147,6 +147,11 @@ if [ ! -d ${AFS_GEN_FOLDER}/${name}_prod ];then
   echo "set output_dependencies internal" >> mgconfigscript
   echo "set lhapdf $LHAPDFCONFIG" >> mgconfigscript
 
+  # If number of cores is not specified, put it to 1
+  if [ -n $ncores ]; then
+      ncores=1
+  fi
+
   if [ $ncores -eq 1 ]; then
       echo "set run_mode 0" >> mgconfigscript
   else
@@ -237,7 +242,7 @@ if [ -d processtmp ]; then
   rm -rf processtmp
 fi
 
-rsync -a $name/ processtmp
+cp -r $name/ processtmp
 
 cd processtmp
 
