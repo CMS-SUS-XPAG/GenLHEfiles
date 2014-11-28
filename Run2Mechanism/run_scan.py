@@ -43,55 +43,55 @@ from itertools import izip
 # -----------------------------------------------------------------
 def makeCLParser():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--name"
-                        , default = "gluino"
-                        , help = "Name for the process (default: %(default)s). Cards should be named <name>_run_card.dat, etc. "
+    parser.add_argument("--name",
+                        default = "gluino",
+                        help = "Name for the process (default: %(default)s). Cards should be named <name>_run_card.dat, etc. "
                         )
-    parser.add_argument("-n", "--nevents"
-                        , type = int
-                        , default = 10000
-                        , help = "Number of events per job (default: %(default)s)"
+    parser.add_argument("-n", "--nevents",
+                        type = int,
+                        default = 10000,
+                        help = "Number of events per job (default: %(default)s)"
                         )
-    parser.add_argument("--nruns"
-                        , type = int
-                        , default = 1
-                        , help = "Number of runs (default: %(default)s)"
+    parser.add_argument("--nruns",
+                        type = int,
+                        default = 1,
+                        help = "Number of runs (default: %(default)s)"
                         )
-    parser.add_argument("--ncores"
-                        , type = int
-                        , default = 1
-                        , help = "Number of cores to run with (default: %(default)s)"
+    parser.add_argument("--ncores",
+                        type = int,
+                        default = 1,
+                        help = "Number of cores to run with (default: %(default)s)"
                         )
-    parser.add_argument("--protocol"
-                        , choices = ["bsub", "qsub"]
-                        , default = "bsub"
-                        , help = "Submission protocol (default: %(default)s)"
+    parser.add_argument("--protocol",
+                        choices = ["bsub", "qsub"],
+                        default = "bsub",
+                        help = "Submission protocol (default: %(default)s)"
                         )
-    parser.add_argument("-q", "--queue"
-                        , default = "1nd"
-                        , help = "Queue name (default: %(default)s)"
+    parser.add_argument("-q", "--queue",
+                        default = "1nd",
+                        help = "Queue name (default: %(default)s)"
                         )
-    parser.add_argument("--nosubmit"
-                        , action = 'store_true'
-                        , help = "Do not submit the jobs"
+    parser.add_argument("--nosubmit",
+                        action = 'store_true',
+                        help = "Do not submit the jobs"
                         )
-    parser.add_argument("--pdg"
-                        , type = int
-                        , default = 1000021
-                        , help = "PDG ID of particle to be produced (default: %(default)s)"
+    parser.add_argument("--pdg",
+                        type = int,
+                        default = 1000021,
+                        help = "PDG ID of particle to be produced (default: %(default)s)"
                         )
     mass_group = parser.add_mutually_exclusive_group()
-    mass_group.add_argument("--mass"
-                            , type=float
-                            , nargs = '*'
-                            , default = 1000
-                            , help="Mass of particle to be produced. Can be a single value or a whitespace separated list (default: %(default)s)."
+    mass_group.add_argument("--mass",
+                            type=float,
+                            nargs = '*',
+                            default = 1000,
+                            help="Mass of particle to be produced. Can be a single value or a whitespace separated list (default: %(default)s)."
                             )
-    mass_group.add_argument("--massrange"
-                            , type=float
-                            , nargs = 3
-                            , help="Define a range of masses to be produced. Format: min max step. Max is not included in the range."
-                            , metavar = ('MIN', 'MAX', 'STEP')
+    mass_group.add_argument("--massrange",
+                            type=float,
+                            nargs = 3,
+                            help="Define a range of masses to be produced. Format: min max step. Max is not included in the range.",
+                            metavar = ('MIN', 'MAX', 'STEP')
                             )
     return parser
 
@@ -108,7 +108,7 @@ def print_configuration(args_dict):
 # -----------------------------------------------------------------
 # Create job script
 # -----------------------------------------------------------------
-def makejob(HOMEDIR, PROCNAME, OUTPUT, NEV, NRUN, NCORES, PDGID, MASS):
+def makejob(HOMEDIR, PROCNAME, OUTPUT, NEV, NRUN, NCORES, PDGID, MASS, SEED):
     # Open a script which will be submitted
     jobname = HOMEDIR+"/scripts/"+PROCNAME+"__"
     for pdg,mass in izip(PDGID,MASS):
@@ -131,6 +131,7 @@ def makejob(HOMEDIR, PROCNAME, OUTPUT, NEV, NRUN, NCORES, PDGID, MASS):
 
     # Create the customization script from the template
     myjob.write("echo set run_card nevents %s > cards/%s_customizecards.dat \n" % (NEV, PROCNAME) )
+    myjob.write("echo set run_card seed %s > cards/%s_customizecards.dat \n" % (SEED, PROCNAME) )
     for pdg,mass in izip(PDGID, MASS):
         myjob.write("echo set param_card mass %s %s >> cards/%s_customizecards.dat \n" % (pdg, mass, PROCNAME) )
 
@@ -163,11 +164,11 @@ def submitjob(QUEUE, JOBNAME, HOMEDIR, PROTOCOL, NCORES):
         submitcommand = ["bsub",
                          "-q %s" % (QUEUE),
                          "-e %s" % (errorfile),
-                         "-o %s" % (logfile),
-                         JOBNAME] 
+                         "-o %s" % (logfile)] 
         if NCORES > 1:
             submitcommand.extend(["-n %s" % (NCORES),
                                   "-R span[hosts=1]"])
+        submitcommand.append(JOBNAME)
         print ' '.join(submitcommand)
         subprocess.call(' '.join(submitcommand) , shell=True)
 
@@ -246,6 +247,9 @@ if __name__ == "__main__":
     # Parse the mass-related arguments to create the jobs
     # Store jobnames for submission
     jobnames = []
+    # Make sure to change the random seed between runs. 
+    # Will just change it for every mass-run combo
+    seed = 1
     if args.massrange != None:
         # A mass range was provided, create a job for each mass point in the range
         MIN, MAX, STEP = args.massrange
@@ -254,7 +258,16 @@ if __name__ == "__main__":
             for nrun in xrange(args.nruns):
                 procname = args.name 
                 output = HOMEDIR + "/lhe/" + procname + str(mass) + "_" + str(nrun) + "_undecayed.lhe.gz"
-                jobnames.append(makejob(HOMEDIR, procname, output, args.nevents, nrun, ncores, [args.pdg], [mass]))
+                jobnames.append(makejob(HOMEDIR, 
+                                        procname, 
+                                        output, 
+                                        args.nevents, 
+                                        nrun, 
+                                        ncores, 
+                                        [args.pdg], 
+                                        [mass], seed)
+                                )
+                seed = seed + 1
     else: 
         # List of masses was provided
         print "Will create jobs for masses", args.mass
@@ -264,7 +277,17 @@ if __name__ == "__main__":
             for nrun in xrange(args.nruns):
                 procname = args.name 
                 output = HOMEDIR + "/lhe/" + procname + str(mass) + "_" + str(nrun) + "_undecayed.lhe.gz"
-                jobnames.append(makejob(HOMEDIR, procname, output, args.nevents, nrun, ncores, [args.pdg], [mass]))
+                jobnames.append(makejob(HOMEDIR, 
+                                        procname, 
+                                        output, 
+                                        args.nevents, 
+                                        nrun, 
+                                        ncores, 
+                                        [args.pdg], 
+                                        [mass], 
+                                        seed)
+                                )
+                seed = seed + 1
 
     print "Done creating job scripts."
 
