@@ -147,11 +147,11 @@ if [ ! -d ${AFS_GEN_FOLDER}/${name}_prod ];then
   echo "set output_dependencies internal" >> mgconfigscript
   echo "set lhapdf $LHAPDFCONFIG" >> mgconfigscript
 
-  if [ $ncores -eq 1]; then
+  if [ $ncores -eq 1 ]; then
       echo "set run_mode 0" >> mgconfigscript
   else
       echo "set run_mode 2" >> mgconfigscript
-      echo "set nb_core 4" >> mgconfigscript
+      echo "set nb_core" $ncores >> mgconfigscript
   fi
 
   echo "save options" >> mgconfigscript

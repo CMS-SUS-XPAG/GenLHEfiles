@@ -1,39 +1,42 @@
-###################################################################
-# File:        run_scan.py                                        #
-#                                                                 #
-# Description: submission script for SUSY scans in Run2.          #
-#                                                                 #
-#   This script will produce a set of jobs that will be submitted #
-#   to a batch server, e.g. lxbatch.                              #
-#   For now only one particle mass can be changed per run. This   #
-#   means that only pair production of sparticles, without        #
-#   consequent decays, is currently supported.                    #
-#                                                                 # 
-# Supported options:                                              # 
-#   --name            Process name. Cards should be appropriately #
-#                     named, e.g. <name>_run_card.dat             # 
-#   --pdg             PDG id of particle to be produced           # 
-#   --mass            White space separated list of masses to     # 
-#                     produce events for                          # 
-#   --massrange       Mass range to produce events for            # 
-#                     Format: MIN MAX STEP                        # 
-#   -n, --nevents     Number of events to produce per run         # 
-#   -nruns            Number of runs                              # 
-#   -ncores           Number of cores to use for event generation # 
-#   -protocol         Submission protocol: bsub or qsub           # 
-#   -q, --queue       Queue to submit to                          # 
-#   --nosubmit        Flag to turn of submission, job scripts are # 
-#                     still created                               # 
-#                                                                 # 
-# Author:   Nadja Strobbe                                         #
-# Created:  2014-11-27                                            #
-# Updated:  ...                                                   #
-###################################################################
+#####################################################################
+##                                                                 ##
+## File:        run_scan.py                                        ##
+##                                                                 ##
+## Description: submission script for SUSY scans in Run2.          ##
+##                                                                 ##
+##   This script will produce a set of jobs that will be submitted ##
+##   to a batch server, e.g. lxbatch.                              ##
+##   For now only one particle mass can be changed per run. This   ##
+##   means that only pair production of sparticles, without        ##
+##   consequent decays, is currently supported.                    ##
+##                                                                 ## 
+## Supported options:                                              ## 
+##   --name            Process name. Cards should be appropriately ##
+##                     named, e.g. <name>_run_card.dat             ## 
+##   --pdg             PDG id of particle to be produced           ## 
+##   --mass            White space separated list of masses to     ## 
+##                     produce events for                          ## 
+##   --massrange       Mass range to produce events for            ## 
+##                     Format: MIN MAX STEP                        ## 
+##   -n, --nevents     Number of events to produce per run         ## 
+##   -nruns            Number of runs                              ## 
+##   -ncores           Number of cores to use for event generation ## 
+##   -protocol         Submission protocol: bsub or qsub           ## 
+##   -q, --queue       Queue to submit to                          ## 
+##   --nosubmit        Flag to turn of submission, job scripts are ## 
+##                     still created                               ## 
+##                                                                 ##
+## Author:   Nadja Strobbe                                         ##
+## Created:  2014-11-27                                            ##
+## Updated:  ...                                                   ##
+##                                                                 ##
+#####################################################################
 
 import os, sys, subprocess
 import argparse
 import numpy as np
 from datetime import datetime
+from itertools import izip
 
 # -----------------------------------------------------------------
 # Command Line Parser
@@ -107,15 +110,20 @@ def print_configuration(args_dict):
 # -----------------------------------------------------------------
 def makejob(HOMEDIR, PROCNAME, OUTPUT, NEV, NRUN, NCORES, PDGID, MASS):
     # Open a script which will be submitted
-    jobname = HOMEDIR+"/scripts/"+PROCNAME+"__"+str(PDGID)+"_"+str(MASS)+"__"+str(NRUN)+".sh"
+    jobname = HOMEDIR+"/scripts/"+PROCNAME+"__"
+    for pdg,mass in izip(PDGID,MASS):
+        jobname = jobname + str(pdg) + "_" + str(mass) + "__"
+    jobname = jobname + str(NRUN)+".sh"
+    #jobname = HOMEDIR+"/scripts/"+PROCNAME+"__"+str(PDGID)+"_"+str(MASS)+"__"+str(NRUN)+".sh"
     myjob = open(jobname,'w')
+    myjob.write("#!/bin/bash \n")
 
     # Create a rundirectory
     myjob.write("mkdir run_SUSY; cd run_SUSY \n")
 
     # Copy over the needed files
     myjob.write("cp -r %s/patches . \n" % (HOMEDIR) )
-    myjob.write("cp %s/SUSY_generation_batch.sh . \n" % (HOMEDIR) )
+    myjob.write("cp %s/SUSY_generation.sh . \n" % (HOMEDIR) )
     myjob.write("mkdir cards \n")
     myjob.write("cp %s/cards/%s_proc_card.dat cards/ \n" % (HOMEDIR, PROCNAME) )
     myjob.write("cp %s/cards/%s_run_card.dat cards/ \n" % (HOMEDIR, PROCNAME) )
@@ -123,11 +131,11 @@ def makejob(HOMEDIR, PROCNAME, OUTPUT, NEV, NRUN, NCORES, PDGID, MASS):
 
     # Create the customization script from the template
     myjob.write("echo set run_card nevents %s > cards/%s_customizecards.dat \n" % (NEV, PROCNAME) )
-    #for pdg,mass in izip(PDGID, MASS):
-    myjob.write("echo set param_card mass %s %s >> cards/%s_customizecards.dat \n" % (PDGID, MASS, PROCNAME) )
+    for pdg,mass in izip(PDGID, MASS):
+        myjob.write("echo set param_card mass %s %s >> cards/%s_customizecards.dat \n" % (pdg, mass, PROCNAME) )
 
     # Run the actual LHE generation
-    myjob.write("./SUSY_generation_batch.sh %s %s \n" % (PROCNAME, NCORES) )
+    myjob.write("./SUSY_generation.sh %s %s \n" % (PROCNAME, NCORES) )
 
     # Copy back the output
     myjob.write("cp %s/%s_unweighted_events.lhe.gz %s \n" % (PROCNAME, PROCNAME, OUTPUT) )
@@ -138,32 +146,40 @@ def makejob(HOMEDIR, PROCNAME, OUTPUT, NEV, NRUN, NCORES, PDGID, MASS):
 
     myjob.close()
 
+    # make job executable
+    os.chmod(jobname,0755)
+
     return jobname
 
 # -----------------------------------------------------------------
 # Submit a job
 # -----------------------------------------------------------------
 def submitjob(QUEUE, JOBNAME, HOMEDIR, PROTOCOL, NCORES):
-    errorfile = HOMEDIR + "/logs/" + JOBNAME.split("/")[-1].replace(".sh",".err")
-    logfile = HOMEDIR + "/logs/" + JOBNAME.split("/")[-1].replace(".sh",".log")
+    # location to store error and log files
+    errorfile = HOMEDIR + "/log/" + JOBNAME.split("/")[-1].replace(".sh",".err")
+    logfile = HOMEDIR + "/log/" + JOBNAME.split("/")[-1].replace(".sh",".log")
+    # submit the job based on the specified protocol
     if PROTOCOL == "bsub":
         submitcommand = ["bsub",
                          "-q %s" % (QUEUE),
-                         "-n %s" % (NCORES), 
-                         "-R \"span[hosts=1]\"",
                          "-e %s" % (errorfile),
                          "-o %s" % (logfile),
                          JOBNAME] 
-        print submitcommand
-        subprocess.call(submitcommand)
+        if NCORES > 1:
+            submitcommand.extend(["-n %s" % (NCORES),
+                                  "-R span[hosts=1]"])
+        print ' '.join(submitcommand)
+        subprocess.call(' '.join(submitcommand) , shell=True)
+
     elif PROTOCOL == "qsub": 
         submitcommand = ["qsub",
                          "-q %s" % (QUEUE),
                          "-e %s" % (errorfile),
                          "-o %s" % (logfile),
                          JOBNAME] 
-        print submitcommand
-        subprocess.call(submitcommand)
+        print ' '.join(submitcommand)
+        subprocess.call(' '.join(submitcommand), shell=True)
+
     else: 
         print "Unsupported submission protocol."
 
@@ -191,6 +207,10 @@ if __name__ == "__main__":
     # Make a folder to store the log files
     if not os.path.isdir("log"):
         os.mkdir(HOMEDIR+"/log")
+
+    # The SUSY_generation.sh script needs to be in the working directory
+    if not os.path.isfile("SUSY_generation.sh"): 
+        sys.exit("SUSY_generation.sh is not in the current working directory!")
 
     # A cards directory with three cards must exist, otherwise the jobs will crash
     if not os.path.isdir("cards"): 
@@ -234,15 +254,17 @@ if __name__ == "__main__":
             for nrun in xrange(args.nruns):
                 procname = args.name 
                 output = HOMEDIR + "/lhe/" + procname + str(mass) + "_" + str(nrun) + "_undecayed.lhe.gz"
-                jobnames.append(makejob(HOMEDIR, procname, output, args.nevents, nrun, ncores, args.pdg, mass))
+                jobnames.append(makejob(HOMEDIR, procname, output, args.nevents, nrun, ncores, [args.pdg], [mass]))
     else: 
         # List of masses was provided
         print "Will create jobs for masses", args.mass
+        if type(args.mass) is int:
+            args.mass = [args.mass]
         for mass in args.mass:
             for nrun in xrange(args.nruns):
                 procname = args.name 
                 output = HOMEDIR + "/lhe/" + procname + str(mass) + "_" + str(nrun) + "_undecayed.lhe.gz"
-                jobnames.append(makejob(HOMEDIR, procname, output, args.nevents, nrun, ncores, args.pdg, mass))
+                jobnames.append(makejob(HOMEDIR, procname, output, args.nevents, nrun, ncores, [args.pdg], [mass]))
 
     print "Done creating job scripts."
 

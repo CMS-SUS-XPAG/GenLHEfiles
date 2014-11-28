@@ -6,7 +6,7 @@ define j = j b b~
 define firstgen = ul ul~ ur ur~ dl dl~ dr dr~
 define secondgen = sl sl~ sr sr~ cl cl~ cr cr~
 define thirdgen = t1 t1~ t2 t2~ b1 b1~ b2 b2~
-define ewkinos = x1+ x2+ x1- x2
+define ewkinos = x1+ x2+ x1- x2-
 define excl = firstgen secondgen thirdgen ewkinos
 
 generate p p > go go $ excl @0
