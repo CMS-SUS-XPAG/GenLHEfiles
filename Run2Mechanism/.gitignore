@@ -1,0 +1,9 @@
+*~
+*.log
+*.cfg
+*.pyc
+lhe/
+lhe_processed/
+log/
+patches/
+scripts/
