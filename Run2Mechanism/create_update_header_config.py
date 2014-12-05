@@ -154,11 +154,21 @@ if __name__ == "__main__":
     # not called mass_dict, the update_header.py script will not be able 
     # to import it. The name of this python file should correspond to 
     # the entry you put in the options dictionary for 'mass'. 
+    # The dictionary should have the follow format: 
+    # mass_dict = {"mother_mass_1": [{"pdgid":mass, "pdgid:mass},
+    #                                {"pdgid":mass, "pdgid:mass},
+    #                                {"pdgid":mass, "pdgid:mass}],
+    #              "mother_mass_2": [{"pdgid":mass, "pdgid:mass},
+    #                                {...},
+    #                                ... ], 
+    #              ....
+    #             }
 
     mass_dict = makeMassDict_standard_SMS(range(800,1205,100),100)
 
 
     # Fill out the options dictionary with your configuration:
+    # All options need to be provided as strings.
     # options = {"name": <name corresponding to the start of inputfiles>, 
     #           "nevents": <number of events to run over, -1 means all>,
     #           "inputdir": <location of the undecayed files>, 
@@ -171,7 +181,8 @@ if __name__ == "__main__":
     #                    replace the full slha block>,
     #           "mass": <.py file that contains the mass_dict>, 
     #           "decay": <SMS model for the decay, if your choice is part
-    #                     of the already provided ones>,
+    #                     of the already provided ones ("T1tttt","T1bbbb",
+    #                     "T1qqqq","T2tt","T2tt_3BD","T2cc","T2bb","T2qq")>,
     #           "decaystring": <Full decay string to be inserted into the
     #                           undecayed files. Useful if your choice is
     #                           not supported by default.>
