@@ -164,7 +164,7 @@ if __name__ == "__main__":
     #              ....
     #             }
 
-    mass_dict = makeMassDict_standard_SMS(range(800,1205,100),100)
+    makeMassDict_standard_SMS(range(800,1205,100),100)
 
 
     # Fill out the options dictionary with your configuration:
