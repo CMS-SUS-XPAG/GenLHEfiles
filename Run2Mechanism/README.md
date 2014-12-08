@@ -3,6 +3,7 @@
 ## Table of contents
 
 * [Introduction](#introduction)
+* [Getting started](#getting-started)
 * [Step 1: Produce undecayed LHE files](#step-1-produce-undecayed-lhe-files)
    * [General procedure](#general-procedure)
    * [SUSY_generation.sh](#susy_generationsh)
@@ -12,8 +13,8 @@
 * [Step 2: Process undecayed LHE files](#step-2-process-undecayed-lhe-files)
    * [Constructing the config file](#constructing-the-config-file)
    * [Examples](#examples-1)
-* [Step 4a: Injection into official production](#step-4a-injection-into-official-production)
 * [Step 3: Validation](#step-3-validation)
+* [Step 4a: Injection into official production](#step-4a-injection-into-official-production)
 * [Step 4b: Private production](#step-4b-private-production)
    * [Prepare a CMSSW area](#prepare-a-cmssw-area)
    * [GEN only](#gen-only)
@@ -47,6 +48,29 @@ official production will also be detailed so that you can easily produce a few m
 points privately if necessary. 
 
 
+## Getting started
+
+To use the scripts available here, you need access to the CMSSW software. For most
+people this means that you will be running on either lxplus or on your local T2. 
+
+To avoid having to copy over all the files separately, I recommend that you clone
+the repository. 
+```
+# Clone command using HTTPS protocol
+git clone https://github.com/CMS-SUS-XPAG/GenLHEfiles.git
+
+# Clone command using SSH protocol
+git clone git@github.com:CMS-SUS-XPAG/GenLHEfiles.git
+```
+
+If you are unfamiliar with git(hub), you can find more information on the use of git and github on
+the CMSSW github [FAQ](http://cms-sw.github.io/faq.html), the [github help pages](https://help.github.com/) 
+or the [git book](http://git-scm.com/book/en/v2). 
+
+If you will only be using the scripts provided here, you only need to be able to clone
+the repository, which should work with one of the above commands.
+
+
 ## Step 1: Produce undecayed LHE files
 
 The first thing you need to decide is what process you want to investigate, in 
@@ -62,8 +86,8 @@ instructions in this section.
 
 The relevant scripts for this step are available in this repository, and are called: 
 
- -  `SUSY_generation.sh`
- -  `run_scan.py`
+ -  [SUSY_generation.sh](./SUSY_generation.sh)
+ -  [run_scan.py](./run_scan.py)
 
 I will explain the general procedure and the details on these two scripts in the 
 following subsections. There is also an example provided that should run on lxbatch
@@ -71,9 +95,9 @@ without problems.
 
 #### General procedure
 
-We will be using the `run_scan.py` script to make (and submit) several job scripts 
+We will be using the [run_scan.py](./run_scan.py) script to make (and submit) several job scripts 
 according to the mass scan we wish to perform. Each of the job scripts will set up a 
-proper environment and will call the `SUSY_generation.sh` script to do the actual 
+proper environment and will call the [SUSY_generation.sh](./SUSY_generation.sh) script to do the actual 
 MadGraph running. They will also create a customization card on the fly that will be 
 used to change the number of events, the seed and the mass. 
 This means that you only need to provide one parameter card for the full scan. 
@@ -97,7 +121,7 @@ The way to call the script in a standalone way, i.e. not through the `run_scan.p
 If you do not specify, the default is to use one core. 
 
 `name` is the most important parameter. It specifies the MadGraph cards that should be 
-used. The `SUSY_generation.sh` script expects that there is a `cards` folder in the 
+used. The [SUSY_generation.sh](./SUSY_generation.sh) script expects that there is a `cards` folder in the 
 current working directory. In this folder it will look for cards with the following
  names:
 
@@ -108,8 +132,8 @@ current working directory. In this folder it will look for cards with the follow
 
 where `name` corresponds to the first argument of the script. The customization card is
 optional, and can be omitted if the full process you want to generate is specified in 
-the other cards. If you use the example cards from the `cards` folder (see the Examples
-section below), and you wish to run `SUSY_generation.sh` by itself, you will have to 
+the other cards. If you use the example cards from the `cards` folder (see the [Examples](#examples)
+section below), and you wish to run [SUSY_generation.sh](./SUSY_generation.sh) by itself, you will have to 
 add a `gluino_customizecard.dat`. This card should set the gluino mass to a reasonable 
 value, as the value that is in the `gluino_param_card.dat` is too high to be accessible
 at the LHC. You can also change other things, such as the number of events, or seed.
@@ -173,13 +197,13 @@ Each time you execute the script, a log file will be created. This log file incl
 full setup which was used. The name of the log file includes the current time in order 
 to make it easier to track things.
 
-The `run_scan.py` script will create several directories in the working directory. 
+The [run_scan.py](./run_scan.py) script will create several directories in the working directory. 
 
 - `scripts`: To hold the job scripts that will be submitted to the batch queue. This 
              directory is NOT cleaned by default by the script. 
 - `log`: To hold the error and log files that are returned by the batch system. This 
          directory is NOT cleaned by default by the script.
-- `lhe`: To hold the output lhe files that are produced by the `SUSY_generation.sh` script
+- `lhe`: To hold the output lhe files that are produced by the [SUSY_generation.sh](./SUSY_generation.sh) script
 - `patches`: This directory will contain two patches for the MG5_aMC@NLO distribution. 
              The first time you run the script these patches will be downloaded from
              https://github.com/cms-sw/genproductions/tree/master/bin/MadGraph5_aMCatNLO
@@ -254,7 +278,7 @@ what you need to do:
   `stop_param_card.dat`
 - Make sure that the last line in the proc_card is consistent with your naming choice, 
   e.g. `output stop -nojpeg`
-- Execute the script and change the relevant parameters. 
+- Execute the script and change the relevant parameters.  
   ```
   python run_scan.py --name stop --pdg 1000006 --massrange 500 800 25 -n 50000
   ```
@@ -295,7 +319,7 @@ particle info, and before the reweighting tags, as shown here:
 ```
 
 
-There are actually two relevant scripts for this step. The first one, `update_header.py` 
+There are actually two relevant scripts for this step. The first one, [update_header.py](./update_header.py) 
 is the one you will need to execute. 
 You can print the help message with the following:
 ```
@@ -322,7 +346,7 @@ The output files will be unzipped however.
 
 #### Constructing the config file
 
-The config file that is needed as input to the `update_header.py` script, will be read
+The config file that is needed as input to the [update_header.py](./update_header.py) script, will be read
 by the standard python ConfigParser. It should have this structure: 
 ```
 [Global]
@@ -340,15 +364,15 @@ decaystring =
 ```
 
 To make it easier for you, I have provided a script that will create the config file
-in the correct format. This script is called `create_update_header_config.py`. 
+in the correct format. This script is called [create_update_header_config.py](./create_update_header_config.py). 
 There are no command line options for this script. You will have to open up a text 
 editor and fill out the appropriate entries in the `options` dictionary at the bottom
 of the file. The table below contains all the options that will be used by the 
-`update_header.py` script. Any other option will be ignored. 
+[update_header.py](./update_header.py) script. Any other option will be ignored. 
 
 | Option       | Info
 | :----------- | :-----------------------------
-| `name`       | This corresponds to the name you passed to the `run_scan.py` script. It corresponds to the beginning of the name of the input LHE files. The assumed naming convention for the undecayed files is: ```<name><mother mass><other stuff>undecayed.lhe(.gz)```. The processed files will have the names ``` <model><mother mass><other stuff>decayed<mass info>```. The mass info will include the pdg id and mass of all particles for which you made a change in the slha.  
+| `name`       | This corresponds to the name you passed to the [run_scan.py](./run_scan.py) script. It corresponds to the beginning of the name of the input LHE files. The assumed naming convention for the undecayed files is: ```<name><mother mass><other stuff>undecayed.lhe(.gz)```. The processed files will have the names ``` <model><mother mass><other stuff>decayed<mass info>```. The mass info will include the pdg id and mass of all particles for which you made a change in the slha.  
 | `nevents`    | Number of events you want to process for each input file. Put any negative value to process all events.
 | `inputdir`   | Location of the LHE files you want to process.
 | `outputdir`  | Location where you want the processed LHE files to be stored. This directory will be created if it does not exist yet. 
@@ -406,7 +430,8 @@ This mass dictionary should be stored in a python file (.py). **It is very impor
 that the dictionary is stored in a variable called `mass_dict`**, as in the example 
 above. You can have code in the file that generates this mass dictionary. The main 
 thing is to have a variable with the correct name. 
-The file `create_update_header_config.py` contains several functions to create this
+The file [create_update_header_config.py](./create_update_header_config.py) contains 
+several functions to create this
 mass dictionary for you. Most of the standard scenarios for simplified model scans
 are included. For example, for the case where you only need to update the mass of the LSP,
 and generate LSP masses from 0 till the mass of the mother particle (with a certain step 
@@ -431,8 +456,8 @@ For this example we want to generate the T1bbbb SMS topology, where the gluinos 
 to b+bbar+LSP. Apart from the gluino mass, the only free mass parameter is the LSP mass. 
 Let's consider that we want to end up with events for all LSP masses up to the gluino 
 mass, in steps of 200 GeV. The required mass dictionary to achieve this can be easily
-generated using the `makeMassDict_standard_SMS()` function in the `update_create_header_config.py`
-script. 
+generated using the `makeMassDict_standard_SMS()` function in the 
+[update_create_header_config.py](./update_create_header_config.py) script. 
 ```python
 # Execute this to create a file called mass_dict.py containing the required mass dictionary
 # makeMassDict_standard_SMS(mother_masses, LSP_step, fname="mass_dict.py")
@@ -470,7 +495,7 @@ mass_dict = {'1400.0': [{'1000022': 0},
 ```
 
 To create the config file, you should update the `options` dictionary at the end of the 
-`create_update_header_config.py` script, give a name for the config file, and then 
+[create_update_header_config.py](./create_update_header_config.py) script, give a name for the config file, and then 
 actually create the config: 
 ```python
 ## To update in the create_update_header_config.py script: 
@@ -496,7 +521,7 @@ Then you should just execute the updated script.
 python create_update_header_config.py
 ```
 
-The last step is then to pass your newly created config file to the `update_header.py` 
+The last step is then to pass your newly created config file to the [update_header.py](./update_header.py) 
 script to actually create the processed LHE files.
 ```
 python update_header.py myconfig.cfg
