@@ -34,7 +34,7 @@ import ConfigParser
 ##  Please note that overriding branching fractions that are present in 
 ##  the original lhe, does not work yet.
 ## ---------------------------------------------------------------------
-def process_lhe(infilename, outfilename, masses, decay_info, nevents):
+def process_lhe(infilename, outfilename, masses, decay_info, nevents, modeltag):
     if infilename.endswith(".lhe.gz"):
         infile = gzip.open(infilename)
     elif infilename.endswith(".lhe"):
@@ -44,6 +44,7 @@ def process_lhe(infilename, outfilename, masses, decay_info, nevents):
     outfile = open(outfilename,'w')
 
     lastblock = ""
+    in_ev = False
     nev = 0
     for line in infile: 
         if "BLOCK" in line:
@@ -68,7 +69,12 @@ def process_lhe(infilename, outfilename, masses, decay_info, nevents):
             else: 
                 newline = decay_info+"\n"
             newline += line
+        if in_ev and line.startswith("<"):
+            newline = "%s\n%s" % (modeltag,line)
+            in_ev = False
         outfile.write(newline)
+        if "<event>" in line: 
+            in_ev = True
         if "</event>" in line:
             nev += 1
         if nev == nevents:
@@ -86,7 +92,7 @@ def process_lhe(infilename, outfilename, masses, decay_info, nevents):
 ##  The new slha block will be updated with with the mass information. 
 ##  Then the slha will be inserted into the lhe file.
 ## ---------------------------------------------------------------------
-def process_lhe_with_slha(infilename, outfilename, slha, masses, nevents):
+def process_lhe_with_slha(infilename, outfilename, slha, masses, nevents, modeltag):
     if infilename.endswith(".gz"):
         infile = gzip.open(infilename)
     elif infilename.endswith(".lhe"):
@@ -110,6 +116,7 @@ def process_lhe_with_slha(infilename, outfilename, slha, masses, nevents):
     slha_new = "".join(slha_new_list)
 
     in_slha = False
+    in_ev = False
     nev=0
     for line in infile: 
         newline = line
@@ -122,7 +129,12 @@ def process_lhe_with_slha(infilename, outfilename, slha, masses, nevents):
             continue
         if "<slha>" in line:
             in_slha = True
+        if in_ev and line.startswith("<"):
+            newline = "%s\n%s" % (modeltag,line)
+            in_ev = False
         outfile.write(newline)
+        if "<event>" in line: 
+            in_ev = True
         if "</event>" in line:
             nev += 1
         if nev == nevents:
@@ -291,19 +303,23 @@ if __name__ == "__main__":
                 out_f = base_f.replace("undecayed",
                                        "_".join(["decayed",option_string])
                                        ).replace(name,model).replace(".gz","")
-
+                # construct the model tag to be inserted
+                mass_string = "_".join("%s" % (val) for val in option.values())
+                model_tag = "# model %s_%s_%s" % (model, mother_mass, mass_string)
                 # Process the LHE file
                 if decay != "slha":
                     process_lhe(f, 
                                 os.path.join(outputdir,out_f), 
                                 option, 
                                 decay,
-                                nevents)
+                                nevents,
+                                model_tag)
                 else:
                     process_lhe_with_slha(f, 
                                           os.path.join(outputdir,out_f),
                                           config.get('SLHA','slha'),
                                           option,
-                                          nevents)
+                                          nevents,
+                                          model_tag)
 
 

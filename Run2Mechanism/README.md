@@ -5,8 +5,8 @@
 * [Introduction](#introduction)
 * [Step 1: Produce undecayed LHE files](#step-1-produce-undecayed-lhe-files)
    * [General procedure](#general-procedure)
-   * [SUSY_generation.sh](#susy_generation.sh)
-   * [run_scan.py](#run_scan.py)
+   * [SUSY_generation.sh](#susy_generationsh)
+   * [run_scan.py](#run_scanpy)
    * [Examples](#examples)
    * [Features to be added in the future](#features-to-be-added-in-the-future)
 * [Step 2: Process undecayed LHE files](#step-2-process-undecayed-lhe-files)
@@ -15,6 +15,7 @@
 * [Step 4a: Injection into official production](#step-4a-injection-into-official-production)
 * [Step 3: Validation](#step-3-validation)
 * [Step 4b: Private production](#step-4b-private-production)
+   * [Prepare a CMSSW area](#prepare-a-cmssw-area)
    * [GEN only](#gen-only)
    * [FASTSIM](#fastsim)
    * [FullSim](#fullsim)
@@ -274,10 +275,28 @@ This step assumes that you have access to a set of undecayed LHE files, and that
 have decided what decay chain you are interested in. This means that you need to know
 the branching fractions and the masses of all particles in the decay chain. This 
 information will be put in the header of the undecayed LHE files. A script is provided
-in this repository to do exactly that. 
+in this repository to do exactly that.  
+In order to easily retrieve which event belongs to which mass point, the script will
+also add a comment line, containing the model string, in each event block.
+It is important to note that this comment line needs to come immediately after the 
+particle info, and before the reweighting tags, as shown here: 
+```
+<event>
+ 5   1  0.3062500E-02  0.9857737E+03  0.7816531E-02  0.9324287E-01
+       21   -1    0    0  502  501  0.00000000000E+00  0.00000000000E+00  0.14584166042E+04  0.14584166042E+04  0.00000000000E+00 0.  1.
+       21   -1    0    0  505  502  0.00000000000E+00  0.00000000000E+00 -0.77210579382E+03  0.77210579382E+03  0.00000000000E+00 0.  1.
+  1000021    1    1    2  503  504 -0.55821310427E+03  0.77519697385E+02  0.52543654093E+02  0.97998571870E+03  0.80000000000E+03 0. -1.
+  1000021    1    1    2  504  501  0.57314551739E+03 -0.10793617560E+03  0.67419761292E+03  0.11977847984E+04  0.80000000000E+03 0. -1.
+       21    1    1    2  505  503 -0.14932413122E+02  0.30416478217E+02 -0.40430456653E+02  0.52751880857E+02  0.00000000000E+00 0.  1.
+# model T1tttt_800.0_100
+<scales pt_clust_1="13000.00000" pt_clust_2="13000.00000" pt_clust_3="33.88420"></scales>
+< other tags for event reweighting > 
+</event>
+```
 
-There are actually two relevant scripts. The first one, `update_header.py` is the one
-you will need to execute. 
+
+There are actually two relevant scripts for this step. The first one, `update_header.py` 
+is the one you will need to execute. 
 You can print the help message with the following:
 ```
 python update_header.py --help
@@ -408,8 +427,8 @@ gluino1400.0_0_undecayed.lhe.gz
 gluino800.0_0_undecayed.lhe.gz
 ```
 
-For this example we want to generate the T1tttt SMS topology, where the gluinos decay
-to t+tbar+LSP. Apart from the gluino mass, the only free mass parameter is the LSP mass. 
+For this example we want to generate the T1bbbb SMS topology, where the gluinos decay
+to b+bbar+LSP. Apart from the gluino mass, the only free mass parameter is the LSP mass. 
 Let's consider that we want to end up with events for all LSP masses up to the gluino 
 mass, in steps of 200 GeV. The required mass dictionary to achieve this can be easily
 generated using the `makeMassDict_standard_SMS()` function in the `update_create_header_config.py`
@@ -462,7 +481,7 @@ options = {"name": "gluino",
            "model": "",
            "slha": "",
            "mass": "mass_dict.py", 
-           "decay": "T1tttt",
+           "decay": "T1bbbb",
            "decaystring": ""
            }
 
@@ -488,8 +507,9 @@ official production.
 ## Step 3: Validation
 
 You should make sure that your processed LHE files are valid. The easiest thing to 
-do is to simply look at the LHE file and check whether the needed masses were updated
-and whether the DECAY block was properly injected. 
+do is to simply look at the LHE file and check whether the needed masses were updated, 
+whether the DECAY block was properly injected, and whether each event contains the
+correct comment line with the model tag. 
 
 It is also a good idea to follow the instructions for the [private production](#step-4b:-private-production),
 in particular those for the GEN step, to check that your LHE files will not cause
@@ -533,19 +553,62 @@ to perform, you will need to run different steps. For all options you will need 
 appropriate genfragment. The one to be used for samples produced using the procedure 
 explained here, can be found on the genproductions github page: 
 
-**TO DO: add link to genfragment**
+**TODO: add link to genfragment**
 
 In this fragment you should update the value of `JetMatching:qCut`, and perhaps the 
 value of `JetMatching:nJetMax`. The `nJetMax` should be set to the largest number of 
 extra partons that are present in the lhe file. The SUSY default for this is `2`.  
 
+#### Prepare a CMSSW area
+
+Before you can start, you need to set up a CMSSW area. Which release to use will depend
+on whether or not you want to produce events up to FastSim or DIGI-RECO. The campaigns
+for reconstruction in Run2 are not ready yet. The GEN-SIM campaign is already available
+and is currenlty using `CMSSW_7_1_12`. 
+
+To run the GEN step, you need to place the genfragment in a specific directory, and 
+you should not forget to compile. 
+
+Instructions: 
+```
+cmsrel CMSSW_7_1_12
+cd CMSSW_7_1_12/src
+cmsenv
+mkdir -p Configuration/GenProduction/python
+mv genfragment_cff.py Configuration/GenProduction/python
+scram b
+```
+
 #### GEN only
 
+If you only want to do a generator level study, or if you want to determine a proper 
+qcut to be used with your samples, you only need to run the GEN step. 
+
+In the official production this is done in two steps. In the first step the LHE file is converted into EDM format, and then in the second step the decay, parton shower and hadronization is performed.
+```
+cmsDriver.py step0 --mc --eventcontent LHE --datatier GEN --conditions MCRUN2_71_V1::All --step NONE  --filein file:mylhe.lhe --fileout file:step0.root -n -1
+
+cmsDriver.py Configuration/GenProduction/python/genfragment_cff.py --mc --eventcontent RAWSIM --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier GEN-SIM --conditions MCRUN2_71_V1::All --beamspot NominalCollision2015 --step GEN --magField 38T_PostLS1  --filein file:step0.root --fileout file:GEN.root -n -1
+```
+
+When doing things locally, you can condense this into a single run: 
+```
+cmsDriver.py Configuration/GenProduction/python/genfragment_cff.py --mc --eventcontent RAWSIM --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier GEN-SIM --conditions MCRUN2_71_V1::All --beamspot NominalCollision2015 --step GEN --magField 38T_PostLS1  --filein file:mylhe.lhe --fileout file:GEN.root -n -1
+```
+
 #### FASTSIM
+
+FastSim for Run2 is not yet available.
 
 
 #### FullSim
 
+DIGI-RECO for Run2 is not yet available. 
+
+Instructions for the GEN-SIM step: 
+```
+cmsDriver.py Configuration/GenProduction/python/genfragment_cff.py --mc --eventcontent RAWSIM --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier GEN-SIM --conditions MCRUN2_71_V1::All --beamspot NominalCollision2015 --step GEN,SIM --magField 38T_PostLS1  --filein file:mylhe.lhe --fileout file:GEN.root -n -1
+```
 
 
 ## Determining the QCUT
