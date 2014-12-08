@@ -11,7 +11,7 @@
    * [Features to be added in the future](#features-to-be-added-in-the-future)
 * [Step 2: Process undecayed LHE files](#step-2-process-undecayed-lhe-files)
    * [Constructing the config file](#constructing-the-config-file)
-   * [Examples](#examples-2)
+   * [Examples](#examples-1)
 * [Step 4a: Injection into official production](#step-4a-injection-into-official-production)
 * [Step 3: Validation](#step-3-validation)
 * [Step 4b: Private production](#step-4b-private-production)
