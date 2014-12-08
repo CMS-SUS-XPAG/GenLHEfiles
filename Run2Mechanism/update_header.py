@@ -255,7 +255,7 @@ if __name__ == "__main__":
         if not model:
             model = "custom"
     elif config.has_option('SLHA','decaystring') and config.get('SLHA','decaystring').strip():
-        decay = config.get('SLHA','decaystring')
+        decay = config.get('SLHA','decaystring').replace("\"","")
         if not model:
             model = "custom"
     elif config.has_option('SLHA','decay') and config.get('SLHA','decay').strip():
