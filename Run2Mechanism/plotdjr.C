@@ -78,7 +78,7 @@ void makeplot(const char *name, TTree *tree, TCut weight, const char *drawstring
   c->SaveAs(TString::Format("%s.pdf",name));
 }
 
-void plotdjr(TString filename, TString outputbase) {
+void plotdjr(TString filename, const char* outputbase) {
  
   TH1::SetDefaultSumw2();
   
