@@ -641,6 +641,48 @@ cmsDriver.py Configuration/GenProduction/python/genfragment_cff.py --mc --eventc
 To determine a good qcut for a given process, you need to scan different values and pick
 the one that gives you smooth differential jet rate (DJR) plots. 
 
-To obtain these plots we provide a script: **Name of DJR plot**
+To obtain these plots we provide a script: [plotdjr.C](./plotdjr.C)
 The input to this script is an EDM file containing the output of the GEN step. See the 
 instructions for the "GEN only" step in the "Private production" section. 
+
+You will also need to use the FWLite setup. So you will first have to set up a CMSSW area, 
+and have a `rootlogon.C` file that sources the FWLite libraries. This file should contain
+something along the following (taken from one of the workbook pages):
+
+```C
+{
+  // Set up FW Lite for automatic loading of CMS libraries
+  // and data formats.   As you may have other user-defined setup
+  // in your rootlogon.C, the CMS setup is executed only if the CMS
+  // environment is set up.
+  //
+  TString cmsswbase = getenv("CMSSW_BASE");
+  if (cmsswbase.Length() > 0) {
+    //
+    // The CMSSW environment is defined (this is true even for FW Lite)
+    // so set up the rest.
+    //
+    cout << "Loading FW Lite setup." << endl;
+    gSystem->Load("libFWCoreFWLite.so");
+    AutoLibraryLoader::enable();
+    gSystem->Load("libDataFormatsFWLite.so");
+    gSystem->Load("libDataFormatsPatCandidates.so");
+   }
+}
+```
+
+
+To create the DJR plots corresponding to a given GEN file, simply do the following: 
+
+```
+root -l
+.L plotdjr.C
+plotdjr("path/to/your/GENfile.root","outputbase")
+```
+
+This will give you three plots, called `outputbase_djr0.pdf`, `outputbase_djr1.pdf' and `outputbase_djr2.pdf`. 
+For events produced up to two extra partons, only the first two of those plots are relevant. The third plot
+should be smooth by construction. 
+You will need to run over about 50k (depending on the matching efficiency) events to get a DJR plot that has 
+low enough statistical fluctuations to be able to make a decision on the qcut the run. 
+
