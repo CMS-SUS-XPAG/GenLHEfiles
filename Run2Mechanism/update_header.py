@@ -288,7 +288,16 @@ if __name__ == "__main__":
         # Get the mother mass from the filename
         # Assumes naming scheme as in run_scan.py
         base_f = os.path.basename(f)
-        mother_mass = base_f.replace(name,"").split("_")[0]
+        parts = base_f.split("_")
+        if len(parts) == 4:
+            # no massdict was used to create the undecayed files
+            mother_mass = parts[1]
+        elif len(parts) > 4:
+            # massdict was used to create undecayed files
+            mother_mass = "_".join(parts[1:-2])
+        else: 
+            print "Unknown filename format, moving to the next file"
+            continue
 
         # Look up what to do for that mass
         if not mother_mass in mass_keys:

@@ -28,7 +28,7 @@
 ##                                                                 ##
 ## Author:   Nadja Strobbe                                         ##
 ## Created:  2014-11-27                                            ##
-## Updated:  ...                                                   ##
+## Updated:  2014-12-16  Add mass dictionary functionality         ##
 ##                                                                 ##
 #####################################################################
 
@@ -92,6 +92,9 @@ def makeCLParser():
                             nargs = 3,
                             help="Define a range of masses to be produced. Format: min max step. Max is not included in the range.",
                             metavar = ('MIN', 'MAX', 'STEP')
+                            )
+    mass_group.add_argument("--massdict",
+                            help = "Dictionary containing mass information and pdg ids"
                             )
     return parser
 
@@ -257,7 +260,7 @@ if __name__ == "__main__":
         for mass in np.arange(MIN, MAX, STEP):
             for nrun in xrange(args.nruns):
                 procname = args.name 
-                output = HOMEDIR + "/lhe/" + procname + str(mass) + "_" + str(nrun) + "_undecayed.lhe.gz"
+                output = HOMEDIR + "/lhe/" + procname + "_" + str(mass) + "_" + str(nrun) + "_undecayed.lhe.gz"
                 jobnames.append(makejob(HOMEDIR, 
                                         procname, 
                                         output, 
@@ -265,9 +268,36 @@ if __name__ == "__main__":
                                         nrun, 
                                         ncores, 
                                         [args.pdg], 
-                                        [mass], seed)
+                                        [mass], 
+                                        seed)
                                 )
                 seed = seed + 1
+    elif args.massdict != None:
+        # A mass dictionary was provided
+        print  "Will create jobs according to", args.massdict
+        masslist = __import__(args.massdict.replace(".py",""))
+        for massdict in masslist.masses:
+            pdgs = []
+            masses = []
+            infostring = []
+            for k, v in massdict.iteritems():
+                pdgs.append(k)
+                masses.append(v)
+                infostring.append("%s_%s"%(k,v))
+            procname = args.name 
+            for nrun in xrange(args.nruns):
+                output = HOMEDIR + "/lhe/" + procname + "_" + "__".join(infostring) + "_" + str(nrun) + "_undecayed.lhe.gz"
+                jobnames.append(makejob(HOMEDIR, 
+                                        procname, 
+                                        output, 
+                                        args.nevents, 
+                                        nrun, 
+                                        ncores, 
+                                        pdgs, 
+                                        masses, 
+                                        seed)
+                                )
+                seed = seed + 1            
     else: 
         # List of masses was provided
         print "Will create jobs for masses", args.mass
@@ -276,7 +306,7 @@ if __name__ == "__main__":
         for mass in args.mass:
             for nrun in xrange(args.nruns):
                 procname = args.name 
-                output = HOMEDIR + "/lhe/" + procname + str(mass) + "_" + str(nrun) + "_undecayed.lhe.gz"
+                output = HOMEDIR + "/lhe/" + procname + "_" + str(mass) + "_" + str(nrun) + "_undecayed.lhe.gz"
                 jobnames.append(makejob(HOMEDIR, 
                                         procname, 
                                         output, 
