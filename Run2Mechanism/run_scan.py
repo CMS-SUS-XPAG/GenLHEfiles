@@ -134,7 +134,7 @@ def makejob(HOMEDIR, PROCNAME, OUTPUT, NEV, NRUN, NCORES, PDGID, MASS, SEED):
 
     # Create the customization script from the template
     myjob.write("echo set run_card nevents %s > cards/%s_customizecards.dat \n" % (NEV, PROCNAME) )
-    myjob.write("echo set run_card iseed %s > cards/%s_customizecards.dat \n" % (SEED, PROCNAME) )
+    myjob.write("echo set run_card iseed %s >> cards/%s_customizecards.dat \n" % (SEED, PROCNAME) )
     for pdg,mass in izip(PDGID, MASS):
         myjob.write("echo set param_card mass %s %s >> cards/%s_customizecards.dat \n" % (pdg, mass, PROCNAME) )
 
