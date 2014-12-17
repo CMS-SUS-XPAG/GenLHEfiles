@@ -20,6 +20,7 @@
    * [GEN only](#gen-only)
    * [FASTSIM](#fastsim)
    * [FullSim](#fullsim)
+   * [Phys14 setup](#phys14-setup)
 * [Determining the QCUT](#determining-the-qcut)
 
 
@@ -36,25 +37,39 @@ always easy to follow depending on the system of your local T2. Once the LHE fil
 were decayed, they needed to be post-processed. Only then could they be put through
 the official production. 
 
-For Run2 we have developed a simpler method. We (i.e. the SUSY group) still need to
+For Run2 we have developed a simpler, and faster, method. We (i.e. the SUSY group) still need to
 provide the undecayed LHE files, but the analysis groups will no longer have to do 
 the decay themselves. This will be done as part of the central production from now
 onwards. The only thing that will need to be done is to modify the header so that it
-includes the mass spectrum and decay chain of your choice. 
+includes the mass spectrum and decay chain of your choice. In order to retrieve the
+mass point information a model tag also needs to be added to the event. 
 
 In this document we will provide a step-by-step guide to do all the needed steps to 
 prepare your request for the official production. The steps that are done in the 
-official production will also be detailed so that you can easily produce a few mass
+official production (once available)  will also be detailed so that you can easily produce a few mass
 points privately if necessary. 
 
 
 ## Getting started
 
-To use the scripts available here, you need access to the CMSSW software. For most
+To use some the scripts available here, you need access to the CMSSW software. For most
 people this means that you will be running on either lxplus or on your local T2. 
+**These scripts have only been tested on lxplus so far.** You might need to make changes 
+here and there to get it to run on the local T2 (e.g. for batch submission). 
 
-To avoid having to copy over all the files separately, I recommend that you clone
-the repository. 
+Most of the python scripts should be run using python 2.7. The easiest way to set 
+this up on lxplus, is to do `cmsenv` in a recent CMSSW area. For example:
+```
+# Set up CMSSW release somewhere
+cmsrel CMSSW_7_1_11
+cd CMSSW_7_1_11/src
+cmsenv
+cd -
+``` 
+
+To avoid having to copy over all the files in this folder separately, I recommend that you clone
+the repository. The clone does not need to reside inside the CMSSW area that you (might have) 
+set up.  
 ```
 # Clone command using HTTPS protocol
 git clone https://github.com/CMS-SUS-XPAG/GenLHEfiles.git
@@ -63,12 +78,13 @@ git clone https://github.com/CMS-SUS-XPAG/GenLHEfiles.git
 git clone git@github.com:CMS-SUS-XPAG/GenLHEfiles.git
 ```
 
-If you are unfamiliar with git(hub), you can find more information on the use of git and github on
-the CMSSW github [FAQ](http://cms-sw.github.io/faq.html), the [github help pages](https://help.github.com/) 
+As a general user, you will not need to contribute to the repository. You will only need to
+use the scripts provided here. Therefore, cloning the repository, which should work 
+with one of the above commands, is all you need to know about git.
+If you are unfamiliar with git(hub), and want to find more information on the use of 
+git and github, you can have a look at the CMSSW github 
+[FAQ](http://cms-sw.github.io/faq.html), the [github help pages](https://help.github.com/) 
 or the [git book](http://git-scm.com/book/en/v2). 
-
-If you will only be using the scripts provided here, you only need to be able to clone
-the repository, which should work with one of the above commands.
 
 
 ## Step 1: Produce undecayed LHE files
@@ -78,7 +94,8 @@ particular what sparticles will be produced in the hard collision. Typically the
 gluinos, top squarks, bottom squarks, et cetera. 
 
 Once you know what process you want, you should have a look at the SUSY group area on 
-EOS to check whether LHE files for that process have already been produced. If you
+EOS (/store/group/phys_susy)
+to check whether LHE files for that process have already been produced. If you
 are happy with what is already available, then you can immediately proceed to Step 2. 
 If your desired process is not there, or you want to look at different masses, then 
 you will need to produce the undecayed LHE files yourself by following the 
@@ -98,11 +115,16 @@ without problems.
 We will be using the [run_scan.py](./run_scan.py) script to make (and submit) several job scripts 
 according to the mass scan we wish to perform. Each of the job scripts will set up a 
 proper environment and will call the [SUSY_generation.sh](./SUSY_generation.sh) script to do the actual 
-MadGraph running. They will also create a customization card on the fly that will be 
-used to change the number of events, the seed and the mass. 
+Madgraph running. They will also create a customization card on the fly that will be 
+used to change the number of events, the seed and the mass(es). 
 This means that you only need to provide one parameter card for the full scan. 
 
 #### SUSY_generation.sh
+
+**Prerequisites**: This script will attempt to set up a CMSSW area. You will thus need
+access to the CMS software. You also need access to the LHAPDF6 libraries. 
+On lxplus this script will work out of the box. This is not guaranteed on your local
+cluster. 
 
 This script is an adaptation of the `gridpack_generation.sh` script that can be found 
 on the CMS genproductions github area: 
@@ -155,6 +177,10 @@ The last line should thus read as follows
 output name -nojpeg
 ```
 
+The included run_card has reasonable values for most processes. If you are not sure
+whether you need to change some parameters, please contact the SUSY MC contacts and the
+MC/Trigger/XPAG conveners. 
+
 To summarize, if your cards are named `mytest_proc_card.dat`, `mytest_run_card.dat` and 
 `mytest_param_card.dat`, and you want to run with 4 cores, then you should execute:
 ```
@@ -164,29 +190,38 @@ To summarize, if your cards are named `mytest_proc_card.dat`, `mytest_run_card.d
 #### run_scan.py
 
 **Prerequisites**: the script will only work if you have access to python 2.7 and numpy. 
-An easy way to achieve this is to set up a **CMSSW7X** area. 
+An easy way to achieve this is to set up a **CMSSW7X** area, as mentioned in 
+[Getting Started](#getting-started). 
 
 This is the script that will take care of the job submission. 
 There are a number of options related to the actual submission, and a number related to
-the masses of the particle you want to scan. 
-For this first version only the very basic setup is supported, namely pair-production of
-sparticles, without subsequent decays. If you want to do something which requires 
-changing the mass of more than one particle, you cannot do it in one go. You will have
-to run several times with the appropriate param_card.
+the masses of the particle(s) you want to scan. 
+There are three different ways to pass the information on the masses to scan (`--mass`,
+`--massrange`, or `--massdict`). 
+If you are producing undecayed files and only need to change the mass of one particle (e.g. 
+the gluino), you can use all three options. 
+If you, on the otherhand, need to change the mass of multiple particles (e.g. for 
+chargino-neutralino production), then you can only use the `--massdict` option.
 
-The list of options: 
+The full list of options: 
 
 - `-h, --help`: Display the help message. This includes all these options.
 - `--name`: Process name (default='gluino'). Cards should be appropriately named, 
             e.g. gluino_run_card.dat 
 - `--pdg`: PDG id of the particle whose mass you want to loop over (default=1000021). 
            For most cases this will be the particle that is pair-produced. This should 
-	   thus be consistent with the process definition in the proc_card. 
+	   thus be consistent with the process definition in the proc_card. This option
+           is not relevant if you are using the --massdict option.
 - `--mass`: White space separated list of masses to produce events for (default=1000) 
 - `--massrange`: Mass range to produce events for. Format: MIN MAX STEP (no default). 
                  The value in MAX is not included in the range.
+- `--massdict`: Name of a python file that contains the mass and pdg information. 
+                The information should be stored in a list called `masses`. Each element
+                of the list will be converted into a job, and should be in the form of a 
+                dictionary {"pdgid1":mass1, "pdgid2":mass2, ...}
 - `-n, --nevents`: Number of events to produce per run (default=10000)
-- `-nruns`: Number of runs, useful if you want to produce a lot of events (default=1) 
+- `-nruns`: Number of runs, useful if you want to produce a lot of events (default=1). 
+            All jobs will be replicated nruns times. 
 - `-ncores`: Number of cores to use for event generation (default=1)
 - `-protocol`: Submission protocol: bsub or qsub (default='bsub')
 - `-q, --queue`: Queue to submit to (default='1nd')
@@ -213,8 +248,8 @@ to run per job, you might need to change this. It is probably fine up to about 1
 for up to two extra partons, but this has not been explicitely tested. 
 
 It is also possible to speed up the event generation by running on more than 1 core. This 
-can be used for running on lxplus and for running locally. This option is not supported
-for batch systems that use `qsub` for submission. 
+can be used for running on lxbatch and for running locally (e.g. on lxplus). This option 
+is not supported for batch systems that use `qsub` for submission. 
 
 The job script will clean up after itself, meaning that it will copy over the output file, 
 and then delete everything it created. If you are running locally and want to keep absolutely
@@ -254,7 +289,8 @@ we did not have to specify `--name` here as the default is `gluino` and the card
 cards folder are named `gluino_..._card.dat`. 
 
 Most likely, you will want to generate events for different masses as well. As mentioned 
-above, there are two arguments that you can use for this: 
+above, there are three arguments that you can use for this. The first two are the easiest
+to use, and will be sufficient for most purposes:
 ```
 # Specify one mass point, for example 1400 GeV
 python run_scan.py --mass 1400
@@ -265,6 +301,20 @@ python run_scan.py --mass 600 750 1200 1450.5
 
 # Construct a mass range with fixed step
 python run_scan.py --massrange 1000 1500 100
+```
+Using the third option requires an intermediate step, the creation of the python file
+that hold the mass and pdgid information. 
+You can put all the code you need to create the required mass list inside this python 
+file. The only restriction is that the final list should be called `masses`. 
+In the case of gluino production we could store the following lines in a file called
+`my_mass_info.py`: 
+```python
+# create the list with mass,pdg information
+masses = [{"1000021":mass} for mass in range(1000,1500,100)]
+```
+You would then call the main script as follows: 
+```
+python run_scan.py --massdict my_mass_info.py
 ```
 
 If you want to generate events for stop quarks for example, instead of gluinos, this is 
@@ -285,10 +335,16 @@ what you need to do:
 - Wait for your LHE files to be delivered
 
 
+In case you want to produce chargino neutralino2 production with a mass difference of 0.1 GeV, you would follow the above
+with the difference that you need to use the `--massdict` option. The corresponding 
+python file could look like: 
+```python
+masses = [{"1000023":mass, "1000024":(mass+0.1)} for mass in range(100,500,25)]
+```
+
 #### Features to be added in the future
 
 - submission with condor (volunteer with condor experience needed)
-- setting masses for multiple particles (needed for neutralino/chargino production)
 - support for running in NLO mode. This will require extensive validation.
 
 
@@ -379,7 +435,7 @@ of the file. The table below contains all the options that will be used by the
 | `model`      | New name to replace the original `name` that is part of the LHE filename (gluino in the default example from Part 1). The output files will thus start with "model". If you pass the empty string as option, the name will become 'custom' or equal to `decay` if that option was set.
 | `mass`       | The name of the python file that contains the `mass_dict` dictionary. More info on this below. In short it specifies how to set the masses of the sparticles appearing in the decay chain. 
 | `slha`       | Full path of the SLHA file you want to use. Leave this option blank if you are happy with the SLHA file present in the undecayed LHE file and you only want to add decay branching ratios for particles that have no branching ratios specified. 
-| `decay`      | Name of one of the predefined options for the decay chain. Currently you can choose from T1tttt, T1bbbb, T1qqqq, T2qq, T2bb, T2tt, T2tt_3BD and T2cc. If none of these suit you, you can leave this option blank. 
+| `decay`      | Name of one of the predefined options for the decay chain. Currently you can choose from T1tttt, T1bbbb, T1qqqq, T2qq, T2bb, T2tt, T2tt_3BD and T2cc. If none of these suit you, you can leave this option blank and use either the `slha` or `decaystring` options. 
 | `decaystring`| If the decay you want is not provided in the predefined options, you can pass the full decay specification as a string. 
 
 To avoid having to come back to this table all the time, there are comments in the file to remind you what each option means. 
@@ -396,16 +452,29 @@ decaystring = "DECAY 1000021 1.0"
         "DECAY 1000006 0.5"
           "  1.0  2  6  1000022"
 ```
-The important thing to note here is that we are using a multiline option, as the decay block will have to multiline as well. For the ConfigParser to accurately parse this, the second and following lines need to start by non-zero whitespace. That is why in the above command I have added some whitespace after each `\n`. The ConfigParser will then strip all this whitespace. This is a problem for these decay blocks, as the lines that contains the branching fractions need to be indented. In order to solve this problem, you need to add quotes. This is why in the above command you can see these escaped quotes. 
+The important thing to note here is that we are using a multiline option, as the decay block 
+will have to multiline as well. For the ConfigParser to accurately parse this, the second and
+ following lines need to start by non-zero whitespace. That is why in the above command I 
+have added some whitespace after each `\n`. 
+When reading this config option, the ConfigParser will strip all this whitespace. 
+This is a problem for these decay blocks, as the lines that contain the branching fractions 
+need to be indented. In order to solve this problem, you need to add quotes. This is why in 
+the above command you can see these escaped quotes. 
 
 
 The last thing that needs to be explained before coming to the examples is the afore-mentioned 
 mass dictionary. This dictionary will encapsulate the grid of parameter points you want
 to generate.  
 The keys of the dictionary are the masses of the mother particles, i.e. the
-particles that were produced with MadGraph. It is assumed that the undecayed files have
-a name like `<name><mother mass><other stuff>undecayed.lhe(.gz)`. The notation for the 
-mother mass in this name should be used in the mass dictionary as well.  
+particles that were produced with Madgraph. 
+It is assumed that the undecayed files have names like what is used in step 1 of these instructions. 
+Two formats are allowed:
+
+ -  `<name>_<mother mass>_<other stuff without underscores>_undecayed.lhe(.gz)`
+ -  `<name>_<pdg id__mother mass(es)>_<other stuff without underscores>_undecayed.lhe(.gz)`. 
+
+The notation used for the second part of this (i.e. mother mass in most cases) should be used as 
+keys in the mass dictionary.  
 The value corresponding to each key in the dictionary is a list of all the configurations
 you wish to produce for that given mother mass (or key). 
 Each configuration is encoded in a dictionary with the pdg id of the particles as keys, 
@@ -446,10 +515,10 @@ Let's continue with the gluino example from the first step and assume that we ha
 produced a set of undecayed LHE files, and stored them in a folder called `lhe`
 ```
 > ls lhe/
-gluino1000.0_0_undecayed.lhe.gz
-gluino1200.0_0_undecayed.lhe.gz
-gluino1400.0_0_undecayed.lhe.gz
-gluino800.0_0_undecayed.lhe.gz
+gluino_1000.0_0_undecayed.lhe.gz
+gluino_1200.0_0_undecayed.lhe.gz
+gluino_1400.0_0_undecayed.lhe.gz
+gluino_800.0_0_undecayed.lhe.gz
 ```
 
 For this example we want to generate the T1bbbb SMS topology, where the gluinos decay
@@ -529,6 +598,7 @@ python update_header.py myconfig.cfg
 Now you have a set of LHE files that are in principle ready to be put through the 
 official production. 
 
+
 ## Step 3: Validation
 
 You should make sure that your processed LHE files are valid. The easiest thing to 
@@ -548,10 +618,13 @@ are ready to submit your request to the official production. To do this you shou
 contact the SUSY MC Generator contacts, and coordinate with them to get your files
 uploaded to EOS. All LHE files that are used as input in an official request need to 
 be stored under /store/lhe, but only the Generator Contacts have write permissions. 
+You will need to tell the MC Contacts exactly how many events are in your request. 
 
 The Generator Contacts will then inject the request in the McM database 
 (https://cms-pdmv.cern.ch/mcm/), and will report on it during the weekly Monte Carlo
 Coordination Meeting. This is where the priority of the request will be discussed. 
+If for some reason you need the samples very urgently, you should also contact the
+SUSY conveners and relevant subgroup conveners. 
 
 The last input that should be provided to the gencontacts, is the qcut values that 
 should be used with your request. This value needs to be put in the Generator Fragment, 
@@ -563,9 +636,10 @@ up to 2 additional partons, so most requests will need to have a corresponding q
 The qcut depends on the hard process, and on the mass of the produced particles. If 
 someone already determined the qcut for the hard process (e.g. gluino pair production), 
 and mass range you are interested in, you can simply reuse that value. 
-An up-to-date list of qcut values can be found on this twiki page: **put twiki here**
+An up-to-date list of qcut values can be found on this twiki page: 
+https://twiki.cern.ch/twiki/bin/viewauth/CMS/SUSYMCProduction13TeV#QCUT_recommendations
 If the qcut has not been determined yet, you should do it yourself by following the 
-instructions in the section "Determining the QCUT". 
+instructions in the section [Determining the QCUT](#determining-the-qcut). 
 
 
 ## Step 4b: Private production
@@ -586,7 +660,7 @@ extra partons that are present in the lhe file. The SUSY default for this is `2`
 
 #### Prepare a CMSSW area
 
-Before you can start, you need to set up a CMSSW area. Which release to use will depend
+Before you can start, you need to set up a CMSSW area. Which release(s) to use will depend
 on whether or not you want to produce events up to FastSim or DIGI-RECO. The campaigns
 for reconstruction in Run2 are not ready yet. The GEN-SIM campaign is already available
 and is currenlty using `CMSSW_7_1_12`. 
@@ -607,9 +681,13 @@ scram b
 #### GEN only
 
 If you only want to do a generator level study, or if you want to determine a proper 
-qcut to be used with your samples, you only need to run the GEN step. 
+qcut to be used with your samples, you only need to run the GEN step, which is quite
+fast. 
 
-In the official production this is done in two steps. In the first step the LHE file is converted into EDM format, and then in the second step the decay, parton shower and hadronization is performed.
+In the official production this is done in two steps. In the first step the LHE file 
+is converted into EDM format, and then in the second step the decay, parton shower and
+ hadronization is performed. If you want to process multiple files in one go, you can 
+pass a comma-separated list of files to the `--filein` argument. 
 ```
 cmsDriver.py step0 --mc --eventcontent LHE --datatier GEN --conditions MCRUN2_71_V1::All --step NONE  --filein file:mylhe.lhe --fileout file:step0.root -n -1
 
@@ -623,16 +701,50 @@ cmsDriver.py Configuration/GenProduction/python/genfragment_cff.py --mc --eventc
 
 #### FASTSIM
 
-FastSim for Run2 is not yet available.
+The official FastSim for Run2 is not yet available.
 
 
 #### FullSim
 
-DIGI-RECO for Run2 is not yet available. 
+The final DIGI-RECO for Run2 is not yet available. 
 
 Instructions for the GEN-SIM step: 
 ```
 cmsDriver.py Configuration/GenProduction/python/genfragment_cff.py --mc --eventcontent RAWSIM --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier GEN-SIM --conditions MCRUN2_71_V1::All --beamspot NominalCollision2015 --step GEN,SIM --magField 38T_PostLS1  --filein file:mylhe.lhe --fileout file:GEN.root -n -1
+```
+
+#### Phys14 setup
+
+Given that the full DIGI-RECO setup for Run2 is not ready yet, we also provide
+instructions on how to make samples according to the Phys14 setup. 
+
+##### GEN-SIM
+
+The CMSSW release to be used is: **CMSSW_6_2_11** or later CMSSW_6_2_X
+
+The cmsDriver command: 
+
+```
+cmsDriver.py GenFragment --filein file:input.lhe --fileout file:GENSIM.root --mc --eventcontent RAWSIM --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier GEN-SIM --conditions POSTLS162_V1::All --step GEN,SIM --magField 38T_PostLS1 --geometry Extended2015 -n -1
+```
+
+##### DIGI-RECO-MINIAOD
+
+The CMSSW release to be used is: **CMSSW_7_2_0**
+
+The cmsDriver commands that were used in the official production:
+```
+cmsDriver.py step1 --filein file:GENSIM.root --fileout file:step1.root --pileup_input "dbs:/MinBias_TuneA2MB_13TeV-pythia8/Fall13-POSTLS162_V1-v1/GEN-SIM" --mc --eventcontent RAWSIM --inputEventContent REGEN --pileup AVE_20_BX_25ns --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier GEN-SIM-RAW --conditions PHYS14_25_V1 --step GEN:fixGenInfo,DIGI,L1,DIGI2RAW,HLT:GRun --magField 38T_PostLS1 -n -1 
+
+cmsDriver.py step2 --filein file:step1.root --fileout file:step2.root --mc --eventcontent AODSIM,DQM --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier AODSIM,DQMIO --conditions PHYS14_25_V1 --step RAW2DIGI,L1Reco,RECO,EI,DQM:DQMOfflinePOGMC --magField 38T_PostLS1 -n -1
+
+cmsDriver.py step3 --filein file:step2.root --fileout file:out.root --mc --eventcontent MINIAODSIM --runUnscheduled --datatier MINIAODSIM --conditions PHYS14_25_V1 --step PAT -n -1
+```
+For private production the DQM info is probably not needed, so it should be safe to drop this step. 
+
+If you want to run with 40 pileup, you should use the following command for the step1:
+```
+cmsDriver.py step1 --filein file:GENSIM.root --fileout file:step1.root --pileup_input "dbs:/MinBias_TuneA2MB_13TeV-pythia8/Fall13-POSTLS162_V1-v1/GEN-SIM" --mc --eventcontent RAWSIM --inputEventContent REGEN --pileup AVE_40_BX_25ns --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier GEN-SIM-RAW --conditions PHYS14_25_V1 --step GEN:fixGenInfo,DIGI,L1,DIGI2RAW,HLT:GRun --magField 38T_PostLS1 -n -1
 ```
 
 
@@ -643,9 +755,10 @@ the one that gives you smooth differential jet rate (DJR) plots.
 
 To obtain these plots we provide a script: [plotdjr.C](./plotdjr.C)
 The input to this script is an EDM file containing the output of the GEN step. See the 
-instructions for the "GEN only" step in the "Private production" section. 
+instructions for the "GEN only" step in the "Private production" section on how to 
+produce a GEN file. 
 
-You will also need to use the FWLite setup. So you will first have to set up a CMSSW area, 
+You will also need to use the FWLite setup. So you will first have to do a `cmsenv` in a CMSSW area, 
 and have a `rootlogon.C` file that sources the FWLite libraries. This file should contain
 something along the following (taken from one of the workbook pages):
 
@@ -680,9 +793,9 @@ root -l
 plotdjr("path/to/your/GENfile.root","outputbase")
 ```
 
-This will give you three plots, called `outputbase_djr0.pdf`, `outputbase_djr1.pdf' and `outputbase_djr2.pdf`. 
+This will give you three plots, called `outputbase_djr0.pdf`, `outputbase_djr1.pdf` and `outputbase_djr2.pdf`. 
 For events produced up to two extra partons, only the first two of those plots are relevant. The third plot
 should be smooth by construction. 
-You will need to run over about 50k (depending on the matching efficiency) events to get a DJR plot that has 
-low enough statistical fluctuations to be able to make a decision on the qcut the run. 
+You will need to run over about 10-50k (depending on the matching efficiency) events to get a DJR plot that has 
+low enough statistical fluctuations to be able to make a decision on the qcut value to use. 
 
