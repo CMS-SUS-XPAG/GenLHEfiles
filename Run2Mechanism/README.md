@@ -649,10 +649,12 @@ production chain. In this case there is no need to upload files to EOS. You do n
 appropriate qcut value however. Once you have this number, you can update the generator
 fragment and start the private production. Depending on the scope of the study you wish
 to perform, you will need to run different steps. For all options you will need the 
-appropriate genfragment. The one to be used for samples produced using the procedure 
-explained here, can be found on the genproductions github page: 
+appropriate genfragment. These can usually be found on the genproductions github page. 
+Currently, a good fragment to use with the files produced using this setup is not yet
+available there. In the mean time you can use the fragment I provide on my public area on
+afs:
 
-**TODO: add link to genfragment**
+/afs/cern.ch/user/n/nstrobbe/public/genfragment.py
 
 In this fragment you should update the value of `JetMatching:qCut`, and perhaps the 
 value of `JetMatching:nJetMax`. The `nJetMax` should be set to the largest number of 
