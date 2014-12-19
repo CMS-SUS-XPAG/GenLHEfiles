@@ -57,7 +57,7 @@ def makeConfig(options, configname):
 ## update_header.py script. 
 ## ---------------------------------------------------------------------
 def makeMassDict_standard_SMS(mother_masses, LSP_step, fname="mass_dict.py"):
-    to_print = "mass_dict = { \"%%.1f\"%%(x) : ([ {'1000022': mass} for mass in range(0,x,%s) ]) for x in %s }" % (
+    to_print = "mass_dict = { \"%%.1f\"%%(x) : ([ {'1000022': mass if mass!=0 else 1} for mass in range(0,x,%s) ]) for x in %s } \n" % (
         LSP_step, mother_masses)
     
     with open(fname, 'w') as mdict:
@@ -80,7 +80,7 @@ def makeMassDict_SMS_fixed(mother_masses,
                            fixed_pdg, fixed_mass,
                            var_pdg, var_min, var_max, var_step, 
                            fname="mass_dict.py"):
-    to_print = "mass_dict = { \"%%.1f\"%%(x) : ([ {%(var_pdg)s : mass, %(fixed_pdg)s : %(fixed_mass)s} for mass in range(%(var_min)s,min(%(var_max)s,int(x)),%(var_step)s) ]) for x in %(mother_masses)s }" % locals()
+    to_print = "mass_dict = { \"%%.1f\"%%(x) : ([ {%(var_pdg)s : mass if mass!=0 else 1, %(fixed_pdg)s : %(fixed_mass)s} for mass in range(%(var_min)s,min(%(var_max)s,int(x)),%(var_step)s) ]) for x in %(mother_masses)s } \n" % locals()
 
     with open(fname, 'w') as mdict:
         mdict.write(to_print)
@@ -105,7 +105,7 @@ def makeMassDict_SMS_massdiff(mother_masses,
                               fixed_pdg, fixed_mass_diff,
                               var_pdg, var_min, var_max, var_step, 
                               fname="mass_dict.py"):
-    to_print = "mass_dict = { \"%%.1f\"%%(x) : ([ {%(var_pdg)s : mass, %(fixed_pdg)s : mass+%(fixed_mass_diff)s} for mass in range(%(var_min)s,min(%(var_max)s,int(x)),%(var_step)s) ]) for x in %(mother_masses)s }" % locals()
+    to_print = "mass_dict = { \"%%.1f\"%%(x) : ([ {%(var_pdg)s : mass if mass!=0 else 1, %(fixed_pdg)s : mass+%(fixed_mass_diff)s} for mass in range(%(var_min)s,min(%(var_max)s,int(x)),%(var_step)s) ]) for x in %(mother_masses)s } \n" % locals()
 
     with open(fname, 'w') as mdict:
         mdict.write(to_print)
@@ -130,7 +130,7 @@ def makeMassDict_SMS_xvalue(mother_masses,
                             fixed_pdg, fixed_x_value,
                             var_pdg, var_min, var_max, var_step, 
                             fname="mass_dict.py"):
-    to_print = "mass_dict = { \"%%.1f\"%%(x) : ([ {%(var_pdg)s : mass, %(fixed_pdg)s : x*%(fixed_x_value)s+(1-%(fixed_x_value)s)*mass} for mass in range(%(var_min)s,min(%(var_max)s,int(x)),%(var_step)s) ]) for x in %(mother_masses)s }" % locals()
+    to_print = "mass_dict = { \"%%.1f\"%%(x) : ([ {%(var_pdg)s : mass if mass!=0 else 1, %(fixed_pdg)s : x*%(fixed_x_value)s+(1-%(fixed_x_value)s)*mass} for mass in range(%(var_min)s,min(%(var_max)s,int(x)),%(var_step)s) ]) for x in %(mother_masses)s } \n" % locals()
 
     with open(fname, 'w') as mdict:
         mdict.write(to_print)
@@ -164,7 +164,7 @@ if __name__ == "__main__":
     #              ....
     #             }
 
-    makeMassDict_standard_SMS(range(800,1205,100),100)
+    makeMassDict_standard_SMS(range(800,1605,100),100)
 
 
     # Fill out the options dictionary with your configuration:
@@ -195,12 +195,12 @@ if __name__ == "__main__":
                "model": "",
                "slha": "",
                "mass": "mass_dict.py", 
-               "decay": "T1tttt",
+               "decay": "T1bbbb",
                "decaystring": ""
                }
 
     # Name for the config file
-    configname = "myconfig.cfg"
+    configname = "tutorial.cfg"
 
     # Actually create the config file to be used by update_header.py
     makeConfig(options, configname)

@@ -57,7 +57,8 @@ void makeplot(const char *name, TTree *tree, TCut weight, const char *drawstring
   TH1D *hmult0 = new TH1D(TString::Format("hmult0_%s",name),"",nbins,xlow,xhigh);
   TH1D *hmult1 = new TH1D(TString::Format("hmult1_%s",name),"",nbins,xlow,xhigh);
   TH1D *hmult2 = new TH1D(TString::Format("hmult2_%s",name),"",nbins,xlow,xhigh);
-  
+
+  hall->SetLineColor(kBlack);
   hmult0->SetLineColor(kBlue);
   hmult1->SetLineColor(kRed);
   hmult2->SetLineColor(kMagenta);
