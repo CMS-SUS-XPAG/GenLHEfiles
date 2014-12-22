@@ -150,17 +150,17 @@ current working directory. In this folder it will look for cards with the follow
 - `name_proc_card.dat`
 - `name_run_card.dat`
 - `name_param_card.dat`
-- `name_customizecard.dat`
+- `name_customizecards.dat`
 
 where `name` corresponds to the first argument of the script. The customization card is
 optional, and can be omitted if the full process you want to generate is specified in 
 the other cards. If you use the example cards from the `cards` folder (see the [Examples](#examples)
 section below), and you wish to run [SUSY_generation.sh](./SUSY_generation.sh) by itself, you will have to 
-add a `gluino_customizecard.dat`. This card should set the gluino mass to a reasonable 
+add a `gluino_customizecards.dat`. This card should set the gluino mass to a reasonable 
 value, as the value that is in the `gluino_param_card.dat` is too high to be accessible
 at the LHC. You can also change other things, such as the number of events, or seed.
 ```
-# Contents of an example gluino_customizecard.dat
+# Contents of an example gluino_customizecards.dat
 set run_card nevents 50000 
 set run_card iseed 12345 
 set param_card mass 1000021 1200
