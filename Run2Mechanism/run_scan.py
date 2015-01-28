@@ -235,9 +235,11 @@ if __name__ == "__main__":
     if not (os.path.isfile("patches/mgfixes.patch") and os.path.isfile("patches/models.patch")):
         print "Will download missing patches"
         os.chdir("patches")
-        c1 = "https://raw.githubusercontent.com/cms-sw/genproductions/master/bin/MadGraph5_aMCatNLO/patches/mgfixes.patch"
+        # c1 = "https://raw.githubusercontent.com/cms-sw/genproductions/master/bin/MadGraph5_aMCatNLO/patches/mgfixes.patch"
+        c1 = "https://raw.githubusercontent.com/cms-sw/genproductions/591ba2978dbd164b3482352980398cf5b422969c/bin/MadGraph5_aMCatNLO/patches/mgfixes.patch"
         subprocess.check_call(["wget",c1])
-        c2 = "https://raw.githubusercontent.com/cms-sw/genproductions/master/bin/MadGraph5_aMCatNLO/patches/models.patch"
+        #c2 = "https://raw.githubusercontent.com/cms-sw/genproductions/master/bin/MadGraph5_aMCatNLO/patches/models.patch"
+        c2 = "https://raw.githubusercontent.com/cms-sw/genproductions/591ba2978dbd164b3482352980398cf5b422969c/bin/MadGraph5_aMCatNLO/patches/models.patch"
         subprocess.check_call(["wget",c2])
         os.chdir(HOMEDIR)
         print "    OK"
