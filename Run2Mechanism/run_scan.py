@@ -9,26 +9,30 @@
 ##   For now only one particle mass can be changed per run. This   ##
 ##   means that only pair production of sparticles, without        ##
 ##   consequent decays, is currently supported.                    ##
-##                                                                 ## 
-## Supported options:                                              ## 
+##                                                                 ##
+## Supported options:                                              ##
 ##   --name            Process name. Cards should be appropriately ##
-##                     named, e.g. <name>_run_card.dat             ## 
-##   --pdg             PDG id of particle to be produced           ## 
-##   --mass            White space separated list of masses to     ## 
-##                     produce events for                          ## 
-##   --massrange       Mass range to produce events for            ## 
-##                     Format: MIN MAX STEP                        ## 
-##   -n, --nevents     Number of events to produce per run         ## 
-##   -nruns            Number of runs                              ## 
-##   -ncores           Number of cores to use for event generation ## 
-##   -protocol         Submission protocol: bsub or qsub           ## 
-##   -q, --queue       Queue to submit to                          ## 
-##   --nosubmit        Flag to turn of submission, job scripts are ## 
-##                     still created                               ## 
+##                     named, e.g. <name>_run_card.dat             ##
+##   --pdg             PDG id of particle to be produced           ##
+##   --mass            White space separated list of masses to     ##
+##                     produce events for                          ##
+##   --massrange       Mass range to produce events for            ##
+##                     Format: MIN MAX STEP                        ##
+##   --massdict        Python file with dictionary containing      ##
+##                     mass information and pdg ids                ##
+##   -n, --nevents     Number of events to produce per run         ##
+##   -nruns            Number of runs                              ##
+##   -ncores           Number of cores to use for event generation ##
+##   -protocol         Submission protocol: bsub, qsub, condor     ##
+##   -q, --queue       Queue to submit to                          ##
+##   --nosubmit        Flag to turn off submission, job scripts    ##
+##                     are still created                           ##
+##   -o, --output      Output directory for LHE file               ##
 ##                                                                 ##
 ## Author:   Nadja Strobbe                                         ##
 ## Created:  2014-11-27                                            ##
-## Updated:  2014-12-16  Add mass dictionary functionality         ##
+## Updated:  2015-03-12  Add Condor option and reorganize          ##
+##                       (Kevin Pedro)                             ##
 ##                                                                 ##
 #####################################################################
 
@@ -63,9 +67,13 @@ def makeCLParser():
                         help = "Number of cores to run with (default: %(default)s)"
                         )
     parser.add_argument("--protocol",
-                        choices = ["bsub", "qsub"],
+                        choices = ["bsub", "qsub", "condor"],
                         default = "bsub",
                         help = "Submission protocol (default: %(default)s)"
+                        )
+    parser.add_argument("-o","--output",
+                        default = "",
+                        help = "Directory for output LHE file (optional for lxbatch, necessary for condor)"
                         )
     parser.add_argument("-q", "--queue",
                         default = "1nd",
@@ -109,60 +117,67 @@ def print_configuration(args_dict):
     configfile.close()
 
 # -----------------------------------------------------------------
-# Create job script
+# Create customize card
 # -----------------------------------------------------------------
-def makejob(HOMEDIR, PROCNAME, OUTPUT, NEV, NRUN, NCORES, PDGID, MASS, SEED):
+
+def makecustom(PROCNAME, NEV, NRUN, PDGID, MASS, SEED):
     # Open a script which will be submitted
-    jobname = HOMEDIR+"/scripts/"+PROCNAME+"__"
+    customname = "cards/"+PROCNAME+"__"
     for pdg,mass in izip(PDGID,MASS):
-        jobname = jobname + str(pdg) + "_" + str(mass) + "__"
-    jobname = jobname + str(NRUN)+".sh"
-    #jobname = HOMEDIR+"/scripts/"+PROCNAME+"__"+str(PDGID)+"_"+str(MASS)+"__"+str(NRUN)+".sh"
-    myjob = open(jobname,'w')
-    myjob.write("#!/bin/bash \n")
-
-    # Create a rundirectory
-    myjob.write("mkdir run_SUSY; cd run_SUSY \n")
-
-    # Copy over the needed files
-    myjob.write("cp -r %s/patches . \n" % (HOMEDIR) )
-    myjob.write("cp %s/SUSY_generation.sh . \n" % (HOMEDIR) )
-    myjob.write("mkdir cards \n")
-    myjob.write("cp %s/cards/%s_proc_card.dat cards/ \n" % (HOMEDIR, PROCNAME) )
-    myjob.write("cp %s/cards/%s_run_card.dat cards/ \n" % (HOMEDIR, PROCNAME) )
-    myjob.write("cp %s/cards/%s_param_card.dat cards/ \n" % (HOMEDIR, PROCNAME) )
+        customname = customname + str(pdg) + "_" + str(mass) + "__"
+    customname = customname + str(NRUN)
+    mycustom = open(customname + "_customizecards.dat",'w')
 
     # Create the customization script from the template
-    myjob.write("echo set run_card nevents %s > cards/%s_customizecards.dat \n" % (NEV, PROCNAME) )
-    myjob.write("echo set run_card iseed %s >> cards/%s_customizecards.dat \n" % (SEED, PROCNAME) )
+    mycustom.write("set run_card nevents %s\n" % (NEV, PROCNAME) )
+    mycustom.write("set run_card iseed %s\n" % (SEED, PROCNAME) )
     for pdg,mass in izip(PDGID, MASS):
-        myjob.write("echo set param_card mass %s %s >> cards/%s_customizecards.dat \n" % (pdg, mass, PROCNAME) )
+        mycustom.write("set param_card mass %s %s\n" % (pdg, mass, PROCNAME) )
 
-    # Run the actual LHE generation
-    myjob.write("./SUSY_generation.sh %s %s \n" % (PROCNAME, NCORES) )
+    mycustom.close()
 
-    # Copy back the output
-    myjob.write("cp %s/%s_unweighted_events.lhe.gz %s \n" % (PROCNAME, PROCNAME, OUTPUT) )
+    return customname
+    
+# -----------------------------------------------------------------
+# Create job script
+# -----------------------------------------------------------------
+def makejob(PROTOCOL, RUNDIR, CMSSWBASE, CMSSWVER, PROCNAME, OUTDIR, NEV, NRUN, PDGID, MASS, SEED):
+    jobprefix = ""
+    jobsuffix = ""
 
-    # Clean up the area
-    myjob.write("cd .. \n")
-    myjob.write("rm -r run_SUSY \n")
-
-    myjob.close()
-
-    # make job executable
-    os.chmod(jobname,0755)
-
-    return jobname
+    if PROTOCOL == "condor":
+        jobprefix = "jobExecCondor"
+        jobsuffix = ".jdl"
+    elif PROTOCOL == "bsub" or PROTOCOL == "qsub":
+        jobprefix = "jobExecLXbatch"
+        jobsuffix = ".sh"
+    
+    # generate customization card for this job
+    customname = makecustom(PROCNAME, NEV, NRUN, PDGID, MASS, SEED)
+    
+    # put in scripts directory
+    jobname = "scripts/"+jobprefix+"_"+customname+jobsuffix
+    # these initial commands are common to condor and lxbatch
+    jobcmd = "cat "+jobprefix+jobsuffix+" | sed -e s/CUSTOMCARD/"+customname+"/ | sed -e s/CMSSWVER/"+CMSSWVER+"/ | sed -e s/OUTDIR/"+OUTDIR+"/ | sed -e s/PROCNAME/"+PROCNAME+"/"
+    # lxbatch needs some extra directory info because it doesn't use the CMSSW tarball
+    if PROTOCOL == "bsub" or PROTOCOL == "qsub":
+        jobcmd = jobcmd+" | sed -e s/CMSDIR/"+CMSSWBASE+"/ | sed -e s/RUNDIR/"+RUNDIR+"/"
+    # now write to job file
+    jobcmd = jobcmd+" > "+jobname
+    
+    # execute command to create job file
+    os.system(jobcmd)
+    return jobname    
 
 # -----------------------------------------------------------------
 # Submit a job
 # -----------------------------------------------------------------
-def submitjob(QUEUE, JOBNAME, HOMEDIR, PROTOCOL, NCORES):
+def submitjob(QUEUE, JOBNAME, RUNDIR, PROTOCOL, NCORES):
     # location to store error and log files
-    errorfile = HOMEDIR + "/log/" + JOBNAME.split("/")[-1].replace(".sh",".err")
-    logfile = HOMEDIR + "/log/" + JOBNAME.split("/")[-1].replace(".sh",".log")
+    errorfile = RUNDIR + "/log/" + JOBNAME.split("/")[-1].replace(".sh",".err")
+    logfile = RUNDIR + "/log/" + JOBNAME.split("/")[-1].replace(".sh",".log")
     # submit the job based on the specified protocol
+    submitcommand = ""
     if PROTOCOL == "bsub":
         submitcommand = ["bsub",
                          "-q %s" % (QUEUE),
@@ -173,7 +188,6 @@ def submitjob(QUEUE, JOBNAME, HOMEDIR, PROTOCOL, NCORES):
                                   "-R span[hosts=1]"])
         submitcommand.append(JOBNAME)
         print ' '.join(submitcommand)
-        subprocess.call(' '.join(submitcommand) , shell=True)
 
     elif PROTOCOL == "qsub": 
         submitcommand = ["qsub",
@@ -182,10 +196,15 @@ def submitjob(QUEUE, JOBNAME, HOMEDIR, PROTOCOL, NCORES):
                          "-o %s" % (logfile),
                          JOBNAME] 
         print ' '.join(submitcommand)
-        subprocess.call(' '.join(submitcommand), shell=True)
+        
+    elif PROTOCOL == "condor":
+        submitcommand = "condor_submit "+JOBNAME
 
     else: 
         print "Unsupported submission protocol."
+        return
+        
+    subprocess.call(' '.join(submitcommand), shell=True) 
 
 
 # -----------------------------------------------------------------
@@ -197,20 +216,14 @@ if __name__ == "__main__":
     args = parser.parse_args()
     print_configuration(vars(args))
 
-    # Store the current working directory
-    HOMEDIR = os.getcwd()
-
-    # Make a folder to store the scripts
-    if not os.path.isdir("scripts"):
-        os.mkdir(HOMEDIR+"/scripts")
-
-    # Make a folder to store the output
-    if not os.path.isdir("lhe"):
-        os.mkdir(HOMEDIR+"/lhe")
-
+    # get some info from the OS
+    CMSSWVER = os.getenv("CMSSW_VERSION")
+    CMSSWBASE = os.getenv("CMSSW_BASE")
+    RUNDIR = os.getcwd()
+    
     # Make a folder to store the log files
-    if not os.path.isdir("log"):
-        os.mkdir(HOMEDIR+"/log")
+    if not os.path.isdir("logs"):
+        os.mkdir(RUNDIR+"/logs")
 
     # The SUSY_generation.sh script needs to be in the working directory
     if not os.path.isfile("SUSY_generation.sh"): 
@@ -229,24 +242,22 @@ if __name__ == "__main__":
             sys.exit("There is no proc card with name %s_proc_card.dat" % (args.name))
         print "    OK"
 
-    # The patches directory must exist, otherwise the jobs will crash
-    if not os.path.isdir("patches"): 
-        os.mkdir(HOMEDIR+"/patches")
-    if not (os.path.isfile("patches/mgfixes.patch") and os.path.isfile("patches/models.patch")):
-        print "Will download missing patches"
-        os.chdir("patches")
-        # c1 = "https://raw.githubusercontent.com/cms-sw/genproductions/master/bin/MadGraph5_aMCatNLO/patches/mgfixes.patch"
-        c1 = "https://raw.githubusercontent.com/cms-sw/genproductions/591ba2978dbd164b3482352980398cf5b422969c/bin/MadGraph5_aMCatNLO/patches/mgfixes.patch"
-        subprocess.check_call(["wget",c1])
-        #c2 = "https://raw.githubusercontent.com/cms-sw/genproductions/master/bin/MadGraph5_aMCatNLO/patches/models.patch"
-        c2 = "https://raw.githubusercontent.com/cms-sw/genproductions/591ba2978dbd164b3482352980398cf5b422969c/bin/MadGraph5_aMCatNLO/patches/models.patch"
-        subprocess.check_call(["wget",c2])
-        os.chdir(HOMEDIR)
-        print "    OK"
+    # Check the output directory specification
+    if not args.output:
+        if args.protocol == "qsub" or args.protocol == "bsub":
+            # Make a folder to store the output
+            if not os.path.isdir("lhe"):
+                os.mkdir(RUNDIR+"/lhe")
+            args.output = RUNDIR+"/lhe"
+        elif args.protocol == "condor":
+            # output directory must be specified for condor
+            print "No output directory specified for condor submission: quitting"
+            return
+    # todo: check condor output for xrootd?
 
-    # Deal with number of cores for qsub protocol
+    # Deal with number of cores for qsub or condor protocols
     ncores = args.ncores
-    if args.protocol == "qsub":
+    if args.protocol == "qsub" or args.protocol == "condor":
         ncores = 1
 
     # Parse the mass-related arguments to create the jobs
@@ -262,13 +273,14 @@ if __name__ == "__main__":
         for mass in np.arange(MIN, MAX, STEP):
             for nrun in xrange(args.nruns):
                 procname = args.name 
-                output = HOMEDIR + "/lhe/" + procname + "_" + str(mass) + "_" + str(nrun) + "_undecayed.lhe.gz"
-                jobnames.append(makejob(HOMEDIR, 
+                jobnames.append(makejob(args.protocol,
+                                        RUNDIR,
+                                        CMSSWBASE,
+                                        CMSSWVER,
                                         procname, 
-                                        output, 
+                                        args.output, 
                                         args.nevents, 
                                         nrun, 
-                                        ncores, 
                                         [args.pdg], 
                                         [mass], 
                                         seed)
@@ -288,13 +300,14 @@ if __name__ == "__main__":
                 infostring.append("%s_%s"%(k,v))
             procname = args.name 
             for nrun in xrange(args.nruns):
-                output = HOMEDIR + "/lhe/" + procname + "_" + "__".join(infostring) + "_" + str(nrun) + "_undecayed.lhe.gz"
-                jobnames.append(makejob(HOMEDIR, 
+                jobnames.append(makejob(args.protocol,
+                                        RUNDIR,
+                                        CMSSWBASE,
+                                        CMSSWVER, 
                                         procname, 
-                                        output, 
+                                        args.output, 
                                         args.nevents, 
                                         nrun, 
-                                        ncores, 
                                         pdgs, 
                                         masses, 
                                         seed)
@@ -308,13 +321,14 @@ if __name__ == "__main__":
         for mass in args.mass:
             for nrun in xrange(args.nruns):
                 procname = args.name 
-                output = HOMEDIR + "/lhe/" + procname + "_" + str(mass) + "_" + str(nrun) + "_undecayed.lhe.gz"
-                jobnames.append(makejob(HOMEDIR, 
+                jobnames.append(makejob(args.protocol,
+                                        RUNDIR,
+                                        CMSSWBASE,
+                                        CMSSWVER, 
                                         procname, 
-                                        output, 
+                                        args.output, 
                                         args.nevents, 
                                         nrun, 
-                                        ncores, 
                                         [args.pdg], 
                                         [mass], 
                                         seed)
@@ -323,8 +337,14 @@ if __name__ == "__main__":
 
     print "Done creating job scripts."
 
+    # (re)generate CMSSW tarball for condor, after makejob so customize cards are made
+    # exclude scripts, logs, lhe directories that get filled up with job submission files
+    # but include cards, which are necessary to run
+    if args.protocol == "condor":
+        os.system("tar --exclude='"+RUNDIR+"/logs' --exclude='"+RUNDIR+"/scripts' --exclude='"+RUNDIR+"/lhe' -zcvf scripts/"+CMSSWVER+".tar.gz "+CMSSWBASE)
+    
     # Now submit the jobs if desired
     if not args.nosubmit:
         for job in jobnames:
-            submitjob(args.queue, job, HOMEDIR, args.protocol, ncores)
+            submitjob(args.queue, job, RUNDIR, args.protocol, ncores)
         print "Submitted all jobs."

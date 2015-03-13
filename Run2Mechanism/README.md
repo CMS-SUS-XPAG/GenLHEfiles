@@ -53,29 +53,35 @@ points privately if necessary.
 ## Getting started
 
 To use some the scripts available here, you need access to the CMSSW software. For most
-people this means that you will be running on either lxplus or on your local T2. 
+people this means that you will be running on either lxplus, cmslpc, or on your local T2. 
 **These scripts have only been tested on lxplus so far.** You might need to make changes 
 here and there to get it to run on the local T2 (e.g. for batch submission). 
 
 Most of the python scripts should be run using python 2.7. The easiest way to set 
-this up on lxplus, is to do `cmsenv` in a recent CMSSW area. For example:
+this up on lxplus, is to do `cmsenv` in a recent CMSSW area.
+You should also clone this git repository to get access to the necessary scripts.
+The instructions below include all of these steps, as well as the steps
+to install MadGraph and the associated programs.
+
 ```
-# Set up CMSSW release somewhere
-cmsrel CMSSW_7_1_11
-cd CMSSW_7_1_11/src
+cmsrel CMSSW_7_1_12
+cd CMSSW_7_1_12
 cmsenv
-cd -
-``` 
-
-To avoid having to copy over all the files in this folder separately, I recommend that you clone
-the repository. The clone does not need to reside inside the CMSSW area that you (might have) 
-set up.  
+mkdir prod
+cd prod
+git clone git@github.com:kpedro88/GenLHEfiles.git
+cd GenLHEfiles/Run2Mechanism
+scripts/installGenerators.sh
+source setupGenEnv.(c)sh
 ```
-# Clone command using HTTPS protocol
-git clone https://github.com/CMS-SUS-XPAG/GenLHEfiles.git
 
-# Clone command using SSH protocol
-git clone git@github.com:CMS-SUS-XPAG/GenLHEfiles.git
+The code from this repository is put in $CMSSW_BASE/prod instead of $CMSSW_BASE/src
+to make it easier to checkout and build CMSSW packages in $CMSSW_BASE/src if desired.
+
+Note: if you want to run MadGraph on multiple cores, you need to specify the number of cores
+when running the install script, like this:
+```
+scripts/installGenerators.sh 5
 ```
 
 As a general user, you will not need to contribute to the repository. You will only need to
@@ -103,7 +109,7 @@ instructions in this section.
 
 The relevant scripts for this step are available in this repository, and are called: 
 
- -  [SUSY_generation.sh](./SUSY_generation.sh)
+ -  [scripts/SUSY_generation.sh](./scripts/SUSY_generation.sh)
  -  [run_scan.py](./run_scan.py)
 
 I will explain the general procedure and the details on these two scripts in the 
@@ -126,21 +132,14 @@ access to the CMS software. You also need access to the LHAPDF6 libraries.
 On lxplus this script will work out of the box. This is not guaranteed on your local
 cluster. 
 
-This script is an adaptation of the `gridpack_generation.sh` script that can be found 
-on the CMS genproductions github area: 
-https://github.com/cms-sw/genproductions/tree/master/bin/MadGraph5_aMCatNLO
-
-It follows the same general structure, and thus inherits the basic setup that you will
-need to adhere to. 
 For now **only production in LO mode is supported**.
 
 The way to call the script in a standalone way, i.e. not through the `run_scan.py`, is: 
 ```
-./SUSY_generation.sh name ncores
+./SUSY_generation.sh cards lhe name custom
 ```
 
-`ncores` specifies the number of cores that will be used during the event generation. 
-If you do not specify, the default is to use one core. 
+`cards` and `lhe` are the directories for the input cards and the output lhe files, respectively.
 
 `name` is the most important parameter. It specifies the MadGraph cards that should be 
 used. The [SUSY_generation.sh](./SUSY_generation.sh) script expects that there is a `cards` folder in the 
@@ -150,11 +149,12 @@ current working directory. In this folder it will look for cards with the follow
 - `name_proc_card.dat`
 - `name_run_card.dat`
 - `name_param_card.dat`
-- `name_customizecards.dat`
+- `custom_customizecards.dat`
 
 where `name` corresponds to the first argument of the script. The customization card is
 optional, and can be omitted if the full process you want to generate is specified in 
-the other cards. If you use the example cards from the `cards` folder (see the [Examples](#examples)
+the other cards. If you omit the customization card, give `custom` the same value as `name`.
+If you use the example cards from the `cards` folder (see the [Examples](#examples)
 section below), and you wish to run [SUSY_generation.sh](./SUSY_generation.sh) by itself, you will have to 
 add a `gluino_customizecards.dat`. This card should set the gluino mass to a reasonable 
 value, as the value that is in the `gluino_param_card.dat` is too high to be accessible
@@ -182,9 +182,9 @@ whether you need to change some parameters, please contact the SUSY MC contacts 
 MC/Trigger/XPAG conveners. 
 
 To summarize, if your cards are named `mytest_proc_card.dat`, `mytest_run_card.dat` and 
-`mytest_param_card.dat`, and you want to run with 4 cores, then you should execute:
+`mytest_param_card.dat`, then you should execute:
 ```
-./SUSY_generation.sh mytest 4
+./SUSY_generation.sh cards lhe mytest mytest
 ```
 
 #### run_scan.py
@@ -226,7 +226,7 @@ The full list of options:
 - `--protocol`: Submission protocol: bsub or qsub (default='bsub')
 - `-q, --queue`: Queue to submit to (default='1nd')
 - `--nosubmit`: Flag to turn off submission, job scripts are still created. Can be useful
-  		if you want to run locally.  
+-  `-o, --output`: Output directory for LHE file (default='lhe')
 
 Each time you execute the script, a log file will be created. This log file includes the 
 full setup which was used. The name of the log file includes the current time in order 
@@ -236,12 +236,9 @@ The [run_scan.py](./run_scan.py) script will create several directories in the w
 
 - `scripts`: To hold the job scripts that will be submitted to the batch queue. This 
              directory is NOT cleaned by default by the script. 
-- `log`: To hold the error and log files that are returned by the batch system. This 
+- `logs`: To hold the error and log files that are returned by the batch system. This 
          directory is NOT cleaned by default by the script.
 - `lhe`: To hold the output lhe files that are produced by the [SUSY_generation.sh](./SUSY_generation.sh) script
-- `patches`: This directory will contain two patches for the MG5_aMC@NLO distribution. 
-             The first time you run the script these patches will be downloaded from
-             https://github.com/cms-sw/genproductions/tree/master/bin/MadGraph5_aMCatNLO
 
 By default the script will submit to the 1nd queue. Depending on how many events you want
 to run per job, you might need to change this. It is probably fine up to about 100k events
@@ -249,12 +246,8 @@ for up to two extra partons, but this has not been explicitely tested.
 
 It is also possible to speed up the event generation by running on more than 1 core. This 
 can be used for running on lxbatch and for running locally (e.g. on lxplus). This option 
-is not supported for batch systems that use `qsub` for submission. 
-
-The job script will clean up after itself, meaning that it will copy over the output file, 
-and then delete everything it created. If you are running locally and want to keep absolutely
-everything, then you have to comment out the line in the script that does this removal. 
-This line can be found at the end of the `makejob(...)` function. 
+is not supported for batch systems that use `qsub` for submission. It is possible in principle
+when using condor, but this is not supported by the script yet.
 
 
 #### Examples
@@ -267,17 +260,17 @@ I have provided some example MadGraph cards in the `cards` directory.
                           I would not recommend this, however, as it will increase the
                           running time substantially.
                           I have also excluded (with the `$` operator) any diagrams 
-			  containing any other sparticle. They will not contribute
+                          containing any other sparticle. They will not contribute
                           anyways as they have been chosen to be decoupled. 
- 			  Also note that the name for the output directory had to be 
-			  consistent with the naming for the cards. In this case it is 
-			  put to "gluino". 
+                          Also note that the name for the output directory had to be 
+                          consistent with the naming for the cards. In this case it is 
+                          put to "gluino". 
 - `gluino_param_card.dat`: This parameter card should be useable for most simplified
-  			   models. It puts all masses to a very high scale. The relevant
- 			   masses will be set during run time as previously explained.
+                           models. It puts all masses to a very high scale. The relevant
+                           masses will be set during run time as previously explained.
 - `gluino_run_card.dat`: Basic run card for LO production. It includes the weights for 
-  			 various scale and PDF choices. MLM matching is turned on with
-			 `xqcut = 30`. 
+                         various scale and PDF choices. MLM matching is turned on with
+                         `xqcut = 30`. 
 
 To run the very basic example on lxplus, you can simply do: 
 ```
@@ -338,13 +331,18 @@ what you need to do:
   ```
 - Wait for your LHE files to be delivered
 
-
 In case you want to produce chargino neutralino2 production with a mass difference of 0.1 GeV, you would follow the above
 with the difference that you need to use the `--massdict` option. The corresponding 
 python file could look like: 
 ```python
 masses = [{"1000023":mass, "1000024":(mass+0.1)} for mass in range(100,500,25)]
 ```
+
+To run with Condor on cmslpc, it is necessary to specify the output directory using an xrootd path:
+```
+root://cmsxrootd.fnal.gov//store/path/to/file
+```
+For more about xrootd, click [here](https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookXrootdService).
 
 #### Features to be added in the future
 

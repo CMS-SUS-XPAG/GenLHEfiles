@@ -1,0 +1,13 @@
+universe = vanilla
+Executable = jobExecCondor.sh
+Requirements = Memory >= 199 && OpSys == "LINUX" && (Arch != "DUMMY" )&& Disk > 1000000
+Should_Transfer_Files = YES
+WhenToTransferOutput = ON_EXIT
+Transfer_Input_Files = jobExecCondor.sh, setupGenEnv.sh, CMSSWVER.tar.gz
+Output = CUSTOMCARD_\$(Cluster)_\$(Process).stdout
+Error = CUSTOMCARD_\$(Cluster)_\$(Process).stderr
+Log = CUSTOMCARD_\$(Cluster)_\$(Process).log
+notification = Never
+x509userproxy = $ENV(X509_USER_PROXY)
+Arguments = CMSSWVER OUTDIR PROCNAME CUSTOMCARD
+Queue 1
