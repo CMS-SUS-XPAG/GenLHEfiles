@@ -257,8 +257,8 @@ if __name__ == "__main__":
             args.output = RUNDIR+"/lhe"
         elif args.protocol == "condor":
             # output directory must be specified for condor
-            print "No output directory specified for condor submission: quitting"
-            return
+            sys.exit("No output directory specified for condor submission: quitting")
+
     # todo: check condor output for xrootd?
 
     # Deal with number of cores for qsub or condor protocols
