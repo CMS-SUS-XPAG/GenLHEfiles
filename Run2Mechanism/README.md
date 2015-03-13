@@ -72,7 +72,7 @@ cd prod
 git clone git@github.com:kpedro88/GenLHEfiles.git
 cd GenLHEfiles/Run2Mechanism
 scripts/installGenerators.sh
-source setupGenEnv.(c)sh
+source scripts/setupGenEnv.(c)sh
 ```
 
 The code from this repository is put in $CMSSW_BASE/prod instead of $CMSSW_BASE/src
