@@ -10,7 +10,7 @@ eval `scramv1 runtime -sh`
 cd -
 
 # environment variables for generator and run directory
-source RUNDIR/scripts/setupGenEnv.sh
+source RUNDIR/setupGenEnv.sh
 
 # cardfiles location
 CARDSDIR=${RUNBASEDIR}/cards

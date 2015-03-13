@@ -21,7 +21,7 @@ echo "OUTDIR:     $OUTDIR"
 echo "PROCNAME:   $PROCNAME"
 echo "CUSTOMCARD: $CUSTOMCARD"
 
-tar -xzvf ${CMSSWVER}.tar.gz
+tar -xzf ${CMSSWVER}.tar.gz
 cd ${CMSSWVER}
 source /cvmfs/cms.cern.ch/cmsset_default.csh
 # cmsenv

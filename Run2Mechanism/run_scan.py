@@ -111,7 +111,7 @@ def makeCLParser():
 # -----------------------------------------------------------------
 def print_configuration(args_dict):
     # open a file with timestamp
-    configfile = open("run_scan_%s.log" % (datetime.now().strftime('%Y%m%d_%H%M%S')),'w')
+    configfile = open("logs/run_scan_%s.log" % (datetime.now().strftime('%Y%m%d_%H%M%S')),'w')
     for k,v in args_dict.iteritems():
         configfile.write("%s = %s \n" %(k,v) )
     configfile.close()
@@ -145,12 +145,12 @@ def makejob(PROTOCOL, RUNDIR, CMSSWBASE, CMSSWVER, PROCNAME, OUTDIR, NEV, NRUN, 
     jobprefix = ""
     jobsuffix = ""
     
-    # get from scripts directory
+    # get template scripts
     if PROTOCOL == "condor":
-        jobprefix = "scripts/jobExecCondor"
+        jobprefix = "jobExecCondor"
         jobsuffix = ".jdl"
     elif PROTOCOL == "bsub" or PROTOCOL == "qsub":
-        jobprefix = "scripts/jobExecLXbatch"
+        jobprefix = "jobExecLXbatch"
         jobsuffix = ".sh"
     
     # generate customization card for this job
@@ -162,8 +162,8 @@ def makejob(PROTOCOL, RUNDIR, CMSSWBASE, CMSSWVER, PROCNAME, OUTDIR, NEV, NRUN, 
     # lxbatch needs some extra directory info because it doesn't use the CMSSW tarball
     if PROTOCOL == "bsub" or PROTOCOL == "qsub":
         jobcmd = jobcmd+" | sed -e s~CMSDIR~"+CMSSWBASE+"~ | sed -e s~RUNDIR~"+RUNDIR+"~"
-    # now write to job file
-    jobcmd = jobcmd+" > "+jobname
+    # now write to job file in scripts dir
+    jobcmd = jobcmd+" > scripts/"+jobname
     print jobcmd
     
     # execute command to create job file
@@ -171,7 +171,7 @@ def makejob(PROTOCOL, RUNDIR, CMSSWBASE, CMSSWVER, PROCNAME, OUTDIR, NEV, NRUN, 
     
     # make job executable
     if PROTOCOL == "bsub" or PROTOCOL == "qsub":
-        os.chmod(jobname,0755)
+        os.chmod("scripts/"+jobname,0755)
     
     return jobname    
 
@@ -204,7 +204,8 @@ def submitjob(QUEUE, JOBNAME, RUNDIR, PROTOCOL, NCORES):
         print ' '.join(submitcommand)
         
     elif PROTOCOL == "condor":
-        submitcommand = "condor_submit "+JOBNAME
+        submitcommand = ["condor_submit", JOBNAME]
+        print ' '.join(submitcommand)
 
     else: 
         print "Unsupported submission protocol."
@@ -220,23 +221,24 @@ if __name__ == "__main__":
     # Parse the command line arguments and print them for provenance
     parser = makeCLParser()
     args = parser.parse_args()
+
+    # Make a folder to store the log files
+    if not os.path.isdir("logs"):
+        os.mkdir(RUNDIR+"/logs")
+
     print_configuration(vars(args))
 
     # get some info from the OS
     CMSSWVER = os.getenv("CMSSW_VERSION")
     CMSSWBASE = os.getenv("CMSSW_BASE")
     RUNDIR = os.getcwd()
-    
-    # Make a folder to store the log files
-    if not os.path.isdir("logs"):
-        os.mkdir(RUNDIR+"/logs")
 
     # Make a folder to store the output
     if not os.path.isdir("lhe"):
         os.mkdir(RUNDIR+"/lhe")
 
-    # The SUSY_generation.sh script needs to be in the scripts directory
-    if not os.path.isfile("scripts/SUSY_generation.sh"): 
+    # The SUSY_generation.sh script needs to be in the current directory
+    if not os.path.isfile("SUSY_generation.sh"): 
         sys.exit("SUSY_generation.sh is not in the current working directory!")
 
     # A cards directory with three cards must exist, otherwise the jobs will crash
@@ -347,11 +349,14 @@ if __name__ == "__main__":
     # (re)generate CMSSW tarball for condor, after makejob so customize cards are made
     # exclude scripts, logs, lhe directories that get filled up with job submission files
     # but include cards, which are necessary to run
+    # change to directory above CMSSW_BASE and tar CMSSW_BASE to get desired directory structure
     if args.protocol == "condor":
-        os.system("tar --exclude='"+RUNDIR+"/logs' --exclude='"+RUNDIR+"/scripts' --exclude='"+RUNDIR+"/lhe*' -zcvf scripts/"+CMSSWVER+".tar.gz "+CMSSWBASE)
+        os.system("tar --exclude='"+RUNDIR+"/logs' --exclude='"+RUNDIR+"/scripts' --exclude='"+RUNDIR+"/lhe*' -zcf scripts/"+CMSSWVER+".tar.gz -C "+CMSSWBASE+"/.. "+CMSSWVER)
     
     # Now submit the jobs if desired
     if not args.nosubmit:
+        os.chdir("scripts")
         for job in jobnames:
             submitjob(args.queue, job, RUNDIR, args.protocol, ncores)
         print "Submitted all jobs."
+        os.chdir("..")

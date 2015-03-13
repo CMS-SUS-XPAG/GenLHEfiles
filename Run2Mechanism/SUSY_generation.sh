@@ -67,8 +67,10 @@ else
   cat makegrid.dat | ./bin/generate_events pilotrun
 
   if [ -n "$ISCONDOR" ]; then
+    echo "xrdcp output for condor"
     xrdcp Events/pilotrun/unweighted_events.lhe.gz ${OUTDIR}/${CUSTOMCARD}_unweighted_events.lhe.gz
   else
+    echo "mv output for lxbatch"
     mkdir -p ${OUTDIR}
     mv Events/pilotrun/unweighted_events.lhe.gz ${OUTDIR}/${CUSTOMCARD}_unweighted_events.lhe.gz
   fi
