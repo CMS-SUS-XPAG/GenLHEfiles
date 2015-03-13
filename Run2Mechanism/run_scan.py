@@ -122,17 +122,17 @@ def print_configuration(args_dict):
 
 def makecustom(PROCNAME, NEV, NRUN, PDGID, MASS, SEED):
     # Open a script which will be submitted
-    customname = "cards/"+PROCNAME+"__"
+    customname = PROCNAME+"__"
     for pdg,mass in izip(PDGID,MASS):
         customname = customname + str(pdg) + "_" + str(mass) + "__"
     customname = customname + str(NRUN)
-    mycustom = open(customname + "_customizecards.dat",'w')
+    mycustom = open("cards/" + customname + "_customizecards.dat",'w')
 
     # Create the customization script from the template
-    mycustom.write("set run_card nevents %s\n" % (NEV, PROCNAME) )
-    mycustom.write("set run_card iseed %s\n" % (SEED, PROCNAME) )
+    mycustom.write("set run_card nevents %s\n" % (NEV) )
+    mycustom.write("set run_card iseed %s\n" % (SEED) )
     for pdg,mass in izip(PDGID, MASS):
-        mycustom.write("set param_card mass %s %s\n" % (pdg, mass, PROCNAME) )
+        mycustom.write("set param_card mass %s %s\n" % (pdg, mass) )
 
     mycustom.close()
 
@@ -144,26 +144,27 @@ def makecustom(PROCNAME, NEV, NRUN, PDGID, MASS, SEED):
 def makejob(PROTOCOL, RUNDIR, CMSSWBASE, CMSSWVER, PROCNAME, OUTDIR, NEV, NRUN, PDGID, MASS, SEED):
     jobprefix = ""
     jobsuffix = ""
-
+    
+    # get from scripts directory
     if PROTOCOL == "condor":
-        jobprefix = "jobExecCondor"
+        jobprefix = "scripts/jobExecCondor"
         jobsuffix = ".jdl"
     elif PROTOCOL == "bsub" or PROTOCOL == "qsub":
-        jobprefix = "jobExecLXbatch"
+        jobprefix = "scripts/jobExecLXbatch"
         jobsuffix = ".sh"
     
     # generate customization card for this job
     customname = makecustom(PROCNAME, NEV, NRUN, PDGID, MASS, SEED)
     
-    # put in scripts directory
-    jobname = "scripts/"+jobprefix+"_"+customname+jobsuffix
+    jobname = jobprefix+"_"+customname+jobsuffix
     # these initial commands are common to condor and lxbatch
-    jobcmd = "cat "+jobprefix+jobsuffix+" | sed -e s/CUSTOMCARD/"+customname+"/ | sed -e s/CMSSWVER/"+CMSSWVER+"/ | sed -e s/OUTDIR/"+OUTDIR+"/ | sed -e s/PROCNAME/"+PROCNAME+"/"
+    jobcmd = "cat "+jobprefix+jobsuffix+" | sed -e s/CUSTOMCARD/"+customname+"/ | sed -e s/CMSSWVER/"+CMSSWVER+"/ | sed -e s~OUTDIR~"+OUTDIR+"~ | sed -e s/PROCNAME/"+PROCNAME+"/"
     # lxbatch needs some extra directory info because it doesn't use the CMSSW tarball
     if PROTOCOL == "bsub" or PROTOCOL == "qsub":
-        jobcmd = jobcmd+" | sed -e s/CMSDIR/"+CMSSWBASE+"/ | sed -e s/RUNDIR/"+RUNDIR+"/"
+        jobcmd = jobcmd+" | sed -e s~CMSDIR~"+CMSSWBASE+"~ | sed -e s~RUNDIR~"+RUNDIR+"~"
     # now write to job file
     jobcmd = jobcmd+" > "+jobname
+    print jobcmd
     
     # execute command to create job file
     os.system(jobcmd)
@@ -234,8 +235,8 @@ if __name__ == "__main__":
     if not os.path.isdir("lhe"):
         os.mkdir(RUNDIR+"/lhe")
 
-    # The SUSY_generation.sh script needs to be in the working directory
-    if not os.path.isfile("SUSY_generation.sh"): 
+    # The SUSY_generation.sh script needs to be in the scripts directory
+    if not os.path.isfile("scripts/SUSY_generation.sh"): 
         sys.exit("SUSY_generation.sh is not in the current working directory!")
 
     # A cards directory with three cards must exist, otherwise the jobs will crash
