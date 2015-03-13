@@ -23,7 +23,8 @@ echo "CUSTOMCARD: $CUSTOMCARD"
 
 tar -xzf ${CMSSWVER}.tar.gz
 cd ${CMSSWVER}
-source /cvmfs/cms.cern.ch/cmsset_default.csh
+scram b ProjectRename
+source /cvmfs/cms.cern.ch/cmsset_default.sh
 # cmsenv
 eval `scramv1 runtime -sh`
 cd -

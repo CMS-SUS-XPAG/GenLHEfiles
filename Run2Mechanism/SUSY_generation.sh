@@ -15,7 +15,7 @@ if [ -d ${CUSTOMCARD} ]; then
 fi
 
 # Run the code-generation step to create the process directory
-./${MGBASEDIR}/bin/mg5_aMC ${CARDSDIR}/${PROCNAME}_proc_card.dat
+${MGBASEDIR}/bin/mg5_aMC ${CARDSDIR}/${PROCNAME}_proc_card.dat
 
 # move generic process directory to specific custom directory for this job
 mv ${PROCNAME} ${CUSTOMCARD}
@@ -68,7 +68,7 @@ else
 
   if [ -n "$ISCONDOR" ]; then
     echo "xrdcp output for condor"
-    xrdcp Events/pilotrun/unweighted_events.lhe.gz ${OUTDIR}/${CUSTOMCARD}_unweighted_events.lhe.gz
+    xrdcp -f Events/pilotrun/unweighted_events.lhe.gz ${OUTDIR}/${CUSTOMCARD}_unweighted_events.lhe.gz
   else
     echo "mv output for lxbatch"
     mkdir -p ${OUTDIR}
