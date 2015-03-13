@@ -167,6 +167,11 @@ def makejob(PROTOCOL, RUNDIR, CMSSWBASE, CMSSWVER, PROCNAME, OUTDIR, NEV, NRUN, 
     
     # execute command to create job file
     os.system(jobcmd)
+    
+    # make job executable
+    if PROTOCOL == "bsub" or PROTOCOL == "qsub":
+        os.chmod(jobname,0755)
+    
     return jobname    
 
 # -----------------------------------------------------------------
@@ -225,6 +230,10 @@ if __name__ == "__main__":
     if not os.path.isdir("logs"):
         os.mkdir(RUNDIR+"/logs")
 
+    # Make a folder to store the output
+    if not os.path.isdir("lhe"):
+        os.mkdir(RUNDIR+"/lhe")
+
     # The SUSY_generation.sh script needs to be in the working directory
     if not os.path.isfile("SUSY_generation.sh"): 
         sys.exit("SUSY_generation.sh is not in the current working directory!")
@@ -245,9 +254,6 @@ if __name__ == "__main__":
     # Check the output directory specification
     if not args.output:
         if args.protocol == "qsub" or args.protocol == "bsub":
-            # Make a folder to store the output
-            if not os.path.isdir("lhe"):
-                os.mkdir(RUNDIR+"/lhe")
             args.output = RUNDIR+"/lhe"
         elif args.protocol == "condor":
             # output directory must be specified for condor
@@ -341,7 +347,7 @@ if __name__ == "__main__":
     # exclude scripts, logs, lhe directories that get filled up with job submission files
     # but include cards, which are necessary to run
     if args.protocol == "condor":
-        os.system("tar --exclude='"+RUNDIR+"/logs' --exclude='"+RUNDIR+"/scripts' --exclude='"+RUNDIR+"/lhe' -zcvf scripts/"+CMSSWVER+".tar.gz "+CMSSWBASE)
+        os.system("tar --exclude='"+RUNDIR+"/logs' --exclude='"+RUNDIR+"/scripts' --exclude='"+RUNDIR+"/lhe*' -zcvf scripts/"+CMSSWVER+".tar.gz "+CMSSWBASE)
     
     # Now submit the jobs if desired
     if not args.nosubmit:
