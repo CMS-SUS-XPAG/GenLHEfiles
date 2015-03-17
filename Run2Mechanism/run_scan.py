@@ -125,7 +125,7 @@ def makecustom(PROCNAME, NEV, NRUN, PDGID, MASS, SEED):
     customname = PROCNAME+"__"
     for pdg,mass in izip(PDGID,MASS):
         customname = customname + str(pdg) + "_" + str(mass) + "__"
-    customname = customname + str(NRUN)
+    customname = customname + "n" + str(NEV) + "_p" + str(NRUN)
     mycustom = open("cards/" + customname + "_customizecards.dat",'w')
 
     # Create the customization script from the template
@@ -345,13 +345,21 @@ if __name__ == "__main__":
                 seed = seed + 1
 
     print "Done creating job scripts."
-
+    
+    # check for grid proxy for condor (necessary to xrdcp output to eos), then:
     # (re)generate CMSSW tarball for condor, after makejob so customize cards are made
     # exclude scripts, logs, lhe directories that get filled up with job submission files
     # but include cards, which are necessary to run
     # change to directory above CMSSW_BASE and tar CMSSW_BASE to get desired directory structure
     if args.protocol == "condor":
-        os.system("tar --exclude='"+RUNDIR+"/logs' --exclude='"+RUNDIR+"/scripts' --exclude='"+RUNDIR+"/lhe*' -zcf scripts/"+CMSSWVER+".tar.gz -C "+CMSSWBASE+"/.. "+CMSSWVER)
+        try:
+            proxy = subprocess.check_output("voms-proxy-info --all",shell=True)
+        except subprocess.CalledProcessError:
+            sys.exit("Grid proxy is necessary for LPC Condor. Call:\nvoms-proxy-init -voms cms\nand try again.")
+    
+        # need relative directory for excludes because of directory change in tar command
+        RELDIR = CMSSWVER + RUNDIR.split(CMSSWVER)[-1]
+        os.system("tar --exclude="+RELDIR+"/logs --exclude="+RELDIR+"/scripts --exclude="+RELDIR+"/lhe* -zcf scripts/"+CMSSWVER+".tar.gz -C "+CMSSWBASE+"/.. "+CMSSWVER)
     
     # Now submit the jobs if desired
     if not args.nosubmit:

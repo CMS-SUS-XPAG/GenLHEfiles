@@ -37,6 +37,7 @@ CARDSDIR=${RUNBASEDIR}/cards
 
 # run madgraph
 # last argument specifies that the script is running in Condor
-${RUNBASEDIR}/SUSY_generation.sh ${CARDSDIR} ${OUTDIR} ${PROCNAME} ${CUSTOMCARD} 1
+echo "run: ${RUNBASEDIR}/SUSY_generation.sh ${CARDSDIR} ${OUTDIR} ${PROCNAME} ${CUSTOMCARD} 1 2>&1"
+${RUNBASEDIR}/SUSY_generation.sh ${CARDSDIR} ${OUTDIR} ${PROCNAME} ${CUSTOMCARD} 1 2>&1
 
 
