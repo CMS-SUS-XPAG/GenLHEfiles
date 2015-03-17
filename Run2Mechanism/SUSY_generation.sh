@@ -68,11 +68,11 @@ else
 
   if [ -n "$ISCONDOR" ]; then
     echo "xrdcp output for condor"
-    xrdcp -f Events/pilotrun/unweighted_events.lhe.gz ${OUTDIR}/${CUSTOMCARD}_unweighted_events.lhe.gz
+    xrdcp -f Events/pilotrun/unweighted_events.lhe.gz ${OUTDIR}/${CUSTOMCARD}_undecayed.lhe.gz
   else
     echo "mv output for lxbatch"
     mkdir -p ${OUTDIR}
-    mv Events/pilotrun/unweighted_events.lhe.gz ${OUTDIR}/${CUSTOMCARD}_unweighted_events.lhe.gz
+    mv Events/pilotrun/unweighted_events.lhe.gz ${OUTDIR}/${CUSTOMCARD}_undecayed.lhe.gz
   fi
   
   echo "End of job"
