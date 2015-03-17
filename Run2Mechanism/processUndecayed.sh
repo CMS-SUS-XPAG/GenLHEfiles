@@ -2,8 +2,8 @@
 
 FILEDIR=$1
 PROCNAME=$2
-DECAYNAME=$2
-CFGNAME=$3
+DECAYNAME=$3
+CFGNAME=$4
 
 # grid proxy check
 voms-proxy-info --all > /dev/null
@@ -14,7 +14,7 @@ fi
 for FILEPATH in `ls /eos/uscms/store/user/pedrok/${FILEDIR}/${PROCNAME}*`
   do
     FILE=`basename ${FILEPATH}`
-	xrdcp root://cmseos.fnal.gov//store/user/pedrok/${FILEDIR}/${FILE} lhe/
+    xrdcp root://cmseos.fnal.gov//store/user/pedrok/${FILEDIR}/${FILE} lhe/
   done
 
 # add some command line options?
