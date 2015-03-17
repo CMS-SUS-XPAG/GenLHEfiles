@@ -384,8 +384,9 @@ You can print the help message with the following:
 python update_header.py --help
 ```
 As you can see from the output, the script takes a config file as input. The structure
-of this config file is explained below. There is also one optional flag `--stableLSP`
-which should be used if the input LHE files do not contain a line like
+of this config file is explained below. There are also two optional flags:
+`--pdg` which specifies the PDG ID of the mother particle (used to find the mass value in the undecayed lhe filename),
+and `--stableLSP` which should be used if the input LHE files do not contain a line like
 ```
 DECAY  1000022  0.0
 ```
@@ -463,8 +464,7 @@ This is a problem for these decay blocks, as the lines that contain the branchin
 need to be indented. In order to solve this problem, you need to add quotes. This is why in 
 the above command you can see these escaped quotes. 
 
-
-The last thing that needs to be explained before coming to the examples is the afore-mentioned 
+The last thing that needs to be explained before coming to the examples is the aforementioned 
 mass dictionary. This dictionary will encapsulate the grid of parameter points you want
 to generate.  
 The keys of the dictionary are the masses of the mother particles, i.e. the
@@ -472,11 +472,10 @@ particles that were produced with Madgraph.
 It is assumed that the undecayed files have names like what is used in step 1 of these instructions. 
 Two formats are allowed:
 
- -  `<name>_<mother mass>_<other stuff without underscores>_undecayed.lhe(.gz)`
- -  `<name>_<pdg id__mother mass(es)>_<other stuff without underscores>_undecayed.lhe(.gz)`. 
+ -  `<name>__<pdg id_mother mass(es)>__<other stuff>_undecayed.lhe(.gz)`. 
 
 The notation used for the second part of this (i.e. mother mass in most cases) should be used as 
-keys in the mass dictionary.  
+keys in the mass dictionary.
 The value corresponding to each key in the dictionary is a list of all the configurations
 you wish to produce for that given mother mass (or key). 
 Each configuration is encoded in a dictionary with the pdg id of the particles as keys, 
@@ -506,10 +505,11 @@ several functions to create this
 mass dictionary for you. Most of the standard scenarios for simplified model scans
 are included. For example, for the case where you only need to update the mass of the LSP,
 and generate LSP masses from 0 till the mass of the mother particle (with a certain step 
-size), you can use the function `makeMassDict_standard_SMS`. 
+size), you can use the function `makeMassDict_standard_SMS` found in 
+[makeMassDict.py](./makeMassDict.py) and automatically imported in 
+[create_update_header_config.py](./create_update_header_config.py).
 Each provided function comes with some comments, so I encourage you to have a look at them
 to decide whether they are useful for your case. 
-
 
 #### Examples
 
@@ -600,6 +600,9 @@ python update_header.py myconfig.cfg
 Now you have a set of LHE files that are in principle ready to be put through the 
 official production. 
 
+When using LPC Condor, the undecayed lhe.gz files will be stored on EOS. It is best to move the files from EOS to scratch space
+before adding the decay information, to avoid overuse of the fuse mount for the file system. The script
+(processUndecayed.sh)[./processUndecayed.sh] shows an example of how to do this.
 
 ## Step 3: Validation
 
