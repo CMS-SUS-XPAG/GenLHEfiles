@@ -343,7 +343,6 @@ For more about xrootd, click [here](https://twiki.cern.ch/twiki/bin/view/CMSPubl
 
 #### Features to be added in the future
 
-- submission with condor (volunteer with condor experience needed)
 - support for running in NLO mode. This will require extensive validation.
 
 
@@ -467,7 +466,7 @@ to generate.
 The keys of the dictionary are the masses of the mother particles, i.e. the
 particles that were produced with Madgraph. 
 It is assumed that the undecayed files have names like what is used in step 1 of these instructions. 
-Two formats are allowed:
+One format is allowed:
 
  -  `<name>__<pdg id_mother mass(es)>__<other stuff>_undecayed.lhe(.gz)`. 
 
@@ -599,7 +598,7 @@ official production.
 
 When using LPC Condor, the undecayed lhe.gz files will be stored on EOS. It is best to move the files from EOS to scratch space
 before adding the decay information, to avoid overuse of the fuse mount for the file system. The script
-(processUndecayed.sh)[./processUndecayed.sh] shows an example of how to do this.
+[processUndecayed.sh](./processUndecayed.sh) shows an example of how to do this.
 
 ## Step 3: Validation
 
