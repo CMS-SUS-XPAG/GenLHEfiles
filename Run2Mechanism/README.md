@@ -71,8 +71,8 @@ mkdir prod
 cd prod
 git clone git@github.com:kpedro88/GenLHEfiles.git
 cd GenLHEfiles/Run2Mechanism
-scripts/installGenerators.sh
-source scripts/setupGenEnv.(c)sh
+./installGenerators.sh
+source setupGenEnv.(c)sh
 ```
 
 The code from this repository is put in $CMSSW_BASE/prod instead of $CMSSW_BASE/src
@@ -81,7 +81,7 @@ to make it easier to checkout and build CMSSW packages in $CMSSW_BASE/src if des
 Note: if you want to run MadGraph on multiple cores, you need to specify the number of cores
 when running the install script, like this:
 ```
-scripts/installGenerators.sh 5
+./installGenerators.sh 5
 ```
 
 As a general user, you will not need to contribute to the repository. You will only need to
@@ -109,7 +109,7 @@ instructions in this section.
 
 The relevant scripts for this step are available in this repository, and are called: 
 
- -  [scripts/SUSY_generation.sh](./scripts/SUSY_generation.sh)
+ -  [SUSY_generation.sh](./SUSY_generation.sh)
  -  [run_scan.py](./run_scan.py)
 
 I will explain the general procedure and the details on these two scripts in the 
@@ -233,7 +233,7 @@ Each time you execute the script, a log file will be created. This log file incl
 full setup which was used. The name of the log file includes the current time in order 
 to make it easier to track things.
 
-The [run_scan.py](./run_scan.py) script will create several directories in the working directory. 
+The [run_scan.py](./run_scan.py) script will use several directories in the working directory. 
 
 - `scripts`: To hold the job scripts that will be submitted to the batch queue. This 
              directory is NOT cleaned by default by the script. 

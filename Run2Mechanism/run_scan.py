@@ -222,20 +222,12 @@ if __name__ == "__main__":
     parser = makeCLParser()
     args = parser.parse_args()
 
-    # Make a folder to store the log files
-    if not os.path.isdir("logs"):
-        os.mkdir(RUNDIR+"/logs")
-
     print_configuration(vars(args))
 
     # get some info from the OS
     CMSSWVER = os.getenv("CMSSW_VERSION")
     CMSSWBASE = os.getenv("CMSSW_BASE")
     RUNDIR = os.getcwd()
-
-    # Make a folder to store the output
-    if not os.path.isdir("lhe"):
-        os.mkdir(RUNDIR+"/lhe")
 
     # The SUSY_generation.sh script needs to be in the current directory
     if not os.path.isfile("SUSY_generation.sh"): 
@@ -357,9 +349,8 @@ if __name__ == "__main__":
         except subprocess.CalledProcessError:
             sys.exit("Grid proxy is necessary for LPC Condor. Call:\nvoms-proxy-init -voms cms\nand try again.")
     
-        # need relative directory for excludes because of directory change in tar command
-        RELDIR = CMSSWVER + RUNDIR.split(CMSSWVER)[-1]
-        os.system("tar --exclude="+RELDIR+"/logs --exclude="+RELDIR+"/scripts --exclude="+RELDIR+"/lhe* -zcf scripts/"+CMSSWVER+".tar.gz -C "+CMSSWBASE+"/.. "+CMSSWVER)
+        # use cache directory tags to denote excluded directories
+        os.system("tar --exclude-caches-all -zcf scripts/"+CMSSWVER+".tar.gz -C "+CMSSWBASE+"/.. "+CMSSWVER)
     
     # Now submit the jobs if desired
     if not args.nosubmit:

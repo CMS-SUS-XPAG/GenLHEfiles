@@ -27,7 +27,7 @@ process.maxEvents = cms.untracked.PSet(
 
 # Input source
 process.source = cms.Source("LHESource",
-    fileNames = cms.untracked.vstring('file:/store/user/pedrok/SUSY2015/T1bbbb/FNAME.lhe')
+    fileNames = cms.untracked.vstring('/store/user/pedrok/SUSY2015/T1bbbb/FNAME.lhe')
 )
 
 process.options = cms.untracked.PSet(
