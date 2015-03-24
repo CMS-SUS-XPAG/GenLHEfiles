@@ -220,12 +220,12 @@ The full list of options:
                 of the list will be converted into a job, and should be in the form of a 
                 dictionary {"pdgid1":mass1, "pdgid2":mass2, ...}
 - `-n, --nevents`: Number of events to produce per run (default=10000)
-- `-nruns`: Number of runs, useful if you want to produce a lot of events (default=1). 
+- `--nruns`: Number of runs, useful if you want to produce a lot of events (default=1). 
             All jobs will be replicated nruns times. 
-- `-ncores`: Number of cores to use for event generation (default=1)
-- `-protocol`: Submission protocol: bsub or qsub (default='bsub')
+- `--ncores`: Number of cores to use for event generation (default=1)
+- `--protocol`: Submission protocol: bsub or qsub (default='bsub')
 - `-q, --queue`: Queue to submit to (default='1nd')
-- `--nosubmit`: Flag to turn of submission, job scripts are still created. Can be useful
+- `--nosubmit`: Flag to turn off submission, job scripts are still created. Can be useful
   		if you want to run locally.  
 
 Each time you execute the script, a log file will be created. This log file includes the 
