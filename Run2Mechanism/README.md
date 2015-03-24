@@ -676,7 +676,7 @@ cmsrel CMSSW_7_1_12
 cd CMSSW_7_1_12/src
 cmsenv
 mkdir -p Configuration/GenProduction/python
-mv genfragment_cff.py Configuration/GenProduction/python
+cp /afs/cern.ch/user/n/nstrobbe/public/genfragment.py Configuration/GenProduction/python/genfragment_cff.py
 scram b
 ```
 
