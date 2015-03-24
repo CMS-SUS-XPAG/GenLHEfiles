@@ -316,6 +316,10 @@ You would then call the main script as follows:
 ```
 python run_scan.py --massdict my_mass_info.py
 ```
+You can check the status of your lxbatch jobs by running
+```
+bjobs
+```
 
 If you want to generate events for stop quarks for example, instead of gluinos, this is 
 what you need to do: 
