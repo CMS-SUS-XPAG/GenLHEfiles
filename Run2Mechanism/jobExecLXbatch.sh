@@ -12,10 +12,7 @@ cd -
 # environment variables for generator and run directory
 source RUNDIR/setupGenEnv.sh
 
-# cardfiles location
-CARDSDIR=${RUNBASEDIR}/cards
-
 # run madgraph
-${RUNBASEDIR}/SUSY_generation.sh CARDSDIR OUTDIR PROCNAME CUSTOMCARD
+${RUNBASEDIR}/SUSY_generation.sh ${RUNBASEDIR}/cards OUTDIR PROCNAME CUSTOMCARD
 
 
