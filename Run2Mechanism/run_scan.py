@@ -344,10 +344,8 @@ if __name__ == "__main__":
     # but include cards, which are necessary to run
     # change to directory above CMSSW_BASE and tar CMSSW_BASE to get desired directory structure
     if args.protocol == "condor":
-        try:
-            proxy = subprocess.check_output("voms-proxy-info --all",shell=True)
-        except subprocess.CalledProcessError:
-            sys.exit("Grid proxy is necessary for LPC Condor. Call:\nvoms-proxy-init -voms cms\nand try again.")
+        # check to make sure the grid proxy exists and is valid
+        os.system("./checkCondor.sh")
     
         # use cache directory tags to denote excluded directories
         os.system("tar --exclude-caches-all -zcf scripts/"+CMSSWVER+".tar.gz -C "+CMSSWBASE+"/.. "+CMSSWVER)
