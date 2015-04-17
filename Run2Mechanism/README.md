@@ -672,7 +672,7 @@ Instructions:
 cd CMSSW_7_1_12/src
 cmsenv
 git cms-addpkg Configuration/Generator
-mv ../prod/GenLHEFiles/Run2Mechanism/genstep/genfragment_cff.py Configuration/Generator/python
+mv ../prod/GenLHEFiles/Run2Mechanism/genstep/genfragment.py Configuration/Generator/python
 scram b
 ```
 
@@ -691,12 +691,12 @@ pass a comma-separated list of files to the `--filein` argument.
 ```
 cmsDriver.py step0 --mc --eventcontent LHE --datatier GEN --conditions MCRUN2_71_V1::All --step NONE  --filein file:mylhe.lhe --fileout file:step0.root -n -1
 
-cmsDriver.py Configuration/GenProduction/python/genfragment_cff.py --mc --eventcontent RAWSIM --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier GEN-SIM --conditions MCRUN2_71_V1::All --beamspot NominalCollision2015 --step GEN --magField 38T_PostLS1  --filein file:step0.root --fileout file:GEN.root -n -1
+cmsDriver.py Configuration/Generator/python/genfragment.py --mc --eventcontent RAWSIM --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier GEN-SIM --conditions MCRUN2_71_V1::All --beamspot NominalCollision2015 --step GEN --magField 38T_PostLS1  --filein file:step0.root --fileout file:GEN.root -n -1
 ```
 
 When doing things locally, you can condense this into a single run: 
 ```
-cmsDriver.py Configuration/GenProduction/python/genfragment_cff.py --mc --eventcontent RAWSIM --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier GEN-SIM --conditions MCRUN2_71_V1::All --beamspot NominalCollision2015 --step GEN --magField 38T_PostLS1  --filein file:mylhe.lhe --fileout file:GEN.root -n -1
+cmsDriver.py Configuration/Generator/python/genfragment.py --mc --eventcontent RAWSIM --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier GEN-SIM --conditions MCRUN2_71_V1::All --beamspot NominalCollision2015 --step GEN --magField 38T_PostLS1  --filein file:mylhe.lhe --fileout file:GEN.root -n -1
 ```
 
 #### FASTSIM
@@ -710,7 +710,7 @@ The final DIGI-RECO for Run2 is not yet available.
 
 Instructions for the GEN-SIM step: 
 ```
-cmsDriver.py Configuration/GenProduction/python/genfragment_cff.py --mc --eventcontent RAWSIM --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier GEN-SIM --conditions MCRUN2_71_V1::All --beamspot NominalCollision2015 --step GEN,SIM --magField 38T_PostLS1  --filein file:mylhe.lhe --fileout file:GEN.root -n -1
+cmsDriver.py Configuration/Generator/python/genfragment.py --mc --eventcontent RAWSIM --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier GEN-SIM --conditions MCRUN2_71_V1::All --beamspot NominalCollision2015 --step GEN,SIM --magField 38T_PostLS1  --filein file:mylhe.lhe --fileout file:GEN.root -n -1
 ```
 
 #### Phys14 setup
