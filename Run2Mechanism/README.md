@@ -226,12 +226,12 @@ The full list of options:
                 of the list will be converted into a job, and should be in the form of a 
                 dictionary {"pdgid1":mass1, "pdgid2":mass2, ...}
 - `-n, --nevents`: Number of events to produce per run (default=10000)
-- `-nruns`: Number of runs, useful if you want to produce a lot of events (default=1). 
+- `--nruns`: Number of runs, useful if you want to produce a lot of events (default=1). 
             All jobs will be replicated nruns times. 
-- `-ncores`: Number of cores to use for event generation (default=1)
-- `-protocol`: Submission protocol: bsub or qsub or condor (default='bsub')
+- `--ncores`: Number of cores to use for event generation (default=1)
+- `--protocol`: Submission protocol: bsub or qsub or condor (default='bsub')
 - `-q, --queue`: Queue to submit to (default='1nd')
-- `--nosubmit`: Flag to turn of submission, job scripts are still created. Can be useful
+- `--nosubmit`: Flag to turn off submission, job scripts are still created. Can be useful
   		if you want to run locally. 
 -  `-o, --output`: Output directory for LHE file (default='lhe')
 
@@ -315,6 +315,15 @@ masses = [{"1000021":mass} for mass in range(1000,1500,100)]
 You would then call the main script as follows: 
 ```
 python run_scan.py --massdict my_mass_info.py
+```
+
+You can check the status of your lxbatch jobs by running
+```
+bjobs
+```
+or your condor jobs by running
+```
+condor_q -submitter [username]
 ```
 
 If you want to generate events for stop quarks for example, instead of gluinos, this is 
@@ -695,14 +704,14 @@ is converted into EDM format, and then in the second step the decay, parton show
  hadronization is performed. If you want to process multiple files in one go, you can 
 pass a comma-separated list of files to the `--filein` argument. 
 ```
-cmsDriver.py step0 --mc --eventcontent LHE --datatier GEN --conditions MCRUN2_71_V1::All --step NONE  --filein file:mylhe.lhe --fileout file:step0.root -n -1
+cmsDriver.py step0 --mc --eventcontent LHE --datatier GEN --conditions MCRUN2_71_V1::All --step NONE  --filein file:mylhe.lhe --fileout file:step0.root -n -1 --no_exec
 
-cmsDriver.py Configuration/Generator/python/genfragment.py --mc --eventcontent RAWSIM --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier GEN-SIM --conditions MCRUN2_71_V1::All --beamspot NominalCollision2015 --step GEN --magField 38T_PostLS1  --filein file:step0.root --fileout file:GEN.root -n -1
+cmsDriver.py Configuration/Generator/python/genfragment.py --mc --eventcontent RAWSIM --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier GEN-SIM --conditions MCRUN2_71_V1::All --beamspot NominalCollision2015 --step GEN --magField 38T_PostLS1  --filein file:step0.root --fileout file:GEN.root -n -1 --no_exec
 ```
 
 When doing things locally, you can condense this into a single run: 
 ```
-cmsDriver.py Configuration/Generator/python/genfragment.py --mc --eventcontent RAWSIM --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier GEN-SIM --conditions MCRUN2_71_V1::All --beamspot NominalCollision2015 --step GEN --magField 38T_PostLS1  --filein file:mylhe.lhe --fileout file:GEN.root -n -1
+cmsDriver.py Configuration/Generator/python/genfragment.py --mc --eventcontent RAWSIM --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier GEN-SIM --conditions MCRUN2_71_V1::All --beamspot NominalCollision2015 --step GEN --magField 38T_PostLS1  --filein file:mylhe.lhe --fileout file:GEN.root -n -1 --no_exec
 ```
 
 #### FASTSIM
@@ -716,7 +725,7 @@ The final DIGI-RECO for Run2 is not yet available.
 
 Instructions for the GEN-SIM step: 
 ```
-cmsDriver.py Configuration/Generator/python/genfragment.py --mc --eventcontent RAWSIM --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier GEN-SIM --conditions MCRUN2_71_V1::All --beamspot NominalCollision2015 --step GEN,SIM --magField 38T_PostLS1  --filein file:mylhe.lhe --fileout file:GEN.root -n -1
+cmsDriver.py Configuration/Generator/python/genfragment.py --mc --eventcontent RAWSIM --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier GEN-SIM --conditions MCRUN2_71_V1::All --beamspot NominalCollision2015 --step GEN,SIM --magField 38T_PostLS1  --filein file:mylhe.lhe --fileout file:GEN.root -n -1 --no_exec
 ```
 
 #### Phys14 setup
@@ -731,7 +740,7 @@ The CMSSW release to be used is: **CMSSW_6_2_11** or later CMSSW_6_2_X
 The cmsDriver command: 
 
 ```
-cmsDriver.py GenFragment --filein file:input.lhe --fileout file:GENSIM.root --mc --eventcontent RAWSIM --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier GEN-SIM --conditions POSTLS162_V1::All --step GEN,SIM --magField 38T_PostLS1 --geometry Extended2015 -n -1
+cmsDriver.py GenFragment --filein file:input.lhe --fileout file:GENSIM.root --mc --eventcontent RAWSIM --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier GEN-SIM --conditions POSTLS162_V1::All --step GEN,SIM --magField 38T_PostLS1 --geometry Extended2015 -n -1 --no_exec
 ```
 
 ##### DIGI-RECO-MINIAOD
@@ -740,17 +749,17 @@ The CMSSW release to be used is: **CMSSW_7_2_0**
 
 The cmsDriver commands that were used in the official production:
 ```
-cmsDriver.py step1 --filein file:GENSIM.root --fileout file:step1.root --pileup_input "dbs:/MinBias_TuneA2MB_13TeV-pythia8/Fall13-POSTLS162_V1-v1/GEN-SIM" --mc --eventcontent RAWSIM --inputEventContent REGEN --pileup AVE_20_BX_25ns --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier GEN-SIM-RAW --conditions PHYS14_25_V1 --step GEN:fixGenInfo,DIGI,L1,DIGI2RAW,HLT:GRun --magField 38T_PostLS1 -n -1 
+cmsDriver.py step1 --filein file:GENSIM.root --fileout file:step1.root --pileup_input "dbs:/MinBias_TuneA2MB_13TeV-pythia8/Fall13-POSTLS162_V1-v1/GEN-SIM" --mc --eventcontent RAWSIM --inputEventContent REGEN --pileup AVE_20_BX_25ns --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier GEN-SIM-RAW --conditions PHYS14_25_V1 --step GEN:fixGenInfo,DIGI,L1,DIGI2RAW,HLT:GRun --magField 38T_PostLS1 -n -1 --no_exec
 
-cmsDriver.py step2 --filein file:step1.root --fileout file:step2.root --mc --eventcontent AODSIM,DQM --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier AODSIM,DQMIO --conditions PHYS14_25_V1 --step RAW2DIGI,L1Reco,RECO,EI,DQM:DQMOfflinePOGMC --magField 38T_PostLS1 -n -1
+cmsDriver.py step2 --filein file:step1.root --fileout file:step2.root --mc --eventcontent AODSIM,DQM --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier AODSIM,DQMIO --conditions PHYS14_25_V1 --step RAW2DIGI,L1Reco,RECO,EI,DQM:DQMOfflinePOGMC --magField 38T_PostLS1 -n -1 --no_exec
 
-cmsDriver.py step3 --filein file:step2.root --fileout file:out.root --mc --eventcontent MINIAODSIM --runUnscheduled --datatier MINIAODSIM --conditions PHYS14_25_V1 --step PAT -n -1
+cmsDriver.py step3 --filein file:step2.root --fileout file:out.root --mc --eventcontent MINIAODSIM --runUnscheduled --datatier MINIAODSIM --conditions PHYS14_25_V1 --step PAT -n -1 --no_exec
 ```
 For private production the DQM info is probably not needed, so it should be safe to drop this step. 
 
 If you want to run with 40 pileup, you should use the following command for the step1:
 ```
-cmsDriver.py step1 --filein file:GENSIM.root --fileout file:step1.root --pileup_input "dbs:/MinBias_TuneA2MB_13TeV-pythia8/Fall13-POSTLS162_V1-v1/GEN-SIM" --mc --eventcontent RAWSIM --inputEventContent REGEN --pileup AVE_40_BX_25ns --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier GEN-SIM-RAW --conditions PHYS14_25_V1 --step GEN:fixGenInfo,DIGI,L1,DIGI2RAW,HLT:GRun --magField 38T_PostLS1 -n -1
+cmsDriver.py step1 --filein file:GENSIM.root --fileout file:step1.root --pileup_input "dbs:/MinBias_TuneA2MB_13TeV-pythia8/Fall13-POSTLS162_V1-v1/GEN-SIM" --mc --eventcontent RAWSIM --inputEventContent REGEN --pileup AVE_40_BX_25ns --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier GEN-SIM-RAW --conditions PHYS14_25_V1 --step GEN:fixGenInfo,DIGI,L1,DIGI2RAW,HLT:GRun --magField 38T_PostLS1 -n -1 --no_exec
 ```
 
 
