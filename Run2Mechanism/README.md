@@ -69,7 +69,7 @@ cd CMSSW_7_1_12
 cmsenv
 mkdir prod
 cd prod
-git clone git@github.com:kpedro88/GenLHEfiles.git
+git clone git@github.com:CMS-SUS-XPAG/GenLHEfiles.git
 cd GenLHEfiles/Run2Mechanism
 ./installGenerators.sh
 source setupGenEnv.(c)sh
