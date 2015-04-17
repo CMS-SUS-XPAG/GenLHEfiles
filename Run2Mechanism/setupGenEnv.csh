@@ -14,9 +14,9 @@ set LHAPDFCONFIG = `echo "$LHAPDF_DATA_PATH/../../bin/lhapdf-config"`
 
 # if lhapdf6 external is available then above points to lhapdf5 and needs to be overridden
 set LHAPDF6TOOLFILE = $CMSSW_BASE/config/toolbox/$SCRAM_ARCH/tools/available/lhapdf6.xml
-if [ -e $LHAPDF6TOOLFILE ]; then
-  set LHAPDFCONFIG = `cat $LHAPDF6TOOLFILE | grep "<environment name \"LHAPDF6_BASE\"" | cut -d \" -f 4`/bin/lhapdf-config
-fi
+if ( -e $LHAPDF6TOOLFILE ) then
+  set LHAPDFCONFIG = `cat $LHAPDF6TOOLFILE | grep '<environment name="LHAPDF6_BASE"' | cut -d \" -f 4`/bin/lhapdf-config
+endif
 
 # make sure env variable for pdfsets points to the right place
 setenv LHAPDF_DATA_PATH `$LHAPDFCONFIG --datadir`
