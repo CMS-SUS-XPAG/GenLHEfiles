@@ -5,17 +5,7 @@ JOBDIR=batch
 OUTDIR=root://cmseos.fnal.gov//store/user/pedrok/SUSY2015/T1bbbb/genstep
 THISDIR=${CMSSW_VERSION}/prod/GenLHEfiles/Run2Mechanism/genstep
 
-# grid proxy check
-voms-proxy-info --all > /dev/null
-if [ $? -ne 0 ]; then
-  voms-proxy-init -voms cms --valid 168:00
-fi
-
-# tarball of CMSSW area
-if [ -z "$KEEPTAR" ]; then
-  mkdir -p ${JOBDIR}
-  tar --exclude-caches-all -zcf ${JOBDIR}/${CMSSW_VERSION}.tar.gz -C ${CMSSW_BASE}/.. ${CMSSW_VERSION}
-fi
+./FScheck.sh "$KEEPTAR" "$JOBDIR"
 
 for QCUT in 30 40 50 60
   do
