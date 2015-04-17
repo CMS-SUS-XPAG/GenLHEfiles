@@ -54,7 +54,7 @@ points privately if necessary.
 
 To use some the scripts available here, you need access to the CMSSW software. For most
 people this means that you will be running on either lxplus, cmslpc, or on your local T2. 
-**These scripts have only been tested on lxplus so far.** You might need to make changes 
+**These scripts have only been tested on lxplus and cmslpc so far.** You might need to make changes 
 here and there to get it to run on the local T2 (e.g. for batch submission). 
 
 Most of the python scripts should be run using python 2.7. The easiest way to set 
@@ -127,7 +127,7 @@ This means that you only need to provide one parameter card for the full scan.
 
 #### SUSY_generation.sh
 
-**Prerequisites**: This script will attempt to set up a CMSSW area. You will thus need
+**Prerequisites**: This script will attempt to use variables from the CMSSW environment. You will thus need
 access to the CMS software. You also need access to the LHAPDF6 libraries. 
 On lxplus this script will work out of the box. This is not guaranteed on your local
 cluster. 
@@ -651,11 +651,7 @@ appropriate qcut value however. Once you have this number, you can update the ge
 fragment and start the private production. Depending on the scope of the study you wish
 to perform, you will need to run different steps. For all options you will need the 
 appropriate genfragment. These can usually be found on the genproductions github page. 
-Currently, a good fragment to use with the files produced using this setup is not yet
-available there. In the mean time you can use the fragment I provide on my public area on
-afs:
-
-/afs/cern.ch/user/n/nstrobbe/public/genfragment.py
+An example to use with the files produced using this setup is [genfragment.py](./genstep/genfragment.py).
 
 In this fragment you should update the value of `JetMatching:qCut`, and perhaps the 
 value of `JetMatching:nJetMax`. The `nJetMax` should be set to the largest number of 
@@ -666,20 +662,21 @@ extra partons that are present in the lhe file. The SUSY default for this is `2`
 Before you can start, you need to set up a CMSSW area. Which release(s) to use will depend
 on whether or not you want to produce events up to FastSim or DIGI-RECO. The campaigns
 for reconstruction in Run2 are not ready yet. The GEN-SIM campaign is already available
-and is currenlty using `CMSSW_7_1_12`. 
+and is currently using `CMSSW_7_1_12`. 
 
 To run the GEN step, you need to place the genfragment in a specific directory, and 
 you should not forget to compile. 
 
 Instructions: 
 ```
-cmsrel CMSSW_7_1_12
 cd CMSSW_7_1_12/src
 cmsenv
-mkdir -p Configuration/GenProduction/python
-mv genfragment_cff.py Configuration/GenProduction/python
+git cms-addpkg Configuration/Generator
+mv ../prod/GenLHEFiles/Run2Mechanism/genstep/genfragment_cff.py Configuration/Generator/python
 scram b
 ```
+
+An example template configuration to check qcut values in the GEN step is [GEN_checkQcut_batch.py](./genstep/GEN_checkQcut_batch.py).
 
 #### GEN only
 
