@@ -78,6 +78,12 @@ source setupGenEnv.(c)sh
 The code from this repository is put in $CMSSW_BASE/prod instead of $CMSSW_BASE/src
 to make it easier to checkout and build CMSSW packages in $CMSSW_BASE/src if desired.
 
+If you do not have a GitHub account with a registered SSH key, you can replace the above
+`git clone` line with this alternative to download over HTTPS:
+```
+git clone https://github.com/CMS-SUS-XPAG/GenLHEfiles.git
+```
+
 Note: if you want to run MadGraph on multiple cores, you need to specify the number of cores
 when running the install script, like this:
 ```
