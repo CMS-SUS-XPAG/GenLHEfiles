@@ -247,7 +247,13 @@ The [run_scan.py](./run_scan.py) script will use several directories in the work
          directory is NOT cleaned by default by the script.
 - `lhe`: To hold the output lhe files that are produced by the [SUSY_generation.sh](./SUSY_generation.sh) script
 
-By default the script will submit to the 1nd queue. Depending on how many events you want
+To run with Condor on cmslpc, it is necessary to specify the output directory using an xrootd path:
+```
+root://cmseos.fnal.gov//store/path/to/file
+```
+For more about xrootd, click [here](https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookXrootdService).
+
+By default the script will submit to the 1nd queue when using the lxplus batch system. Depending on how many events you want
 to run per job, you might need to change this. It is probably fine up to about 100k events
 for up to two extra partons, but this has not been explicitely tested. 
 
@@ -349,12 +355,6 @@ python file could look like:
 ```python
 masses = [{"1000023":mass, "1000024":(mass+0.1)} for mass in range(100,500,25)]
 ```
-
-To run with Condor on cmslpc, it is necessary to specify the output directory using an xrootd path:
-```
-root://cmseos.fnal.gov//store/path/to/file
-```
-For more about xrootd, click [here](https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookXrootdService).
 
 #### Features to be added in the future
 
