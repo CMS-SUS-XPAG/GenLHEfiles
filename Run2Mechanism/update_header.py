@@ -294,11 +294,18 @@ if __name__ == "__main__":
         # Assumes naming scheme as in run_scan.py
         base_f = os.path.basename(f)
         parts = base_f.split("_")
-        for pnum, p in enumerate(parts):
-            if p==str(args.pdg) and pnum < len(parts)-1:
-                mother_mass = parts[pnum+1]
-                found_mother_mass = True
-                break
+        found_mother_mass = False
+        if len(parts) == 4:
+            # old undecayed file created without using a mass dict
+            mother_mass = parts[1]
+            found_mother_mass = True
+        else:
+            for pnum, p in enumerate(parts):
+                if p==str(args.pdg) and pnum < len(parts)-1:
+                    mother_mass = parts[pnum+1]
+                    found_mother_mass = True
+                    break
+
         if not found_mother_mass: 
             print "Unknown filename format, moving to the next file"
             continue

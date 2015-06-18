@@ -122,10 +122,11 @@ def print_configuration(args_dict):
 
 def makecustom(PROCNAME, NEV, NRUN, PDGID, MASS, SEED):
     # Open a script which will be submitted
-    customname = PROCNAME+"__"
+    customname = PROCNAME
+    infostring = []
     for pdg,mass in izip(PDGID,MASS):
-        customname = customname + str(pdg) + "_" + str(mass) + "__"
-    customname = customname + "n" + str(NEV) + "_p" + str(NRUN)
+        infostring.append("%s_%s"%(pdg,mass));
+    customname = customname + "_" + "__".join(infostring) + "_" + "n" + str(NEV) + "-" + "p" + str(NRUN)
     mycustom = open("cards/" + customname + "_customizecards.dat",'w')
 
     # Create the customization script from the template
@@ -294,11 +295,9 @@ if __name__ == "__main__":
         for massdict in masslist.masses:
             pdgs = []
             masses = []
-            infostring = []
             for k, v in massdict.iteritems():
                 pdgs.append(k)
                 masses.append(v)
-                infostring.append("%s_%s"%(k,v))
             procname = args.name 
             for nrun in xrange(args.nruns):
                 jobnames.append(makejob(args.protocol,

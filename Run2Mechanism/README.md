@@ -481,9 +481,10 @@ to generate.
 The keys of the dictionary are the masses of the mother particles, i.e. the
 particles that were produced with Madgraph. 
 It is assumed that the undecayed files have names like what is used in step 1 of these instructions. 
-One format is allowed:
+Two formats are allowed:
 
- -  `<name>__<pdg id_mother mass(es)>__<other stuff>_undecayed.lhe(.gz)`. 
+ -  `<name>_<pdg id_mass(__pdg id_mass...)>_<other stuff without underscores>_undecayed.lhe(.gz)`
+ -  `<name>_<mother mass>_<other stuff without underscores>_undecayed.lhe(.gz)`
 
 The notation used for the second part of this (i.e. mother mass in most cases) should be used as 
 keys in the mass dictionary.
