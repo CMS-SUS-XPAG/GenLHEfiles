@@ -443,7 +443,7 @@ of the file. The table below contains all the options that will be used by the
 | Option       | Info
 | :----------- | :-----------------------------
 | `name`       | This corresponds to the name you passed to the [run_scan.py](./run_scan.py) script. It corresponds to the beginning of the name of the input LHE files. The assumed naming convention for the undecayed files is: ```<name><mother mass><other stuff>undecayed.lhe(.gz)```. The processed files will have the names ``` <model><mother mass><other stuff>decayed<mass info>```. The mass info will include the pdg id and mass of all particles for which you made a change in the slha.  
-| `nevents`    | Number of events you want to process for each input file. Put any negative value to process all events.
+| `pdg`        | The PDG ID of the mother particle in the sample (e.g. 1000021 for a gluino).
 | `inputdir`   | Location of the LHE files you want to process.
 | `outputdir`  | Location where you want the processed LHE files to be stored. This directory will be created if it does not exist yet. 
 | `model`      | New name to replace the original `name` that is part of the LHE filename (gluino in the default example from Part 1). The output files will thus start with "model". If you pass the empty string as option, the name will become 'custom' or equal to `decay` if that option was set.

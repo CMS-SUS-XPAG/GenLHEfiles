@@ -187,11 +187,6 @@ def makeCLParser():
                         metavar = "configfile",
                         help = "Config file to be used. See create_update_header_config.py for more details."
                         )
-    parser.add_argument("--pdg",
-                        type = int,
-                        default = 1000021,
-                        help = "PDG ID of mother particle (default: %(default)s)"
-                        )
     parser.add_argument("--stableLSP",
                         action="store_true",
                         help = "Flag to add 'DECAY 1000022 0' to the lhe files. Only needed if original file does not have this line yet, and only used if you have chosen one of the built-in decay options."
@@ -241,6 +236,7 @@ if __name__ == "__main__":
 
     # extract some info from the config
     name = config.get('Global','name')
+    pdg = config.get('Global','pdg')
     nevents = config.getint('Global','nevents')
 
     # Get the path to all files in the inputdir that match the 'name'
@@ -301,7 +297,7 @@ if __name__ == "__main__":
             found_mother_mass = True
         else:
             for pnum, p in enumerate(parts):
-                if p==str(args.pdg) and pnum < len(parts)-1:
+                if p==str(pdg) and pnum < len(parts)-1:
                     mother_mass = parts[pnum+1]
                     found_mother_mass = True
                     break

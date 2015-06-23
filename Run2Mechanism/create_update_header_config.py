@@ -33,6 +33,7 @@ def makeConfig(options, configname):
 
     config.add_section('Global')
     config.set('Global', 'name', options["name"])
+    config.set('Global', 'pdg', options["pdg"])
     config.set('Global', 'nevents', options["nevents"])
     config.set('Global', 'inputdir', options["inputdir"])
     config.set('Global', 'outputdir', options["outputdir"])
@@ -75,10 +76,7 @@ if __name__ == "__main__":
     #              ....
     #             }
 
-    to_print = "mass_dict = {'1000.0': [{'1000022': 700},{'1000022': 750}, {'1000022': 800}, {'1000022': 850}, {'1000022': 950}],  '800.0' : [{'1000022': 550}, {'1000022': 600}, {'1000022': 650}, {'1000022': 700}, {'1000022': 750}]}"
-
-    with open("massdict_gluino_800_1000_caterina.py", 'w') as mdict:
-        mdict.write(to_print)
+    m.makeMassDict_standard_SMS(range(800,1605,100),100)
 
     # Fill out the options dictionary with your configuration:
     # All options need to be provided as strings.
@@ -102,18 +100,19 @@ if __name__ == "__main__":
     #           }
 
     options = {"name": "gluino", 
+               "pdg": "1000021",
                "nevents": "-1",
                "inputdir": "lhe", 
                "outputdir": "lhe_processed", 
                "model": "",
                "slha": "",
-               "mass": "massdict_gluino_800_1000_caterina.py", 
+               "mass": "mass_dict.py", 
                "decay": "T1bbbb",
                "decaystring": ""
                }
 
     # Name for the config file
-    configname = "gluino_800_1000_caterina.cfg"
+    configname = "tutorial.cfg"
 
     # Actually create the config file to be used by update_header.py
     makeConfig(options, configname)
