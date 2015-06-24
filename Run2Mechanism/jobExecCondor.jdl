@@ -1,14 +1,14 @@
 universe = vanilla
-Executable = ../jobExecCondor.sh
+Executable = PWD/jobExecCondor.sh
 Requirements = OpSys == "LINUX" && (Arch != "DUMMY" )
 request_disk = 1000000
 request_memory = 199
 Should_Transfer_Files = YES
 WhenToTransferOutput = ON_EXIT
-Transfer_Input_Files = ../jobExecCondor.sh, ../setupGenEnv.sh, CMSSWVER.tar.gz
-Output = CUSTOMCARD__$(Cluster)_$(Process).stdout
-Error = CUSTOMCARD__$(Cluster)_$(Process).stderr
-Log = CUSTOMCARD__$(Cluster)_$(Process).condor
+Transfer_Input_Files = PWD/jobExecCondor.sh, PWD/setupGenEnv.sh, PWD/scripts/CMSSWVER.tar.gz
+Output = PWD/logs/CUSTOMCARD__$(Cluster)_$(Process).stdout
+Error = PWD/logs/CUSTOMCARD__$(Cluster)_$(Process).stderr
+Log = PWD/logs/CUSTOMCARD__$(Cluster)_$(Process).condor
 notification = Never
 x509userproxy = $ENV(X509_USER_PROXY)
 Arguments = CMSSWVER OUTDIR PROCNAME CUSTOMCARD

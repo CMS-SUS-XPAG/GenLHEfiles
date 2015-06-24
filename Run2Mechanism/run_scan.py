@@ -72,8 +72,8 @@ def makeCLParser():
                         help = "Submission protocol (default: %(default)s)"
                         )
     parser.add_argument("-o","--output",
-                        default = "",
-                        help = "Directory for output LHE file (optional for lxbatch, necessary for condor)"
+                        default = "lhe",
+                        help = "Directory for output LHE file"
                         )
     parser.add_argument("-q", "--queue",
                         default = "1nd",
@@ -87,6 +87,11 @@ def makeCLParser():
                         type = int,
                         default = 1000021,
                         help = "PDG ID of particle to be produced (default: %(default)s)"
+                        )
+    parser.add_argument("--keeptar",
+                        action='store_true',
+                        default = False,
+                        help = "keep existing CMSSW tarball for Condor"
                         )
     mass_group = parser.add_mutually_exclusive_group()
     mass_group.add_argument("--mass",
@@ -159,7 +164,7 @@ def makejob(PROTOCOL, RUNDIR, CMSSWBASE, CMSSWVER, PROCNAME, OUTDIR, NEV, NRUN, 
     
     jobname = jobprefix+"_"+customname+jobsuffix
     # these initial commands are common to condor and lxbatch
-    jobcmd = "cat "+jobprefix+jobsuffix+" | sed -e s/CUSTOMCARD/"+customname+"/ | sed -e s/CMSSWVER/"+CMSSWVER+"/ | sed -e s~OUTDIR~"+OUTDIR+"~ | sed -e s/PROCNAME/"+PROCNAME+"/"
+    jobcmd = "cat "+jobprefix+jobsuffix+" | sed -e s/CUSTOMCARD/"+customname+"/ | sed -e s/CMSSWVER/"+CMSSWVER+"/ | sed -e s~OUTDIR~"+OUTDIR+"~ | sed -e s/PROCNAME/"+PROCNAME+"/ | sed -e s~PWD~"+os.getenv("PWD")+"~g"
     # lxbatch needs some extra directory info because it doesn't use the CMSSW tarball
     if PROTOCOL == "bsub" or PROTOCOL == "qsub":
         jobcmd = jobcmd+" | sed -e s~CMSDIR~"+CMSSWBASE+"~ | sed -e s~RUNDIR~"+RUNDIR+"~"
@@ -205,7 +210,7 @@ def submitjob(QUEUE, JOBNAME, RUNDIR, PROTOCOL, NCORES):
         print ' '.join(submitcommand)
         
     elif PROTOCOL == "condor":
-        submitcommand = ["condor_submit", JOBNAME]
+        submitcommand = ["condor_submit", os.getenv("PWD")+"/scripts/"+JOBNAME]
         print ' '.join(submitcommand)
 
     else: 
@@ -246,16 +251,6 @@ if __name__ == "__main__":
         if not os.path.isfile("cards/%s_proc_card.dat" % (args.name)):
             sys.exit("There is no proc card with name %s_proc_card.dat" % (args.name))
         print "    OK"
-
-    # Check the output directory specification
-    if not args.output:
-        if args.protocol == "qsub" or args.protocol == "bsub":
-            args.output = RUNDIR+"/lhe"
-        elif args.protocol == "condor":
-            # output directory must be specified for condor
-            sys.exit("No output directory specified for condor submission: quitting")
-
-    # todo: check condor output for xrootd?
 
     # Deal with number of cores for qsub or condor protocols
     ncores = args.ncores
@@ -347,12 +342,16 @@ if __name__ == "__main__":
         os.system("./checkCondor.sh")
     
         # use cache directory tags to denote excluded directories
-        os.system("tar --exclude-caches-all -zcf scripts/"+CMSSWVER+".tar.gz -C "+CMSSWBASE+"/.. "+CMSSWVER)
+        if not args.keeptar:
+            os.system("tar --exclude-caches-all -zcf scripts/"+CMSSWVER+".tar.gz -C "+CMSSWBASE+"/.. "+CMSSWVER)
     
     # Now submit the jobs if desired
     if not args.nosubmit:
-        os.chdir("scripts")
+        pwd = os.getenv("PWD")
+        if not args.output.startswith("root://"):
+            os.chdir(args.output)
         for job in jobnames:
             submitjob(args.queue, job, RUNDIR, args.protocol, ncores)
         print "Submitted all jobs."
-        os.chdir("..")
+        if not args.output.startswith("root://"):
+            os.chdir(pwd)

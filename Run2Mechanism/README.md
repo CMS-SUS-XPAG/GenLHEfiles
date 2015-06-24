@@ -233,7 +233,8 @@ The full list of options:
 - `-q, --queue`: Queue to submit to (default='1nd')
 - `--nosubmit`: Flag to turn off submission, job scripts are still created. Can be useful
   		if you want to run locally. 
--  `-o, --output`: Output directory for LHE file (default='lhe')
+- `-o, --output`: Output directory for LHE file (default='lhe')
+- `--keeptar`: keep existing CMSSW tarball for Condor (default='False')
 
 Each time you execute the script, a log file will be created. This log file includes the 
 full setup which was used. The name of the log file includes the current time in order 
@@ -247,7 +248,8 @@ The [run_scan.py](./run_scan.py) script will use several directories in the work
          directory is NOT cleaned by default by the script.
 - `lhe`: To hold the output lhe files that are produced by the [SUSY_generation.sh](./SUSY_generation.sh) script
 
-To run with Condor on cmslpc, it is necessary to specify the output directory using an xrootd path:
+To run with Condor on cmslpc, it is recommended to specify the output directory using an xrootd path to EOS 
+when generating large files:
 ```
 root://cmseos.fnal.gov//store/path/to/file
 ```
