@@ -10,6 +10,6 @@ Output = PWD/logs/CUSTOMCARD__$(Cluster)_$(Process).stdout
 Error = PWD/logs/CUSTOMCARD__$(Cluster)_$(Process).stderr
 Log = PWD/logs/CUSTOMCARD__$(Cluster)_$(Process).condor
 notification = Never
-x509userproxy = $ENV(X509_USER_PROXY)
+GPROXY
 Arguments = CMSSWVER OUTDIR PROCNAME CUSTOMCARD
 Queue 1

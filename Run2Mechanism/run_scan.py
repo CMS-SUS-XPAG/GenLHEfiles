@@ -150,6 +150,9 @@ def makecustom(PROCNAME, NEV, NRUN, PDGID, MASS, SEED):
 def makejob(PROTOCOL, RUNDIR, CMSSWBASE, CMSSWVER, PROCNAME, OUTDIR, NEV, NRUN, PDGID, MASS, SEED):
     jobprefix = ""
     jobsuffix = ""
+
+    # check for file output to EOS over xrootd for LPC condor
+    use_eos = OUTDIR.startswith("root://")
     
     # get template scripts
     if PROTOCOL == "condor":
@@ -164,10 +167,17 @@ def makejob(PROTOCOL, RUNDIR, CMSSWBASE, CMSSWVER, PROCNAME, OUTDIR, NEV, NRUN, 
     
     jobname = jobprefix+"_"+customname+jobsuffix
     # these initial commands are common to condor and lxbatch
-    jobcmd = "cat "+jobprefix+jobsuffix+" | sed -e s/CUSTOMCARD/"+customname+"/ | sed -e s/CMSSWVER/"+CMSSWVER+"/ | sed -e s~OUTDIR~"+OUTDIR+"~ | sed -e s/PROCNAME/"+PROCNAME+"/ | sed -e s~PWD~"+os.getenv("PWD")+"~g"
+    jobcmd = "cat "+jobprefix+jobsuffix+" | sed -e s/CUSTOMCARD/"+customname+"/ | sed -e s/CMSSWVER/"+CMSSWVER+"/ | sed -e s~OUTDIR~"+OUTDIR+"~ | sed -e s/PROCNAME/"+PROCNAME+"/"
     # lxbatch needs some extra directory info because it doesn't use the CMSSW tarball
     if PROTOCOL == "bsub" or PROTOCOL == "qsub":
         jobcmd = jobcmd+" | sed -e s~CMSDIR~"+CMSSWBASE+"~ | sed -e s~RUNDIR~"+RUNDIR+"~"
+    elif PROTOCOL == "condor":
+        jobcmd = jobcmd+" | sed -e s~PWD~"+os.getenv("PWD")+"~g"
+        if use_eos:
+            jobcmd = jobcmd+" | sed -e 's/GPROXY/x509userproxy = $ENV(X509_USER_PROXY)/'"
+        else:
+            jobcmd = jobcmd+" | sed -e s/GPROXY//"
+
     # now write to job file in scripts dir
     jobcmd = jobcmd+" > scripts/"+jobname
     print jobcmd
@@ -251,6 +261,9 @@ if __name__ == "__main__":
         if not os.path.isfile("cards/%s_proc_card.dat" % (args.name)):
             sys.exit("There is no proc card with name %s_proc_card.dat" % (args.name))
         print "    OK"
+
+    # check for file output to EOS over xrootd for LPC condor
+    use_eos = args.output.startswith("root://")
 
     # Deal with number of cores for qsub or condor protocols
     ncores = args.ncores
@@ -339,7 +352,8 @@ if __name__ == "__main__":
     # change to directory above CMSSW_BASE and tar CMSSW_BASE to get desired directory structure
     if args.protocol == "condor":
         # check to make sure the grid proxy exists and is valid
-        os.system("./checkCondor.sh")
+        if use_eos:
+            os.system("./checkCondor.sh")
     
         # use cache directory tags to denote excluded directories
         if not args.keeptar:
@@ -348,10 +362,10 @@ if __name__ == "__main__":
     # Now submit the jobs if desired
     if not args.nosubmit:
         pwd = os.getenv("PWD")
-        if not args.output.startswith("root://"):
+        if not use_eos: #ensure LHE output gets transferred to user-specified dir
             os.chdir(args.output)
         for job in jobnames:
             submitjob(args.queue, job, RUNDIR, args.protocol, ncores)
         print "Submitted all jobs."
-        if not args.output.startswith("root://"):
+        if not use_eos:
             os.chdir(pwd)
