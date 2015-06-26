@@ -229,21 +229,52 @@ def submitjob(QUEUE, JOBNAME, RUNDIR, PROTOCOL, NCORES):
         
     subprocess.call(' '.join(submitcommand), shell=True) 
 
+# -----------------------------------------------------------------
+#Create CACHEDIR.TAG files on the fly to exclude output directories from condor tarball
+# -----------------------------------------------------------------
+def cachedir(DIR):
+    if len(DIR)==0:
+        return
+        
+    tagfile = DIR+"/CACHEDIR.TAG"
+    if not os.path.isfile(tagfile):
+        tag = open(tagfile,'w')
+        tag.write("Signature: 8a477f597d28d172789f06886806bc55\n")
+        tag.write("# This file is a cache directory tag.\n")
+        tag.write("# For information about cache directory tags, see:\n")
+        tag.write("#       http://www.brynosaurus.com/cachedir/")
+        tag.close()
+
 
 # -----------------------------------------------------------------
 
 if __name__ == "__main__": 
 
-    # Parse the command line arguments and print them for provenance
+    # Parse the command line arguments
     parser = makeCLParser()
     args = parser.parse_args()
-
-    print_configuration(vars(args))
 
     # get some info from the OS
     CMSSWVER = os.getenv("CMSSW_VERSION")
     CMSSWBASE = os.getenv("CMSSW_BASE")
     RUNDIR = os.getcwd()
+
+    # check for file output to EOS over xrootd for LPC condor
+    use_eos = args.output.startswith("root://")
+
+    # list of output directories to create
+    dirlist = ["scripts","logs"]
+    if not use_eos:
+        dirlist.extend([args.output,args.output+"_processed"])
+
+    # create output directories and CACHEDIR.TAG files (if necessary)        
+    for dirname in dirlist:
+        if not os.path.isdir(RUNDIR+"/"+dirname):
+            os.mkdir(RUNDIR+"/"+dirname)
+        cachedir(RUNDIR+"/"+dirname)
+
+    # print the command line arguments for provenance
+    print_configuration(vars(args))
 
     # The SUSY_generation.sh script needs to be in the current directory
     if not os.path.isfile("SUSY_generation.sh"): 
@@ -262,8 +293,7 @@ if __name__ == "__main__":
             sys.exit("There is no proc card with name %s_proc_card.dat" % (args.name))
         print "    OK"
 
-    # check for file output to EOS over xrootd for LPC condor
-    use_eos = args.output.startswith("root://")
+
 
     # Deal with number of cores for qsub or condor protocols
     ncores = args.ncores
