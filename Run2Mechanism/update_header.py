@@ -236,6 +236,7 @@ if __name__ == "__main__":
 
     # extract some info from the config
     name = config.get('Global','name')
+    pdg = config.get('Global','pdg')
     nevents = config.getint('Global','nevents')
 
     # Get the path to all files in the inputdir that match the 'name'
@@ -289,13 +290,19 @@ if __name__ == "__main__":
         # Assumes naming scheme as in run_scan.py
         base_f = os.path.basename(f)
         parts = base_f.split("_")
+        found_mother_mass = False
         if len(parts) == 4:
-            # no massdict was used to create the undecayed files
+            # old undecayed file created without using a mass dict
             mother_mass = parts[1]
-        elif len(parts) > 4:
-            # massdict was used to create undecayed files
-            mother_mass = "_".join(parts[1:-2])
-        else: 
+            found_mother_mass = True
+        else:
+            for pnum, p in enumerate(parts):
+                if p==str(pdg) and pnum < len(parts)-1:
+                    mother_mass = parts[pnum+1]
+                    found_mother_mass = True
+                    break
+
+        if not found_mother_mass: 
             print "Unknown filename format, moving to the next file"
             continue
 

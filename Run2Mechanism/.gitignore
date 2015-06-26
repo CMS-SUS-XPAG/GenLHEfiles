@@ -2,8 +2,11 @@
 *.log
 *.cfg
 *.pyc
+*.png
 lhe/
 lhe_processed/
-log/
+logs/
 patches/
 scripts/
+genstep/batch/
+genstep/logs/

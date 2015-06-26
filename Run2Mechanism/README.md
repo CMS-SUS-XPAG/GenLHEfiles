@@ -53,29 +53,41 @@ points privately if necessary.
 ## Getting started
 
 To use some the scripts available here, you need access to the CMSSW software. For most
-people this means that you will be running on either lxplus or on your local T2. 
-**These scripts have only been tested on lxplus so far.** You might need to make changes 
+people this means that you will be running on either lxplus, cmslpc, or on your local T2. 
+**These scripts have only been tested on lxplus and cmslpc so far.** You might need to make changes 
 here and there to get it to run on the local T2 (e.g. for batch submission). 
 
 Most of the python scripts should be run using python 2.7. The easiest way to set 
-this up on lxplus, is to do `cmsenv` in a recent CMSSW area. For example:
+this up on lxplus, is to do `cmsenv` in a recent CMSSW area.
+You should also clone this git repository to get access to the necessary scripts.
+The instructions below include all of these steps, as well as the steps
+to install MadGraph and the associated programs.
+
 ```
-# Set up CMSSW release somewhere
-cmsrel CMSSW_7_1_11
-cd CMSSW_7_1_11/src
+cmsrel CMSSW_7_1_12
+cd CMSSW_7_1_12
 cmsenv
-cd -
-``` 
-
-To avoid having to copy over all the files in this folder separately, I recommend that you clone
-the repository. The clone does not need to reside inside the CMSSW area that you (might have) 
-set up.  
-```
-# Clone command using HTTPS protocol
-git clone https://github.com/CMS-SUS-XPAG/GenLHEfiles.git
-
-# Clone command using SSH protocol
+mkdir prod
+cd prod
 git clone git@github.com:CMS-SUS-XPAG/GenLHEfiles.git
+cd GenLHEfiles/Run2Mechanism
+./installGenerators.sh
+source setupGenEnv.(c)sh
+```
+
+The code from this repository is put in $CMSSW_BASE/prod instead of $CMSSW_BASE/src
+to make it easier to checkout and build CMSSW packages in $CMSSW_BASE/src if desired.
+
+If you do not have a GitHub account with a registered SSH key, you can replace the above
+`git clone` line with this alternative to download over HTTPS:
+```
+git clone https://github.com/CMS-SUS-XPAG/GenLHEfiles.git
+```
+
+Note: if you want to run MadGraph on multiple cores, you need to specify the number of cores
+when running the install script, like this:
+```
+./installGenerators.sh 5
 ```
 
 As a general user, you will not need to contribute to the repository. You will only need to
@@ -121,26 +133,19 @@ This means that you only need to provide one parameter card for the full scan.
 
 #### SUSY_generation.sh
 
-**Prerequisites**: This script will attempt to set up a CMSSW area. You will thus need
+**Prerequisites**: This script will attempt to use variables from the CMSSW environment. You will thus need
 access to the CMS software. You also need access to the LHAPDF6 libraries. 
 On lxplus this script will work out of the box. This is not guaranteed on your local
 cluster. 
 
-This script is an adaptation of the `gridpack_generation.sh` script that can be found 
-on the CMS genproductions github area: 
-https://github.com/cms-sw/genproductions/tree/master/bin/MadGraph5_aMCatNLO
-
-It follows the same general structure, and thus inherits the basic setup that you will
-need to adhere to. 
 For now **only production in LO mode is supported**.
 
 The way to call the script in a standalone way, i.e. not through the `run_scan.py`, is: 
 ```
-./SUSY_generation.sh name ncores
+./SUSY_generation.sh cards lhe name custom
 ```
 
-`ncores` specifies the number of cores that will be used during the event generation. 
-If you do not specify, the default is to use one core. 
+`cards` and `lhe` are the directories for the input cards and the output lhe files, respectively.
 
 `name` is the most important parameter. It specifies the MadGraph cards that should be 
 used. The [SUSY_generation.sh](./SUSY_generation.sh) script expects that there is a `cards` folder in the 
@@ -150,11 +155,12 @@ current working directory. In this folder it will look for cards with the follow
 - `name_proc_card.dat`
 - `name_run_card.dat`
 - `name_param_card.dat`
-- `name_customizecards.dat`
+- `custom_customizecards.dat`
 
 where `name` corresponds to the first argument of the script. The customization card is
 optional, and can be omitted if the full process you want to generate is specified in 
-the other cards. If you use the example cards from the `cards` folder (see the [Examples](#examples)
+the other cards. If you omit the customization card, give `custom` the same value as `name`.
+If you use the example cards from the `cards` folder (see the [Examples](#examples)
 section below), and you wish to run [SUSY_generation.sh](./SUSY_generation.sh) by itself, you will have to 
 add a `gluino_customizecards.dat`. This card should set the gluino mass to a reasonable 
 value, as the value that is in the `gluino_param_card.dat` is too high to be accessible
@@ -182,9 +188,9 @@ whether you need to change some parameters, please contact the SUSY MC contacts 
 MC/Trigger/XPAG conveners. 
 
 To summarize, if your cards are named `mytest_proc_card.dat`, `mytest_run_card.dat` and 
-`mytest_param_card.dat`, and you want to run with 4 cores, then you should execute:
+`mytest_param_card.dat`, then you should execute:
 ```
-./SUSY_generation.sh mytest 4
+./SUSY_generation.sh cards lhe mytest mytest
 ```
 
 #### run_scan.py
@@ -223,38 +229,47 @@ The full list of options:
 - `--nruns`: Number of runs, useful if you want to produce a lot of events (default=1). 
             All jobs will be replicated nruns times. 
 - `--ncores`: Number of cores to use for event generation (default=1)
-- `--protocol`: Submission protocol: bsub or qsub (default='bsub')
+- `--protocol`: Submission protocol: bsub or qsub or condor (default='bsub')
 - `-q, --queue`: Queue to submit to (default='1nd')
 - `--nosubmit`: Flag to turn off submission, job scripts are still created. Can be useful
-  		if you want to run locally.  
+  		if you want to run locally. 
+- `-o, --output`: Output directory for LHE file (default='lhe')
+- `--keeptar`: keep existing CMSSW tarball for Condor (default='False')
 
 Each time you execute the script, a log file will be created. This log file includes the 
 full setup which was used. The name of the log file includes the current time in order 
 to make it easier to track things.
 
-The [run_scan.py](./run_scan.py) script will create several directories in the working directory. 
+The [run_scan.py](./run_scan.py) script will use several directories in the working directory. 
 
 - `scripts`: To hold the job scripts that will be submitted to the batch queue. This 
              directory is NOT cleaned by default by the script. 
-- `log`: To hold the error and log files that are returned by the batch system. This 
+- `logs`: To hold the error and log files that are returned by the batch system. This 
          directory is NOT cleaned by default by the script.
 - `lhe`: To hold the output lhe files that are produced by the [SUSY_generation.sh](./SUSY_generation.sh) script
-- `patches`: This directory will contain two patches for the MG5_aMC@NLO distribution. 
-             The first time you run the script these patches will be downloaded from
-             https://github.com/cms-sw/genproductions/tree/master/bin/MadGraph5_aMCatNLO
 
-By default the script will submit to the 1nd queue. Depending on how many events you want
+To run with Condor on cmslpc, it is recommended to specify the output directory using an xrootd path to EOS 
+when generating large files:
+```
+root://cmseos.fnal.gov//store/path/to/file
+```
+For more about xrootd, click [here](https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookXrootdService).
+
+When using Condor on cmslpc, the CMSSW working directory is sent to the worker node in a tarball.
+Some subdirectories only contain log files or LHE output files which are not necessary to run the production.
+The user can exclude such a subdirectory by placing a file called CACHEDIR.TAG in it.
+The tar option `--exclude-caches-all` (used by default in [run_scan.py](./run_scan.py)) will then ignore the subdirectory.
+Examples of this CACHEDIR.TAG file are included in the repository for the lhe, lhe_processed, logs, and scripts directories.
+For more about CACHEDIR.TAG, consult the [Cache Directory Tagging Standard](http://www.brynosaurus.com/cachedir/spec.html).
+
+By default the script will submit to the 1nd queue when using the lxplus batch system. Depending on how many events you want
 to run per job, you might need to change this. It is probably fine up to about 100k events
 for up to two extra partons, but this has not been explicitely tested. 
 
 It is also possible to speed up the event generation by running on more than 1 core. This 
 can be used for running on lxbatch and for running locally (e.g. on lxplus). This option 
-is not supported for batch systems that use `qsub` for submission. 
-
-The job script will clean up after itself, meaning that it will copy over the output file, 
-and then delete everything it created. If you are running locally and want to keep absolutely
-everything, then you have to comment out the line in the script that does this removal. 
-This line can be found at the end of the `makejob(...)` function. 
+is not supported for batch systems that use `qsub` for submission. It is possible in principle
+when using condor, but this is not supported by the script yet.
 
 
 #### Examples
@@ -267,17 +282,17 @@ I have provided some example MadGraph cards in the `cards` directory.
                           I would not recommend this, however, as it will increase the
                           running time substantially.
                           I have also excluded (with the `$` operator) any diagrams 
-			  containing any other sparticle. They will not contribute
+                          containing any other sparticle. They will not contribute
                           anyways as they have been chosen to be decoupled. 
- 			  Also note that the name for the output directory had to be 
-			  consistent with the naming for the cards. In this case it is 
-			  put to "gluino". 
+                          Also note that the name for the output directory had to be 
+                          consistent with the naming for the cards. In this case it is 
+                          put to "gluino". 
 - `gluino_param_card.dat`: This parameter card should be useable for most simplified
-  			   models. It puts all masses to a very high scale. The relevant
- 			   masses will be set during run time as previously explained.
+                           models. It puts all masses to a very high scale. The relevant
+                           masses will be set during run time as previously explained.
 - `gluino_run_card.dat`: Basic run card for LO production. It includes the weights for 
-  			 various scale and PDF choices. MLM matching is turned on with
-			 `xqcut = 30`. 
+                         various scale and PDF choices. MLM matching is turned on with
+                         `xqcut = 30`. 
 
 To run the very basic example on lxplus, you can simply do: 
 ```
@@ -316,9 +331,14 @@ You would then call the main script as follows:
 ```
 python run_scan.py --massdict my_mass_info.py
 ```
+
 You can check the status of your lxbatch jobs by running
 ```
 bjobs
+```
+or your condor jobs by running
+```
+condor_q -submitter [username]
 ```
 
 If you want to generate events for stop quarks for example, instead of gluinos, this is 
@@ -338,7 +358,6 @@ what you need to do:
   ```
 - Wait for your LHE files to be delivered
 
-
 In case you want to produce chargino neutralino2 production with a mass difference of 0.1 GeV, you would follow the above
 with the difference that you need to use the `--massdict` option. The corresponding 
 python file could look like: 
@@ -348,7 +367,6 @@ masses = [{"1000023":mass, "1000024":(mass+0.1)} for mass in range(100,500,25)]
 
 #### Features to be added in the future
 
-- submission with condor (volunteer with condor experience needed)
 - support for running in NLO mode. This will require extensive validation.
 
 
@@ -386,8 +404,9 @@ You can print the help message with the following:
 python update_header.py --help
 ```
 As you can see from the output, the script takes a config file as input. The structure
-of this config file is explained below. There is also one optional flag `--stableLSP`
-which should be used if the input LHE files do not contain a line like
+of this config file is explained below. There are also two optional flags:
+`--pdg` which specifies the PDG ID of the mother particle (used to find the mass value in the undecayed lhe filename),
+and `--stableLSP` which should be used if the input LHE files do not contain a line like
 ```
 DECAY  1000022  0.0
 ```
@@ -433,7 +452,7 @@ of the file. The table below contains all the options that will be used by the
 | Option       | Info
 | :----------- | :-----------------------------
 | `name`       | This corresponds to the name you passed to the [run_scan.py](./run_scan.py) script. It corresponds to the beginning of the name of the input LHE files. The assumed naming convention for the undecayed files is: ```<name><mother mass><other stuff>undecayed.lhe(.gz)```. The processed files will have the names ``` <model><mother mass><other stuff>decayed<mass info>```. The mass info will include the pdg id and mass of all particles for which you made a change in the slha.  
-| `nevents`    | Number of events you want to process for each input file. Put any negative value to process all events.
+| `pdg`        | The PDG ID of the mother particle in the sample (e.g. 1000021 for a gluino).
 | `inputdir`   | Location of the LHE files you want to process.
 | `outputdir`  | Location where you want the processed LHE files to be stored. This directory will be created if it does not exist yet. 
 | `model`      | New name to replace the original `name` that is part of the LHE filename (gluino in the default example from Part 1). The output files will thus start with "model". If you pass the empty string as option, the name will become 'custom' or equal to `decay` if that option was set.
@@ -465,8 +484,7 @@ This is a problem for these decay blocks, as the lines that contain the branchin
 need to be indented. In order to solve this problem, you need to add quotes. This is why in 
 the above command you can see these escaped quotes. 
 
-
-The last thing that needs to be explained before coming to the examples is the afore-mentioned 
+The last thing that needs to be explained before coming to the examples is the aforementioned 
 mass dictionary. This dictionary will encapsulate the grid of parameter points you want
 to generate.  
 The keys of the dictionary are the masses of the mother particles, i.e. the
@@ -474,11 +492,11 @@ particles that were produced with Madgraph.
 It is assumed that the undecayed files have names like what is used in step 1 of these instructions. 
 Two formats are allowed:
 
+ -  `<name>_<pdg id_mass(__pdg id_mass...)>_<other stuff without underscores>_undecayed.lhe(.gz)`
  -  `<name>_<mother mass>_<other stuff without underscores>_undecayed.lhe(.gz)`
- -  `<name>_<pdg id__mother mass(es)>_<other stuff without underscores>_undecayed.lhe(.gz)`. 
 
 The notation used for the second part of this (i.e. mother mass in most cases) should be used as 
-keys in the mass dictionary.  
+keys in the mass dictionary.
 The value corresponding to each key in the dictionary is a list of all the configurations
 you wish to produce for that given mother mass (or key). 
 Each configuration is encoded in a dictionary with the pdg id of the particles as keys, 
@@ -508,10 +526,11 @@ several functions to create this
 mass dictionary for you. Most of the standard scenarios for simplified model scans
 are included. For example, for the case where you only need to update the mass of the LSP,
 and generate LSP masses from 0 till the mass of the mother particle (with a certain step 
-size), you can use the function `makeMassDict_standard_SMS`. 
+size), you can use the function `makeMassDict_standard_SMS` found in 
+[makeMassDict.py](./makeMassDict.py) and automatically imported in 
+[create_update_header_config.py](./create_update_header_config.py).
 Each provided function comes with some comments, so I encourage you to have a look at them
 to decide whether they are useful for your case. 
-
 
 #### Examples
 
@@ -602,6 +621,9 @@ python update_header.py myconfig.cfg
 Now you have a set of LHE files that are in principle ready to be put through the 
 official production. 
 
+When using LPC Condor, the undecayed lhe.gz files will be stored on EOS. It is best to move the files from EOS to scratch space
+before adding the decay information, to avoid overuse of the fuse mount for the file system. The script
+[processUndecayed.sh](./processUndecayed.sh) shows an example of how to do this.
 
 ## Step 3: Validation
 
@@ -654,11 +676,7 @@ appropriate qcut value however. Once you have this number, you can update the ge
 fragment and start the private production. Depending on the scope of the study you wish
 to perform, you will need to run different steps. For all options you will need the 
 appropriate genfragment. These can usually be found on the genproductions github page. 
-Currently, a good fragment to use with the files produced using this setup is not yet
-available there. In the mean time you can use the fragment I provide on my public area on
-afs:
-
-/afs/cern.ch/user/n/nstrobbe/public/genfragment.py
+An example to use with the files produced using this setup is [genfragment.py](./genstep/genfragment.py).
 
 In this fragment you should update the value of `JetMatching:qCut`, and perhaps the 
 value of `JetMatching:nJetMax`. The `nJetMax` should be set to the largest number of 
@@ -669,20 +687,21 @@ extra partons that are present in the lhe file. The SUSY default for this is `2`
 Before you can start, you need to set up a CMSSW area. Which release(s) to use will depend
 on whether or not you want to produce events up to FastSim or DIGI-RECO. The campaigns
 for reconstruction in Run2 are not ready yet. The GEN-SIM campaign is already available
-and is currenlty using `CMSSW_7_1_12`. 
+and is currently using `CMSSW_7_1_12`. 
 
 To run the GEN step, you need to place the genfragment in a specific directory, and 
 you should not forget to compile. 
 
 Instructions: 
 ```
-cmsrel CMSSW_7_1_12
 cd CMSSW_7_1_12/src
 cmsenv
-mkdir -p Configuration/GenProduction/python
-cp /afs/cern.ch/user/n/nstrobbe/public/genfragment.py Configuration/GenProduction/python/genfragment_cff.py
+git cms-addpkg Configuration/Generator
+mv ../prod/GenLHEfiles/Run2Mechanism/genstep/genfragment.py Configuration/Generator/python
 scram b
 ```
+
+An example template configuration to check qcut values in the GEN step is [GEN_checkQcut_batch.py](./genstep/GEN_checkQcut_batch.py).
 
 #### GEN only
 
@@ -697,12 +716,12 @@ pass a comma-separated list of files to the `--filein` argument.
 ```
 cmsDriver.py step0 --mc --eventcontent LHE --datatier GEN --conditions MCRUN2_71_V1::All --step NONE  --filein file:mylhe.lhe --fileout file:step0.root -n -1 --no_exec
 
-cmsDriver.py Configuration/GenProduction/python/genfragment_cff.py --mc --eventcontent RAWSIM --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier GEN-SIM --conditions MCRUN2_71_V1::All --beamspot NominalCollision2015 --step GEN --magField 38T_PostLS1  --filein file:step0.root --fileout file:GEN.root -n -1 --no_exec
+cmsDriver.py Configuration/Generator/python/genfragment.py --mc --eventcontent RAWSIM --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier GEN-SIM --conditions MCRUN2_71_V1::All --beamspot NominalCollision2015 --step GEN --magField 38T_PostLS1  --filein file:step0.root --fileout file:GEN.root -n -1 --no_exec
 ```
 
 When doing things locally, you can condense this into a single run: 
 ```
-cmsDriver.py Configuration/GenProduction/python/genfragment_cff.py --mc --eventcontent RAWSIM --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier GEN-SIM --conditions MCRUN2_71_V1::All --beamspot NominalCollision2015 --step GEN --magField 38T_PostLS1  --filein file:mylhe.lhe --fileout file:GEN.root -n -1 --no_exec
+cmsDriver.py Configuration/Generator/python/genfragment.py --mc --eventcontent RAWSIM --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier GEN-SIM --conditions MCRUN2_71_V1::All --beamspot NominalCollision2015 --step GEN --magField 38T_PostLS1  --filein file:mylhe.lhe --fileout file:GEN.root -n -1 --no_exec
 ```
 
 #### FASTSIM
@@ -716,7 +735,7 @@ The final DIGI-RECO for Run2 is not yet available.
 
 Instructions for the GEN-SIM step: 
 ```
-cmsDriver.py Configuration/GenProduction/python/genfragment_cff.py --mc --eventcontent RAWSIM --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier GEN-SIM --conditions MCRUN2_71_V1::All --beamspot NominalCollision2015 --step GEN,SIM --magField 38T_PostLS1  --filein file:mylhe.lhe --fileout file:GEN.root -n -1 --no_exec
+cmsDriver.py Configuration/Generator/python/genfragment.py --mc --eventcontent RAWSIM --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier GEN-SIM --conditions MCRUN2_71_V1::All --beamspot NominalCollision2015 --step GEN,SIM --magField 38T_PostLS1  --filein file:mylhe.lhe --fileout file:GEN.root -n -1 --no_exec
 ```
 
 #### Phys14 setup
