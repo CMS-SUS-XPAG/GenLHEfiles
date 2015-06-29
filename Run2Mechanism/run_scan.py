@@ -271,7 +271,8 @@ if __name__ == "__main__":
     for dirname in dirlist:
         if not os.path.isdir(RUNDIR+"/"+dirname):
             os.mkdir(RUNDIR+"/"+dirname)
-        cachedir(RUNDIR+"/"+dirname)
+        if args.protocol == "condor":
+            cachedir(RUNDIR+"/"+dirname)
 
     # print the command line arguments for provenance
     print_configuration(vars(args))
