@@ -196,8 +196,8 @@ def makejob(PROTOCOL, RUNDIR, CMSSWBASE, CMSSWVER, PROCNAME, OUTDIR, NEV, NRUN, 
 # -----------------------------------------------------------------
 def submitjob(QUEUE, JOBNAME, RUNDIR, PROTOCOL, NCORES):
     # location to store error and log files
-    errorfile = RUNDIR + "/log/" + JOBNAME.split("/")[-1].replace(".sh",".err")
-    logfile = RUNDIR + "/log/" + JOBNAME.split("/")[-1].replace(".sh",".log")
+    errorfile = os.path.join(RUNDIR,"logs",JOBNAME.split("/")[-1].replace(".sh",".err"))
+    logfile = os.path.join(RUNDIR,"logs",JOBNAME.split("/")[-1].replace(".sh",".log"))
     # submit the job based on the specified protocol
     submitcommand = ""
     if PROTOCOL == "bsub":
@@ -208,7 +208,7 @@ def submitjob(QUEUE, JOBNAME, RUNDIR, PROTOCOL, NCORES):
         if NCORES > 1:
             submitcommand.extend(["-n %s" % (NCORES),
                                   "-R span[hosts=1]"])
-        submitcommand.append(JOBNAME)
+        submitcommand.append(os.path.join(RUNDIR,"scripts",JOBNAME))
         print ' '.join(submitcommand)
 
     elif PROTOCOL == "qsub": 
@@ -216,11 +216,11 @@ def submitjob(QUEUE, JOBNAME, RUNDIR, PROTOCOL, NCORES):
                          "-q %s" % (QUEUE),
                          "-e %s" % (errorfile),
                          "-o %s" % (logfile),
-                         JOBNAME] 
+                         os.path.join(RUNDIR,"scripts",JOBNAME)] 
         print ' '.join(submitcommand)
         
     elif PROTOCOL == "condor":
-        submitcommand = ["condor_submit", os.getenv("PWD")+"/scripts/"+JOBNAME]
+        submitcommand = ["condor_submit", os.path.join(RUNDIR,"scripts",JOBNAME)]
         print ' '.join(submitcommand)
 
     else: 
