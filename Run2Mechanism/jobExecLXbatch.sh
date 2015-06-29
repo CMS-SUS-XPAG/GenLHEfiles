@@ -14,5 +14,5 @@ source RUNDIR/setupGenEnv.sh
 
 # run madgraph
 ${RUNBASEDIR}/SUSY_generation.sh ${RUNBASEDIR}/cards OUTDIR PROCNAME CUSTOMCARD
-
-
+cp -v OUTDIR/CUSTOMCARD_undecayed.lhe.gz ${RUNBASEDIR}/OUTDIR
+rm -rf OUTDIR

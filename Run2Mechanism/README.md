@@ -259,7 +259,8 @@ When using Condor on cmslpc, the CMSSW working directory is sent to the worker n
 Some subdirectories only contain log files or LHE output files which are not necessary to run the production.
 The user can exclude such a subdirectory by placing a file called CACHEDIR.TAG in it.
 The tar option `--exclude-caches-all` (used by default in [run_scan.py](./run_scan.py)) will then ignore the subdirectory.
-Examples of this CACHEDIR.TAG file are included in the repository for the lhe, lhe_processed, logs, and scripts directories.
+[run_scan.py](./run_scan.py) will automatically create a CACHEDIR.TAG file in the lhe, lhe_processed, logs, and scripts directories
+(or the user-specified local output directory, if it is different than the default "lhe").
 For more about CACHEDIR.TAG, consult the [Cache Directory Tagging Standard](http://www.brynosaurus.com/cachedir/spec.html).
 
 By default the script will submit to the 1nd queue when using the lxplus batch system. Depending on how many events you want

@@ -76,8 +76,8 @@ else
     fi
   else
     echo "mv output for lxbatch"
-    mkdir -p ${OUTDIR}
-    mv Events/pilotrun/unweighted_events.lhe.gz ${OUTDIR}/${CUSTOMCARD}_undecayed.lhe.gz
+    mkdir -p ../${OUTDIR}
+    mv -v Events/pilotrun/unweighted_events.lhe.gz ../${OUTDIR}/${CUSTOMCARD}_undecayed.lhe.gz
   fi
   
   echo "End of job"

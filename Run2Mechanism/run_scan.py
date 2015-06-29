@@ -167,7 +167,7 @@ def makejob(PROTOCOL, RUNDIR, CMSSWBASE, CMSSWVER, PROCNAME, OUTDIR, NEV, NRUN, 
     
     jobname = jobprefix+"_"+customname+jobsuffix
     # these initial commands are common to condor and lxbatch
-    jobcmd = "cat "+jobprefix+jobsuffix+" | sed -e s/CUSTOMCARD/"+customname+"/ | sed -e s/CMSSWVER/"+CMSSWVER+"/ | sed -e s~OUTDIR~"+OUTDIR+"~ | sed -e s/PROCNAME/"+PROCNAME+"/"
+    jobcmd = "cat "+jobprefix+jobsuffix+" | sed -e s/CUSTOMCARD/"+customname+"/ | sed -e s/CMSSWVER/"+CMSSWVER+"/ | sed -e s~OUTDIR~"+OUTDIR+"~g | sed -e s/PROCNAME/"+PROCNAME+"/"
     # lxbatch needs some extra directory info because it doesn't use the CMSSW tarball
     if PROTOCOL == "bsub" or PROTOCOL == "qsub":
         jobcmd = jobcmd+" | sed -e s~CMSDIR~"+CMSSWBASE+"~ | sed -e s~RUNDIR~"+RUNDIR+"~"
@@ -196,8 +196,8 @@ def makejob(PROTOCOL, RUNDIR, CMSSWBASE, CMSSWVER, PROCNAME, OUTDIR, NEV, NRUN, 
 # -----------------------------------------------------------------
 def submitjob(QUEUE, JOBNAME, RUNDIR, PROTOCOL, NCORES):
     # location to store error and log files
-    errorfile = RUNDIR + "/log/" + JOBNAME.split("/")[-1].replace(".sh",".err")
-    logfile = RUNDIR + "/log/" + JOBNAME.split("/")[-1].replace(".sh",".log")
+    errorfile = os.path.join(RUNDIR,"logs",JOBNAME.split("/")[-1].replace(".sh",".err"))
+    logfile = os.path.join(RUNDIR,"logs",JOBNAME.split("/")[-1].replace(".sh",".log"))
     # submit the job based on the specified protocol
     submitcommand = ""
     if PROTOCOL == "bsub":
@@ -208,7 +208,7 @@ def submitjob(QUEUE, JOBNAME, RUNDIR, PROTOCOL, NCORES):
         if NCORES > 1:
             submitcommand.extend(["-n %s" % (NCORES),
                                   "-R span[hosts=1]"])
-        submitcommand.append(JOBNAME)
+        submitcommand.append(os.path.join(RUNDIR,"scripts",JOBNAME))
         print ' '.join(submitcommand)
 
     elif PROTOCOL == "qsub": 
@@ -216,11 +216,11 @@ def submitjob(QUEUE, JOBNAME, RUNDIR, PROTOCOL, NCORES):
                          "-q %s" % (QUEUE),
                          "-e %s" % (errorfile),
                          "-o %s" % (logfile),
-                         JOBNAME] 
+                         os.path.join(RUNDIR,"scripts",JOBNAME)] 
         print ' '.join(submitcommand)
         
     elif PROTOCOL == "condor":
-        submitcommand = ["condor_submit", os.getenv("PWD")+"/scripts/"+JOBNAME]
+        submitcommand = ["condor_submit", os.path.join(RUNDIR,"scripts",JOBNAME)]
         print ' '.join(submitcommand)
 
     else: 
@@ -229,21 +229,53 @@ def submitjob(QUEUE, JOBNAME, RUNDIR, PROTOCOL, NCORES):
         
     subprocess.call(' '.join(submitcommand), shell=True) 
 
+# -----------------------------------------------------------------
+#Create CACHEDIR.TAG files on the fly to exclude output directories from condor tarball
+# -----------------------------------------------------------------
+def cachedir(DIR):
+    if len(DIR)==0:
+        return
+        
+    tagfile = DIR+"/CACHEDIR.TAG"
+    if not os.path.isfile(tagfile):
+        tag = open(tagfile,'w')
+        tag.write("Signature: 8a477f597d28d172789f06886806bc55\n")
+        tag.write("# This file is a cache directory tag.\n")
+        tag.write("# For information about cache directory tags, see:\n")
+        tag.write("#       http://www.brynosaurus.com/cachedir/")
+        tag.close()
+
 
 # -----------------------------------------------------------------
 
 if __name__ == "__main__": 
 
-    # Parse the command line arguments and print them for provenance
+    # Parse the command line arguments
     parser = makeCLParser()
     args = parser.parse_args()
-
-    print_configuration(vars(args))
 
     # get some info from the OS
     CMSSWVER = os.getenv("CMSSW_VERSION")
     CMSSWBASE = os.getenv("CMSSW_BASE")
     RUNDIR = os.getcwd()
+
+    # check for file output to EOS over xrootd for LPC condor
+    use_eos = args.output.startswith("root://")
+
+    # list of output directories to create
+    dirlist = ["scripts","logs"]
+    if not use_eos:
+        dirlist.extend([args.output,args.output+"_processed"])
+
+    # create output directories and CACHEDIR.TAG files (if necessary)        
+    for dirname in dirlist:
+        if not os.path.isdir(RUNDIR+"/"+dirname):
+            os.mkdir(RUNDIR+"/"+dirname)
+        if args.protocol == "condor":
+            cachedir(RUNDIR+"/"+dirname)
+
+    # print the command line arguments for provenance
+    print_configuration(vars(args))
 
     # The SUSY_generation.sh script needs to be in the current directory
     if not os.path.isfile("SUSY_generation.sh"): 
@@ -262,8 +294,7 @@ if __name__ == "__main__":
             sys.exit("There is no proc card with name %s_proc_card.dat" % (args.name))
         print "    OK"
 
-    # check for file output to EOS over xrootd for LPC condor
-    use_eos = args.output.startswith("root://")
+
 
     # Deal with number of cores for qsub or condor protocols
     ncores = args.ncores
