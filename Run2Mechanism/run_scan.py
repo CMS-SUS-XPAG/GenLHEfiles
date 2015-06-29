@@ -167,7 +167,7 @@ def makejob(PROTOCOL, RUNDIR, CMSSWBASE, CMSSWVER, PROCNAME, OUTDIR, NEV, NRUN, 
     
     jobname = jobprefix+"_"+customname+jobsuffix
     # these initial commands are common to condor and lxbatch
-    jobcmd = "cat "+jobprefix+jobsuffix+" | sed -e s/CUSTOMCARD/"+customname+"/ | sed -e s/CMSSWVER/"+CMSSWVER+"/ | sed -e s~OUTDIR~"+OUTDIR+"~ | sed -e s/PROCNAME/"+PROCNAME+"/"
+    jobcmd = "cat "+jobprefix+jobsuffix+" | sed -e s/CUSTOMCARD/"+customname+"/ | sed -e s/CMSSWVER/"+CMSSWVER+"/ | sed -e s~OUTDIR~"+OUTDIR+"~g | sed -e s/PROCNAME/"+PROCNAME+"/"
     # lxbatch needs some extra directory info because it doesn't use the CMSSW tarball
     if PROTOCOL == "bsub" or PROTOCOL == "qsub":
         jobcmd = jobcmd+" | sed -e s~CMSDIR~"+CMSSWBASE+"~ | sed -e s~RUNDIR~"+RUNDIR+"~"
