@@ -697,7 +697,7 @@ Instructions:
 cd CMSSW_7_1_12/src
 cmsenv
 git cms-addpkg Configuration/Generator
-mv ../prod/GenLHEfiles/Run2Mechanism/genstep/genfragment.py Configuration/Generator/python
+cp ../prod/GenLHEfiles/Run2Mechanism/genstep/genfragment.py Configuration/Generator/python
 scram b
 ```
 
