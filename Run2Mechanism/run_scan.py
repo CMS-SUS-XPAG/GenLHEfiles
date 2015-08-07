@@ -310,7 +310,7 @@ if __name__ == "__main__":
     if args.massrange != None:
         # A mass range was provided, create a job for each mass point in the range
         MIN, MAX, STEP = args.massrange
-        print "Will create jobs for the mass range [%s,%s[ with step %s" % (MIN, MAX, STEP)
+        print "Will create jobs for the mass range [%s,%s] with step %s" % (MIN, MAX, STEP)
         for mass in np.arange(MIN, MAX, STEP):
             for nrun in xrange(args.nruns):
                 procname = args.name 
