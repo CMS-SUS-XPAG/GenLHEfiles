@@ -220,7 +220,6 @@ The full list of options:
            is not relevant if you are using the --massdict option.
 - `--mass`: White space separated list of masses to produce events for (default=1000) 
 - `--massrange`: Mass range to produce events for. Format: MIN MAX STEP (no default). 
-                 The value in MAX is not included in the range.
 - `--massdict`: Name of a python file that contains the mass and pdg information. 
                 The information should be stored in a list called `masses`. Each element
                 of the list will be converted into a job, and should be in the form of a 
@@ -326,7 +325,7 @@ In the case of gluino production we could store the following lines in a file ca
 `my_mass_info.py`: 
 ```python
 # create the list with mass,pdg information
-masses = [{"1000021":mass} for mass in range(1000,1500,100)]
+masses = [{"1000021":mass} for mass in range(1000,1500+100,100)] # given the way the Python range() function works, '1500+100' ensures that 1500 is also included in the list
 ```
 You would then call the main script as follows: 
 ```
