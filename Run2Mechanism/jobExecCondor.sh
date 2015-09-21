@@ -33,7 +33,8 @@ cd -
 source setupGenEnv.sh
 
 # cardfiles location
-CARDSDIR=${RUNBASEDIR}/cards
+# will be prepended with ${RUNBASEDIR}/ in SUSY_generation.sh
+CARDSDIR=cards
 
 # run madgraph
 # last argument specifies that the script is running in Condor

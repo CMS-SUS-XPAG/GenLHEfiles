@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CARDSDIR=$1
+CARDSDIR=${RUNBASEDIR}/$1
 OUTDIR=$2
 PROCNAME=$3
 CUSTOMCARD=$4
@@ -18,7 +18,9 @@ fi
 ${MGBASEDIR}/bin/mg5_aMC ${CARDSDIR}/${PROCNAME}_proc_card.dat
 
 # move generic process directory to specific custom directory for this job
-mv ${PROCNAME} ${CUSTOMCARD}
+if [ "$PROCNAME" != "$CUSTOMCARD" ]; then
+  mv -v ${PROCNAME} ${CUSTOMCARD}
+fi
 cd ${CUSTOMCARD}
 
 # Locating the run card
@@ -72,7 +74,7 @@ else
       xrdcp -f Events/pilotrun/unweighted_events.lhe.gz ${OUTDIR}/${CUSTOMCARD}_undecayed.lhe.gz
     else
       #transfer output using condor file transfer
-      mv Events/pilotrun/unweighted_events.lhe.gz ${CMSSW_BASE}/../${CUSTOMCARD}_undecayed.lhe.gz
+      mv -v Events/pilotrun/unweighted_events.lhe.gz ${CMSSW_BASE}/../${CUSTOMCARD}_undecayed.lhe.gz
     fi
   else
     echo "mv output for lxbatch"
