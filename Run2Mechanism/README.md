@@ -413,6 +413,8 @@ DECAY  1000022  0.0
 in the slha block of the header, and you have chosen one of the predefined decay
 scenarios (see info below). The help message contains the currently included decay
 options.  
+Note that there is a bug in Pythia8 versions < 8.212, where the information from the first DECAY block is ignored. 
+It is thus necessary to put the neutralino decay first, since there is no associated information on decay modes.
 
 Once you have a valid config file, you can simply execute the script 
 ```

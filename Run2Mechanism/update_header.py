@@ -275,7 +275,8 @@ if __name__ == "__main__":
         decay_dict = get_decay_dict()
         decay = decay_dict[config.get('SLHA','decay')]
         if args.stableLSP:
-            decay += decay_dict["LSP_stable"]
+            # Prepend stableLSP; needed to work around pythia8 bug in versions < 8.212
+            decay = decay_dict["LSP_stable"] + decay
         if not model:
             model = config.get('SLHA','decay')
     else:
