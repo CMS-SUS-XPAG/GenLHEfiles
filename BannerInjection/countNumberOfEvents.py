@@ -3,7 +3,7 @@
 import sys
 
 f = open(sys.argv[1])
-efficiency = int(sys.argv[2])
+efficiency = float(sys.argv[2])
 
 total = 0
 for l in f.readlines():
@@ -11,4 +11,4 @@ for l in f.readlines():
    total = total + int(k[2])
 
 
-print total, total*efficiency
+print total, total/efficiency
