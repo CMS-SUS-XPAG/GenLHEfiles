@@ -258,7 +258,7 @@ Int_t T2qq() {
   leg->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -376,7 +376,7 @@ Int_t T2qq2() {
   leg->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -509,7 +509,7 @@ Int_t T6ttWW() {
   leg->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -622,7 +622,7 @@ Int_t T6ttWW2() {
   leg->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -720,7 +720,7 @@ Int_t T6bbllslepton() {
   leg->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -845,7 +845,7 @@ Int_t T6qqWW() {
   leg->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -948,7 +948,7 @@ Int_t T6qqWW2() {
   leg->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -1045,7 +1045,7 @@ Int_t TChiWZ() {
   leg->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -1179,7 +1179,7 @@ Int_t TChiSlepSnu() {
   leg->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -1279,7 +1279,7 @@ Int_t TCoNLSP() {
   leg->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -1463,7 +1463,7 @@ Int_t T1TTTTExtended() {
   line2t->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -1689,7 +1689,7 @@ Int_t T1TTTTExtended_v2() {
   line2t->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -1832,7 +1832,7 @@ Int_t T1BBBB() {
   leg->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -1984,7 +1984,7 @@ Int_t T1BBBB_v2() {
   leg->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -2174,7 +2174,7 @@ Int_t T1TTBB() {
   line2t->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -2366,7 +2366,7 @@ Int_t T1TTBB_v2() {
   line2t->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -2493,7 +2493,7 @@ Int_t T1qqqq() {
   leg->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -2629,7 +2629,7 @@ Int_t T1qqqq_v2() {
   leg->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -2749,7 +2749,7 @@ Int_t T5VV() {
   leg->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -2877,7 +2877,7 @@ Int_t T5VV_v2() {
   leg->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -2995,7 +2995,7 @@ Int_t T5qqqqWW_v1() {
   leg->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -3110,7 +3110,7 @@ Int_t T5qqqqWW_v2() {
   leg->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -3229,7 +3229,7 @@ Int_t T5qqqqWZ() {
   leg->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -3332,7 +3332,7 @@ Int_t T5ZZ() {
   leg->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -3478,7 +3478,7 @@ Int_t T5tttt_DM175() {
   line2t->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -3619,7 +3619,7 @@ Int_t T5tttt_DM175_v2() {
   line2t->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -3735,7 +3735,7 @@ Int_t T5tttt_MGLU1500() {
   line1t->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -3865,7 +3865,7 @@ Int_t T5tttt_MGLU1500_v2() {
   line1t->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -4028,7 +4028,7 @@ Int_t T5ttcc() {
   line2t->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -4161,7 +4161,7 @@ Int_t T5ttcc_v2() {
   leg->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -4244,7 +4244,7 @@ Int_t T7btW() {
   leg->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -4343,7 +4343,7 @@ Int_t T5Wg() {
   leg->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -4414,6 +4414,8 @@ Int_t T5gg() {
       Float_t NEvents = xsec * Lref * 1000;
       if(considerXsec && NEvents > 150000) totalNumberOfEvents += NEvents;   
       else totalNumberOfEvents += 150000;
+      if(considerXsec && NEvents > 150000) std::cout << m_glu << " " << m_LSP << " " << NEvents << std::endl;
+      else                                 std::cout << m_glu << " " << m_LSP << " 150000 " << std::endl;
     }
   }
   leg->AddEntry(boxes[boxes.size()-1], "100x100 GeV^{2}, 150K", "F");
@@ -4428,6 +4430,8 @@ Int_t T5gg() {
       Float_t NEvents = xsec * Lref * 1000;
       if(considerXsec && NEvents > 150000) totalNumberOfEvents += NEvents;   
       else totalNumberOfEvents += 150000;
+      if(considerXsec && NEvents > 150000) std::cout << m_glu << " " << m_LSP << " " << NEvents << std::endl;
+      else                                 std::cout << m_glu << " " << m_LSP << " 150000 " << std::endl;
     }
   }
   leg->AddEntry(boxes[boxes.size()-1], "50x100 GeV^{2}, 150K", "F");
@@ -4441,7 +4445,7 @@ Int_t T5gg() {
   leg->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -4524,7 +4528,7 @@ Int_t T5Zg() {
   leg->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -4625,7 +4629,7 @@ Int_t T6gg() {
   leg->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -4725,7 +4729,7 @@ Int_t T5Wg_v2() {
   leg->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -4823,7 +4827,7 @@ Int_t T5gg_v2() {
   leg->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -4922,7 +4926,7 @@ Int_t T6gg_v2() {
   leg->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -5129,7 +5133,7 @@ Int_t T2bb() {
   leg->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -5330,7 +5334,7 @@ Int_t T2tb() {
   leg->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -5529,7 +5533,7 @@ Int_t T2bW() {
   leg->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -5656,7 +5660,7 @@ Int_t T6ttWW() {
   leg->Draw();
 
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -5849,7 +5853,7 @@ Int_t T2TT() {
     
     
   char textNP[200];
-  sprintf(textNP, "# of mass points: %d", boxes.size());
+  sprintf(textNP, "# of mass points: %d", (int)boxes.size());
   char textNE[200];
   sprintf(textNE, "# of events: %d", totalNumberOfEvents);
 
@@ -5999,7 +6003,7 @@ Int_t T2TTstrip() {
     
     
     char textNP[200];
-    sprintf(textNP, "# of mass points: %d", boxes.size());
+    sprintf(textNP, "# of mass points: %d", (int)boxes.size());
     char textNE[200];
     sprintf(textNE, "# of events: %d", totalNumberOfEvents);
     
