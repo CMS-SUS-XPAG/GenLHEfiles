@@ -11,4 +11,4 @@ for l in f.readlines():
    total = total + float(k[2])
 
 
-print total, "%.2f" % (total*efficiency)
+print total, "%.2f" % (total/efficiency)
