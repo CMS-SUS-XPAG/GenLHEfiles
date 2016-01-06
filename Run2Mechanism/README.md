@@ -728,22 +728,57 @@ cmsDriver.py Configuration/Generator/python/genfragment.py --mc --eventcontent R
 
 #### FASTSIM
 
-The official FastSim for Run2 is not yet available.
+The current CMSSW release is **CMSSW_7_4_4** (last checked 2016/01/06).
 
+The cmsDriver command for FastSim is:
+```
+cmsDriver.py Configuration/Generator/python/genfragment.py  --pileup_input "dbs:/Neutrino_E-10_gun/RunIISpring15PrePremix-MCRUN2_74_V9-v1/GEN-SIM-DIGI-RAW" --mc --eventcontent AODSIM --fast --customise SLHCUpgradeSimulations/Configuration/postLS1CustomsPreMixing.customisePostLS1 --datatier AODSIM --conditions MCRUN2_74_V9 --beamspot NominalCollision2015 --step GEN,SIM,RECOBEFMIX,DIGIPREMIX_S2:pdigi_valid,DATAMIX,L1,L1Reco,RECO,HLT:@frozen25ns --magField 38T_PostLS1 --datamix PreMix --filein file:mylhe.lhe --fileout file:FastSim.root -n -1
+```
+
+To create miniAOD_v1:
+```
+cmsDriver.py step1 --mc --eventcontent MINIAODSIM --fast --runUnscheduled --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier MINIAODSIM --conditions MCRUN2_74_V9 --step PAT --filein file:FastSim.root --fileout file:miniaodv1.root -n -1
+```
+
+To create miniAOD_v2:
+Use **CMSSW_7_4_14** (last checked 2016/01/06).
+```
+cmsDriver.py step1 --mc --eventcontent MINIAODSIM --runUnscheduled --fast --customise SLHCUpgradeSimulations/Configuration/postLS1CustomsPreMixing.customisePostLS1 --datatier MINIAODSIM --conditions 74X_mcRun2_asymptotic_v2 --step PAT --filein file:FastSim.root --fileout file:miniaodv2.root -n -1
+```
 
 #### FullSim
 
-The final DIGI-RECO for Run2 is not yet available. 
-
-Instructions for the GEN-SIM step: 
+Instructions for the GEN-SIM step (use **CMSSW_7_1_20_patch3**): 
 ```
 cmsDriver.py Configuration/Generator/python/genfragment.py --mc --eventcontent RAWSIM --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier GEN-SIM --conditions MCRUN2_71_V1::All --beamspot NominalCollision2015 --step GEN,SIM --magField 38T_PostLS1  --filein file:mylhe.lhe --fileout file:GEN.root -n -1 --no_exec
 ```
 
+Instructions for the DIGI step (use **CMSSW_7_4_1_patch4**):
+```
+cmsDriver.py step1 --pileup_input "dbs:/MinBias_TuneCUETP8M1_13TeV-pythia8/RunIIWinter15GS-MCRUN2_71_V1-v1/GEN-SIM" --mc --eventcontent RAWSIM --pileup 2015_25ns_Startup_PoissonOOTPU --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier GEN-SIM-RAW --conditions MCRUN2_74_V9 --step DIGI,L1,DIGI2RAW,HLT:@frozen25ns --magField 38T_PostLS1 --filein file:GEN.root --fileout file:DIGI.root -n -1
+```
+
+Instructions for the RECO step (use CMSSW_7_4_1_patch4):
+```
+cmsDriver.py step2 --mc --eventcontent AODSIM,DQM --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier AODSIM --conditions MCRUN2_74_V9 --step RAW2DIGI,L1Reco,RECO --magField 38T_PostLS1 --filein file:DIGI.root --fileout file:AOD.root -n -1
+```
+
+Instructions for miniaod_v1 (use CMSSW_7_4_1_patch4):
+```
+cmsDriver.py step3 --mc --eventcontent MINIAODSIM --runUnscheduled --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier MINIAODSIM --conditions MCRUN2_74_V9 --step PAT --filein file:AOD.root --fileout file:miniaodv1.root -n -1
+```
+
+Instructions for miniaod_v2 (use **CMSSW_7_4_14**):
+```
+cmsDriver.py step1 --mc --eventcontent MINIAODSIM --runUnscheduled --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1 --datatier MINIAODSIM --conditions 74X_mcRun2_asymptotic_v2 --step PAT --filein file:AOD.root --fileout file:miniaodv2.root -n -1
+```
+
+(Note that the "stepX" is just a dummy name, you could put anything. This field only matters if you need to pass in a genfragment.)
+
 #### Phys14 setup
 
-Given that the full DIGI-RECO setup for Run2 is not ready yet, we also provide
-instructions on how to make samples according to the Phys14 setup. 
+For completeness, we also provide
+instructions on how to make samples according to the Phys14 setup used before the Run2 MC campaigns were ready. 
 
 ##### GEN-SIM
 
