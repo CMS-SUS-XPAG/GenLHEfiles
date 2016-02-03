@@ -231,7 +231,8 @@ The full list of options:
 - `--protocol`: Submission protocol: bsub or qsub or condor (default='bsub')
 - `-q, --queue`: Queue to submit to (default='1nd')
 - `--nosubmit`: Flag to turn off submission, job scripts are still created. Can be useful
-  		if you want to run locally. 
+  		if you want to run locally (You should then probably remove the last line 
+                in the produced scripts). 
 - `-o, --output`: Output directory for LHE file (default='lhe')
 - `--keeptar`: keep existing CMSSW tarball for Condor (default='False')
 
