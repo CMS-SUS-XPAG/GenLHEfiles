@@ -75,12 +75,25 @@ if __name__ == "__main__":
     #                                ... ], 
     #              ....
     #             }
+    # If you have two mother pgd ids (e.g. for chargino-neutralino 
+    # production), you should put those as a comma-separated list in the
+    # key of the dictionary, e.g.
+    # mass_dict = {"mother_mass_A_1,mother_mass_B_1": [...], ...}
+    # Or more explicitly 
+    # mass_dict = {"400,380": [{"1000022":100},
+    #                          {"1000022":200}],
+    #              "500,480": [{"1000022":100},
+    #                          {"1000022":200}],
+    #             }
 
     m.makeMassDict_standard_SMS(range(800,1605,100),100)
 
     # Fill out the options dictionary with your configuration:
     # All options need to be provided as strings.
     # options = {"name": <name corresponding to the start of inputfiles>, 
+    #           "pdg": <comma-separated list of mother ids. Will mostly 
+    #                   just contain one entry, potentially two for 
+    #                   chargino-neutralino production>,
     #           "nevents": <number of events to run over, -1 means all>,
     #           "inputdir": <location of the undecayed files>, 
     #           "outputdir": <location to store the processed files>, 
