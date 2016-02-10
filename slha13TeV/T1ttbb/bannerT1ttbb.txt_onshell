@@ -1,0 +1,113 @@
+<LesHouchesEvents version="3.0">
+<header>
+<MGVersion>
+# MG/ME version    : 2.2.2
+</MGVersion>
+<MG5ProcCard>
+import model mssm
+define p u u~ d d~ s s~ c c~ b b~ g
+define j p
+define q p
+generate p p > st st  @1
+add process p p >  st st j  @2
+add process p p > st st j j @3
+# Specify process(es) to run
+#slepton-slepton
+<MGProcCard>
+# Begin PROCESS # This is TAG. Do not modify this line
+pp>T2tb    @0       # First Process
+# End PROCESS  # This is TAG. Do not modify this line
+</MGProcCard>
+</MG5ProcCard>
+<slha>
+#
+BLOCK MASS  # Mass Spectrum
+# PDG code           mass       particle
+        25     1.00000000E+03
+        35     1.00000000E+03
+        36     1.00000000E+03
+        37     1.00000000E+03
+        6      1.72500000E+02
+   1000001     100000.0          # ~d_L
+   2000001     1.00000000E+05   # ~d_R
+   1000002     100000.0          # ~u_L
+   2000002     1.00000000E+05   # ~u_R
+   1000003     100000.0          # ~s_L
+   2000003     1.00000000E+05   # ~s_R
+   1000004     100000.0          # ~c_L
+   2000004     1.00000000E+05   # ~c_R
+   1000005     1.00000000E+05   # ~b_1
+   2000005     1.10000000E+05   # ~b_2
+   1000006     1.10000000E+05            # ~t_1
+   2000006     1.10000000E+05   # ~t_2
+   1000011     1.00000000E+04   # ~e_L
+   2000011     1.00000000E+04   # ~e_R
+   1000012     1.00000000E+04   # ~nu_eL
+   1000013     1.00000000E+04   # ~mu_L
+   2000013     1.00000000E+04   # ~mu_R
+   1000014     1.00000000E+04   # ~nu_muL
+   1000015     1.00000000E+04   # ~tau_1
+   2000015     1.00000000E+04   # ~tau_2
+   1000016     1.00000000E+04   # ~nu_tauL
+   1000021     MASS1	        # ~g
+   1000022     MASS2            # ~chi_10
+   1000023     1.00000000E+04   # ~chi_20
+   1000025     1.00000000E+04   # ~chi_30
+   1000035     1.00000000E+04   # ~chi_40
+   1000024     MASS3            # ~chi_1+
+   1000037     1.00000000E+04   # ~chi_2+
+#
+#
+#
+#         PDG            Width
+DECAY         6     1.134E+00        # top decays
+DECAY   1000006     0.00000000E+00   # stop2 decays
+DECAY   2000006     0.00000000E+00   # stop2 decays
+DECAY   1000005     0.00000000E+00   # sbottom1 decays
+DECAY   2000005     0.00000000E+00   # sbottom2 decays
+#
+#         PDG            Width
+DECAY   1000011     0.00000000E+00   # selectron_L decays
+DECAY   2000011     0.00000000E+00   # selectron_R decays
+DECAY   1000013     0.00000000E+00   # smuon_L decays
+DECAY   2000013     0.00000000E+00   # smuon_R decays
+DECAY   1000015     0.00000000E+00   # stau_1 decays
+DECAY   2000015     0.00000000E+00   # stau_2 decays
+#
+#         PDG            Width
+DECAY   1000012     0.00000000E+00   # snu_elL decays
+DECAY   1000014     0.00000000E+00   # snu_muL decays
+DECAY   1000016     0.00000000E+00   # snu_tauL decays
+
+
+DECAY   1000021     1.00000000E+00   # stop1 decays
+#          BR         NDA      ID1       ID2
+     0.000000E+00    3     1000022      -6 	6
+     0.250000E+00    3     1000024      -6 	5
+     0.250000E+00    3     -1000024      6     -5
+     0.250000E+00    3     1000022       6     -6
+     0.250000E+00    3     1000022       5     -5
+
+
+DECAY   1000024     0.10000000E+00   # chargino1 decays
+     0.0000000    3     1000022        -1      2
+     0.3213690    3     1000022        -1      2
+     0.0164940    3     1000022        -1      4
+     0.0165020    3     1000022        -3      2
+     0.3206150    3     1000022        -3      4
+     0.0000100    3     1000022        -5      2
+     0.0005910    3     1000022        -5      4
+     0.1081660    3     1000022        -11     12
+     0.1081660    3     1000022        -13     14
+     0.1080870    3     1000022        -15     16
+
+
+DECAY   1000022     0.00000000E+00   # neutralino1 decays
+
+
+</slha>
+
+<MGRunCard>
+   1   = ickkw   ! turning matching on/off for multi-jet sample
+  30   = xqcut   ! minimum kt jet measure between partons
+</MGRunCard>
