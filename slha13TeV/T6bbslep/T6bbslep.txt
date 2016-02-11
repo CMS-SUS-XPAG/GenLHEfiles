@@ -87,11 +87,11 @@ DECAY   1000023 2.00000000E-02        # neutralino2 decays
  1.25000000E-01 2 2000013 -13         # BR(~chi_20 -> smuon_R mu+)
 DECAY   1000011 2.00000000E-02        # selectron_L decays
  1.00000000E+00 2 1000022 11          # BR( selectron_L -> ~chi_10 e-)
-DECAY   2000011 0.00000000E+00        # selectron_R decays
+DECAY   2000011 2.00000000E-02        # selectron_R decays
  1.00000000E+00 2 1000022 11          # BR( selectron_R -> ~chi_10 e-)
-DECAY   1000013 0.00000000E+00        # smuon_L decays
+DECAY   1000013 2.00000000E-02        # smuon_L decays
  1.00000000E+00 2 1000022 13          # BR( smuon_L -> ~chi_10 mu-)
-DECAY   2000013 0.00000000E+00        # smuon_R decays
+DECAY   2000013 2.00000000E-02        # smuon_R decays
  1.00000000E+00 2 1000022 13          # BR( smuon_L -> ~chi_10 mu-)
 #         PDG            Width
 DECAY   1000021     0.00000000E+00   # gluino decays

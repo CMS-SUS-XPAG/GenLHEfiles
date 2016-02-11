@@ -164,11 +164,11 @@ void go() {
 
   //##########Third generation production###################//
   Int_t nT2bb = T2bb();
+  */
   
   Int_t nT2tb = T2tb();
   
-  Int_t nT2bW = T2bW();
-  */
+  //Int_t nT2bW = T2bW();
   //Int_t nT2TT = T2TT();
   /*  
   Int_t nT2TTstrip = T2TTstrip();
@@ -177,7 +177,7 @@ void go() {
   
   Int_t nT6ttWW2 = T6ttWW2();
   */
-  Int_t nT6bbllslepton = T6bbllslepton();
+  //Int_t nT6bbllslepton = T6bbllslepton();
   /*
   //##########Electroweak production###################//
   Int_t nTChiWZ = TChiWZ();
