@@ -216,7 +216,7 @@ baseSLHATable_tauden = baseSLHATable_tauden.replace('%BRANCH_EM%','%e' %ch_slep_
 baseSLHATable_tauden = baseSLHATable_tauden.replace('%BRANCH_T%','%e' %ch_slep_tau)
 
 for i in range(17):
-    for x  in [1.0]: #scan over different slepton masses (ekw scan 2,3,4)
+    for x  in [0.5]: #scan over different slepton masses (ekw scan 2,3,4)
         m_lsp = 0. + i*50 
         m_slep =m_lsp + x*(m_n2-m_lsp) # slepton mass
         slhatable = baseSLHATable_tauden.replace('%MN1%','%e' % m_lsp)
