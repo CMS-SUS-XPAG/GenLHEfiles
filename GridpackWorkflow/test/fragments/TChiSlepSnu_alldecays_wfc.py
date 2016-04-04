@@ -209,17 +209,17 @@ snu_branch = 0.00000000
 #ch1 branching ratio
 ch_slep_em = 0.00000000
 ch_slep_tau = 1.00000000
-baseSLHATable_tauden = baseSLHATable.replace('%BRANCH_SL%','%e'%slep_branch)
-baseSLHATable_tauden = baseSLHATable_tauden.replace('%BRANCH_TL%','%e' %stau_branch)
-baseSLHATable_tauden = baseSLHATable_tauden.replace('%BRANCH_SN%','%e' %snu_branch)
-baseSLHATable_tauden = baseSLHATable_tauden.replace('%BRANCH_EM%','%e' %ch_slep_em)
-baseSLHATable_tauden = baseSLHATable_tauden.replace('%BRANCH_T%','%e' %ch_slep_tau)
+baseSLHATable_taudom = baseSLHATable.replace('%BRANCH_SL%','%e'%slep_branch)
+baseSLHATable_taudom = baseSLHATable_taudom.replace('%BRANCH_TL%','%e' %stau_branch)
+baseSLHATable_taudom = baseSLHATable_taudom.replace('%BRANCH_SN%','%e' %snu_branch)
+baseSLHATable_taudom = baseSLHATable_taudom.replace('%BRANCH_EM%','%e' %ch_slep_em)
+baseSLHATable_taudom = baseSLHATable_taudom.replace('%BRANCH_T%','%e' %ch_slep_tau)
 
 for i in range(17):
     for x  in [0.5]: #scan over different slepton masses (ekw scan 2,3,4)
         m_lsp = 0. + i*50 
         m_slep =m_lsp + x*(m_n2-m_lsp) # slepton mass
-        slhatable = baseSLHATable_tauden.replace('%MN1%','%e' % m_lsp)
+        slhatable = baseSLHATable_taudom.replace('%MN1%','%e' % m_lsp)
         slhatable = slhatable.replace('%MSLEP%','%e' % m_slep)
         model = model_base+'TauDom_' + str(x).replace('.','p')
         generator.RandomizedParameters.append(
