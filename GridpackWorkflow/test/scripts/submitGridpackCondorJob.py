@@ -21,11 +21,11 @@ if __name__ == '__main__':
     out_dir = '/hadoop/cms/store/user/'+os.environ['USER']+'/mcProduction/GRIDPACKS/'+proc
 
     #gridpack generation script and misc scripts
-    infile_list = [genproductions_dir+'/bin/MadGraph5_aMCatNLO/gridpack_generation.sh']
+    infile_list = [script_dir+'/gridpack_generation.sh'] #use modified gridpack generation script 
     infile_list.append(genproductions_dir+'/bin/MadGraph5_aMCatNLO/runcmsgrid_LO.sh')
     infile_list.append(genproductions_dir+'/bin/MadGraph5_aMCatNLO/cleangridmore.sh')
     #patches needed by gridpack generation script
-    infile_list.append(genproductions_dir+'/bin/MadGraph5_aMCatNLO/patches/ucsd.patch')
+    infile_list.append(script_dir+'/ucsd.patch') #use the patch committed in this repository
     infile_list.append(genproductions_dir+'/bin/MadGraph5_aMCatNLO/patches/mgfixes.patch')
     infile_list.append(genproductions_dir+'/bin/MadGraph5_aMCatNLO/patches/models.patch')
     #madgraph cards
