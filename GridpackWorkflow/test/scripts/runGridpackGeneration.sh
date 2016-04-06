@@ -18,21 +18,19 @@ echo $WORKDIR
 echo "Output directory set to: "
 echo $OUTDIR
 
-#clone genproductions repository
-git clone https://github.com/cms-sw/genproductions.git
-
-#copy script, patch, and cards into correct location
-cd genproductions/bin/MadGraph5_aMCatNLO
-cp ${WORKDIR}/gridpack_generation.sh .
+#copy patches and cards into correct location
+mkdir patches
 cp ${WORKDIR}/ucsd.patch patches/
-mkdir cards/${PROCESS}
+cp ${WORKDIR}/mgfixes.patch patches/
+cp ${WORKDIR}/models.patch patches/
+mkdir -p cards/${PROCESS}
 cp ${WORKDIR}/${PROCESS}_run_card.dat cards/${PROCESS}
 cp ${WORKDIR}/${PROCESS}_proc_card.dat cards/${PROCESS}
 cp ${WORKDIR}/${PROCESS}_customizecards.dat cards/${PROCESS}
 
 #run script
 echo "Running gridpack generation"
-./gridpack_generation.sh ${PROCESS} cards/${PROCESS} condor
+./gridpack_generation.sh ${PROCESS} cards/${PROCESS} 
 
 #copy output
 echo "Copy output"
