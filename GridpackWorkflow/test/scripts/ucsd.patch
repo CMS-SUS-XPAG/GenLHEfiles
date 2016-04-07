@@ -1,0 +1,100 @@
+diff -ur -x '.*/models/.*' ../old/MG5_aMC_v2_3_3/madgraph/various/cluster.py MG5_aMC_v2_3_3/madgraph/various/cluster.py
+--- ../old/MG5_aMC_v2_3_3/madgraph/various/cluster.py   2015-10-26 02:18:52.000000001 +0100
++++ MG5_aMC_v2_3_3/madgraph/various/cluster.py  2015-12-11 15:13:21.000000001 +0100
+@@ -835,26 +835,35 @@
+     name = 'condor'
+     job_id = 'CONDOR_ID'
+ 
+-
++    maximum_submited_jobs = 300
+ 
+     @multiple_try()
+     def submit(self, prog, argument=[], cwd=None, stdout=None, stderr=None, log=None,
+                required_output=[], nb_submit=0):
+         """Submit a job prog to a Condor cluster"""
+         
+-        text = """Executable = %(prog)s
++        me_dir = self.get_jobs_identifier(cwd, prog)
++        if len(self.submitted_ids) > self.maximum_submited_jobs:
++            fct = lambda idle, run, finish: logger.info('Waiting for free slot: %s %s %s' % (idle, run, finish))
++            self.wait(me_dir, fct, self.maximum_submited_jobs)
++
++        text = """universe=grid
++                  Grid_Resource=condor cmssubmit-r1.t2.ucsd.edu glidein-collector.t2.ucsd.edu
++                  +DESIRED_Sites="T2_US_UCSD"
++                  environment = CONDOR_ID=$(Cluster).$(Process)
+                   output = %(stdout)s
+                   error = %(stderr)s
+                   log = %(log)s
+-                  %(argument)s
+-                  environment = CONDOR_ID=$(Cluster).$(Process)
+-                  Universe = vanilla
+-                  notification = Error
+                   Initialdir = %(cwd)s
+-                  Request_memory = 528
+-                  %(requirement)s
+-                  getenv=True
+-                  queue 1
++                  +Owner = undefined
++                  notify_user = dustin.james.anderson@cern.ch
++                  x509userproxy = /tmp/x509up_u31156
++                  Executable = %(prog)s
++                  Transfer_executable = True
++                  notification = Error
++                  getenv = True
++                  %(argument)s
++                  Queue 1
+                """
+         
+         if self.cluster_queue not in ['None', None]:
+@@ -908,6 +917,11 @@
+         """Submit the job on the cluster NO SHARE DISK
+            input/output file should be give relative to cwd
+         """
++        me_dir = self.get_jobs_identifier(cwd, prog)
++        if len(self.submitted_ids) > self.maximum_submited_jobs:
++            fct = lambda idle, run, finish: logger.info('Waiting for free slot: %s %s %s' % (idle, run, finish))
++            self.wait(me_dir, fct, self.maximum_submited_jobs)
++
+         
+         if not required_output and output_files:
+             required_output = output_files
+@@ -916,22 +930,27 @@
+             return self.submit(prog, argument, cwd, stdout, stderr, log, 
+                                required_output=required_output, nb_submit=nb_submit)
+         
+-        text = """Executable = %(prog)s
+-                  output = %(stdout)s
+-                  error = %(stderr)s
+-                  log = %(log)s
+-                  %(argument)s
++        text = """universe=grid
++                  Grid_Resource=condor cmssubmit-r1.t2.ucsd.edu glidein-collector.t2.ucsd.edu
++                  +DESIRED_Sites="T2_US_UCSD"
++                  environment = CONDOR_ID=$(Cluster).$(Process)
+                   should_transfer_files = YES
+                   when_to_transfer_output = ON_EXIT
+                   transfer_input_files = %(input_files)s
+                   %(output_files)s
+-                  Universe = vanilla
+-                  notification = Error
++                  output = %(stdout)s
++                  error = %(stderr)s
++                  log = %(log)s
+                   Initialdir = %(cwd)s
+-                  Request_memory = 528
+-                  %(requirement)s
+-                  getenv=True
+-                  queue 1
++                  +Owner = undefined
++                  notify_user = dustin.james.anderson@cern.ch
++                  x509userproxy = /tmp/x509up_u31156
++                  Executable = %(prog)s
++                  Transfer_executable = True
++                  notification = Error
++                  getenv = True
++                  %(argument)s
++                  Queue 1
+                """
+         
+         if self.cluster_queue not in ['None', None]:
