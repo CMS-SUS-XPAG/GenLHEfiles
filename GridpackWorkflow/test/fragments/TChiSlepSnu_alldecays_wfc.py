@@ -145,9 +145,9 @@ baseSLHATable = baseSLHATable.replace('%MC1%','%e' %m_c1)
 
 #Flavor-democratic
 #chi branching ratio
-slep_branch = 0.08333333E+00
+slep_branch = 0.16666666E+00
 stau_branch = slep_branch
-snu_branch = 0.16666666E+00
+snu_branch = 0.00000000
 #ch1 branching ratio
 ch_slep_em = 0.16666666E+00
 ch_slep_tau = 0.16666666E+00
@@ -174,7 +174,7 @@ for i in range(17):
         )
 ####### tau-enriched ########
 #chi branching ratio
-slep_branch = 0.08333333E+00
+slep_branch = 0.16666666E+00
 stau_branch = slep_branch
 snu_branch = 0.00000000
 #ch1 branching ratio
