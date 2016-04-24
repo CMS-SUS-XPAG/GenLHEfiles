@@ -23,11 +23,11 @@ You should get the gridpack at: /cms/store/user/${USER}/mcProduction/GRIDPACKS/<
 ## lhe+pLHE+GS+DR+AODSIM+MINIAODSIM
 Scripts are under GridpackWorkflow/test/scripts.
 * Modify the prodScript.sh specifications (see top of the file), in particular: 
-** PROCESS: should be the same as <proc> used in the gridpack step, as it is used to retrieve the tarball.
-** MODEL: name which is written in the LHE event product
-** TAG: used to tag the dataset. You may want to add, for instance the information of the LSP mass, something like "_mLSP-XXX"
-** STOP_DECAY: specify stop decay used in the slha (can be generalised for other processes)
-** QCUT: self explaining
+PROCESS: should be the same as <proc> used in the gridpack step, as it is used to retrieve the tarball.
+MODEL: name which is written in the LHE event product
+TAG: used to tag the dataset. You may want to add, for instance the information of the LSP mass, something like "_mLSP-XXX"
+STOP_DECAY: specify stop decay used in the slha (can be generalised for other processes)
+ QCUT: self explaining
 * Make sure the correct slha is written under the <slha> header below. For instance, you should put the correct mass for the LSP.
 * Make sure you have a valid proxy (see Gridpack section before)
 * Run the submitMiniAODCondorJob.py script:
