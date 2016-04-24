@@ -1,5 +1,5 @@
 ### Make many DJR plots at once
-### (files in the input directory should have names of the form GEN_<process>_<qcut>_<random seed>.root)
+### (files in the input directory should have names of the form GEN_<process>_<qcut>.root)
 
 ### Authors: 
 ### Ana Ovcharova
@@ -32,7 +32,7 @@ def parseQcuts(proc, infile_path):
 
     return qcuts
 
-def makeDJRPlots(f, proc, qcuts, texOnly=False):
+def makeDJRPlots(f, proc, qcuts, texOnly=False, qmin=0, qmax=200):
     #load libraries
     gSystem.Load("libFWCoreFWLite.so")
     AutoLibraryLoader.enable()
@@ -51,6 +51,7 @@ def makeDJRPlots(f, proc, qcuts, texOnly=False):
 
     #plot for each qcut
     for (iqcut,fin) in qcuts:
+        if iqcut > qmax or iqcut < qmin: continue
         qcut = str(iqcut) 
         fout = proc+"_"+qcut
         if not texOnly: #create the pdf
@@ -61,8 +62,6 @@ def makeDJRPlots(f, proc, qcuts, texOnly=False):
         f.write("\\frametitle{"+proc.replace("_"," ") +" qCut = "+ qcut+"} \n")
         f.write("\\includegraphics[width=0.5\\textwidth]{"+proc+"_"+qcut+"_djr0.pdf} \n")
         f.write("\\includegraphics[width=0.5\\textwidth]{"+proc+"_"+qcut+"_djr1.pdf}\\\\ \n")
-        #f.write("\\includegraphics[width=0.5\\textwidth]{"+proc+"_"+qcut+"_djr2.pdf} \n")
-        #f.write("\\includegraphics[width=0.5\\textwidth]{"+proc+"_"+qcut+"_djr3.pdf}\\\\ \n")
         f.write("\\end{frame} \n")
 
 if __name__ == '__main__':
@@ -71,11 +70,15 @@ if __name__ == '__main__':
     parser.add_argument('directory', help='path to dir containing input files')
     parser.add_argument('--tex-only', dest='texOnly', action='store_true', 
             help='only write latex document, skip making pdfs')
+    parser.add_argument('--qcut-range', dest='qcutRange', nargs=2, type=int, default=[50,100], 
+            help="Range of qcuts to consider")
     args = parser.parse_args()
 
     proc = args.proc
     infile_path = args.directory
     qcuts = parseQcuts(proc, infile_path)
+    qmin = args.qcutRange[0]
+    qmax = args.qcutRange[1]
 
     fname = "plots_"+proc+".tex"
     f = open(fname,'w')
@@ -83,7 +86,7 @@ if __name__ == '__main__':
     f.write("\\beamertemplatenavigationsymbolsempty\n")
     f.write("\\usepackage{graphicx}\n")
     f.write("\\begin{document}\n")
-    makeDJRPlots(f, proc, qcuts, texOnly=args.texOnly)
+    makeDJRPlots(f, proc, qcuts, texOnly=args.texOnly, qmin=qmin, qmax=qmax)
     f.write("\\end{document}\n")
     f.close()
     subprocess.call(['pdflatex', fname])

@@ -37,14 +37,14 @@ def submitCondorJob(proc, executable, options, infile, label, outputToTransfer=N
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('procs', help="Names of physics models", nargs='+')
+    parser.add_argument('proc', help="Names of physics model")
     parser.add_argument('--in-file', '-i', dest='infile', help="Full path to input tarball", required=True)
     parser.add_argument('--nevents', '-n', help="Number of events per job", type=int, default=25000)
     parser.add_argument('--njobs', '-j', help="Number of condor jobs", type=int, default=1)
     parser.add_argument('--no-sub', dest='noSub', action='store_true', help='Do not submit jobs')
     args = parser.parse_args()
 
-    procs = args.procs
+    proc = args.proc
     nevents = args.nevents
     njobs = args.njobs
     infile = args.infile
@@ -54,11 +54,10 @@ if __name__ == '__main__':
     out_dir='/hadoop/cms/store/user/'+os.environ['USER']+'/mcProduction/LHE'
     print "Will generate LHE events using tarball",infile
 
-    for proc in procs:
-        outdir = out_dir+'/'+proc
-        options = [proc, str(nevents), outdir]
-        print "Options:",(' '.join(options))
-        for j in range(0,njobs):
-            rseed = str(500+j)
-            print "Random seed",rseed
-            submitCondorJob(proc, executable, options+[rseed], infile, label=rseed, submit=(not args.noSub))
+    outdir = out_dir+'/'+proc
+    options = [proc, str(nevents), outdir]
+    print "Options:",(' '.join(options))
+    for j in range(0,njobs):
+        rseed = str(500+j)
+        print "Random seed",rseed
+        submitCondorJob(proc, executable, options+[rseed], infile, label=rseed, submit=(not args.noSub))
