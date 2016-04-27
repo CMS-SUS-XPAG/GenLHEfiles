@@ -9,9 +9,9 @@ OUTDIR_EOS=$5
 
 GRIDPACK_PATH=$PWD
 
-PROCESS="SMS-T2tt_mStop-300"
-MODEL="# model T2tt_300_125"
-TAG="_mLSP-125"
+PROCESS="SMS-T2tt_mStop-175"
+MODEL="# model T2tt_175_1"
+TAG="_mLSP-1"
 STOP_DECAY=\
 "DECAY   1000006     1.00000000E+00   # stop decays
      1.00000000E+00    2     1000022         6"
@@ -76,7 +76,7 @@ BLOCK MASS  # Mass Spectrum
    2000004     1.00000000E+05   # ~c_R
    1000005     1.00000000E+05   # ~b_1
    2000005     1.00000000E+05   # ~b_2
-   1000006     300.             # ~t_1
+   1000006     175.             # ~t_1
    2000006     1.00000000E+05   # ~t_2
    1000011     1.00000000E+05   # ~e_L
    2000011     1.00000000E+05   # ~e_R
@@ -88,7 +88,7 @@ BLOCK MASS  # Mass Spectrum
    2000015     1.00000000E+05   # ~tau_2
    1000016     1.00000000E+05   # ~nu_tauL
    1000021     1.00000000E+05   # ~g
-   1000022     125.             # ~chi_10
+   1000022     1.               # ~chi_10
    1000023     1.00000000E+05   # ~chi_20
    1000025     1.00000000E+05   # ~chi_30
    1000035     1.00000000E+05   # ~chi_40
@@ -274,12 +274,7 @@ cmsRun -e -j mini_rt.xml mini_driver.py || exit $? ;
 
 echo "Copy MiniAODv2 to hadoop"
 
-# # This doesn't work for me atm (most important thing is to copy to EOS anyway...)
-# lcg-cp -b -D srmv2 --vo cms -t 2400 --verbose file:${PROCESS}${TAG}_madgraphMLM-pythia8_RunIISpring15MiniAODv2-Asympt25ns_74X_RS-${RANDOM_SEED}_MINIAODSIM.root srm://bsrm-3.t2.ucsd.edu:8443/srm/v2/server?SFN=${OUTDIR}/${PROCESS}${TAG}_madgraphMLM-pythia8_RunIISpring15MiniAODv2-Asympt25ns_74X_RS-${RANDOM_SEED}_MINIAODSIM.root
-
-# # This doesn't work either
-# hadoop fs -mkdir ${OUTDIR}
-# hadoop fs -copyFromLocal ${PROCESS}${TAG}_madgraphMLM-pythia8_RunIISpring15MiniAODv2-Asympt25ns_74X_RS-${RANDOM_SEED}_MINIAODSIM.root ${OUTDIR}/${PROCESS}${TAG}_madgraphMLM-pythia8_RunIISpring15MiniAODv2-Asympt25ns_74X_RS-${RANDOM_SEED}_MINIAODSIM.root
+lcg-cp -b -D srmv2 --vo cms -t 2400 --verbose file:${PROCESS}${TAG}_madgraphMLM-pythia8_RunIISpring15MiniAODv2-Asympt25ns_74X_RS-${RANDOM_SEED}_MINIAODSIM.root srm://bsrm-3.t2.ucsd.edu:8443/srm/v2/server?SFN=${OUTDIR}/${PROCESS}${TAG}_madgraphMLM-pythia8_RunIISpring15MiniAODv2-Asympt25ns_74X_RS-${RANDOM_SEED}_MINIAODSIM.root
 
 if ! [[ "${OUTDIR_EOS}" == "" ]]; then
     xrdcp ${PROCESS}${TAG}_madgraphMLM-pythia8_RunIISpring15MiniAODv2-Asympt25ns_74X_RS-${RANDOM_SEED}_MINIAODSIM.root root://eoscms.cern.ch//eos/cms/${OUTDIR_EOS}/${PROCESS}${TAG}_madgraphMLM-pythia8_RunIISpring15MiniAODv2-Asympt25ns_74X_RS-${RANDOM_SEED}_MINIAODSIM.root
