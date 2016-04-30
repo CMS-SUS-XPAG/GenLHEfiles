@@ -8,8 +8,8 @@ define slep = el+ er+ mul+ mur+ ta1+ ta2+ el- er- mul- mur- ta1- ta2- sve svm sv
 define ino = n1 n2 n3 n4 x2+ x2- h1 h2 h3 h- h+
 define chi1 = x1+ x1- 
 
-generate p p > chi1 n2 / sq @1
-add process p p > chi1 n2 j / sq @2
-add process p p > chi1 n2 j j / sq @3
+generate p p > chi1 n2 @1
+add process p p > chi1 n2 j @2
+add process p p > chi1 n2 j j @3
 
 output SMS-TChiSlepSnu_mChi-%MNLSP% -nojpeg
