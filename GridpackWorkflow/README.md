@@ -22,7 +22,7 @@ source writeallcards_SMS-TChiSlepSnu.sh
 
 ### Gridpack Generation
 
-Submit gridpack generation jobs to run on Condor using `test/scripts/submitGridpackCondorJob.py`. In the chargino-neutralino production example, submit all jobs at once with:
+Submit gridpack generation jobs to run on Condor. A single job can be submitted using `test/scripts/submitGridpackCondorJob.py`. In the chargino-neutralino production example, submit all jobs at once with:
 ```
 source submitallgridpackjobs_SMS-TChiSlepSnu.sh
 ```
