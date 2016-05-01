@@ -14,7 +14,7 @@ Prepare the MadGraph cards for the process of interest. For a scan over several 
 
 Ex: the folder `production/cards/SMS-TChiSlepSnu/templatecards` contains template cards for chargino-neutralino production. Create cards for each chargino mass using the script provided:
 ```
-cd GridpackWorkflow/production/cards/SMS-TChiSlepSnu
+cd production/cards/SMS-TChiSlepSnu
 source writeallcards_SMS-TChiSlepSnu.sh
 ```
 
