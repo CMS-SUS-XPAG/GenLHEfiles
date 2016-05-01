@@ -18,6 +18,7 @@ parser.add_argument('--slha', help="Path to slha file/fragment", required=True)
 parser.add_argument('--qcut-range', dest='qcutRange', nargs=2, type=int, default=[50,100], 
         help="Range of qcuts to scan over")
 parser.add_argument('--no-sub', dest='noSub', action='store_true', help='Do not submit jobs')
+parser.add_argument('--proxy', dest="proxy", help="Path to proxy", default='/tmp/x509up_u31156')
 args = parser.parse_args()
 
 proc = args.proc
@@ -40,4 +41,4 @@ for qcut in qcutRange:
     outfile = '_'.join(['GEN',proc,str(qcut)+'.root'])
     options = [proc, os.path.basename(slha), str(qcut), outdir]
     submitCondorJob(proc, executable, options, infile, label=str(qcut), #outputToTransfer=outfile,
-            submit=(not args.noSub))
+            submit=(not args.noSub), proxy=args.proxy)
