@@ -19,6 +19,7 @@ The folder `production/cards/SMS-TChiSlepSnu/templatecards` contains template ca
 cd production/cards/SMS-TChiSlepSnu
 source writeallcards_SMS-TChiSlepSnu.sh
 ```
+This script also creates an SLHA file for each particle mass, for use in running Pythia later. When generating events for your own signal process, edit the template SLHA file in the `templatecards` directory for the desired signal. Your SLHA file should specify the masses of the SUSY particle(s) in your model, and they should match the values in the Madgraph customization card. The SLHA can also specify decay modes for the SUSY particle(s), but this is not needed because it does not play a role in the determination of the q-cut.
 
 ### Gridpack Generation
 
@@ -26,7 +27,7 @@ Submit gridpack generation jobs to run on Condor. A single job can be submitted 
 ```
 source submitallgridpackjobs_SMS-TChiSlepSnu.sh
 ```
-This script just runs `submitGridpackCondorJob.py` for each value of the chargino mass.  You may need to supply additional arguments (`--genproductions-dir` and `--proxy`) to `submitGridpackCondorJob.py` to ensure that it runs correctly with your local setup. See the python script for more info.
+This script just runs `submitGridpackCondorJob.py` for each value of the chargino mass.  You may need to supply additional arguments (`--genproductions-dir` and `--proxy`) to `submitGridpackCondorJob.py` to ensure that it runs correctly with your local setup. See the python script for more info, and modify `submitallgridpackjobs_SMS-TChiSlepSnu.sh` with the needed changes.
 
 Each gridpack job will store its output on Hadoop, by default in `/hadoop/cms/store/user/${USER}/mcProduction/GRIDPACKS`.  
 
@@ -36,19 +37,13 @@ Now generate about 25000 LHE events from each gridpack, for use in determining t
 ```
 source submitalllhejobs_SMS-TChiSlepSnu.sh
 ```
-See `submitLHECondorJob.py` for available options. You should supply the location of your proxy using `--proxy`.
+See `submitLHECondorJob.py` for available options, and make any needed changes in `submitalllhejobs_SMS-TChiSlepSnu.sh`. You should supply the location of your proxy using `--proxy`.
 
 Each LHE job will store its output on Hadoop, by default in `/hadoop/cms/store/user/${USER}/mcProduction/LHE`.  
 
-### Q-cut Determination
+### Q-Cut Determination
 
-To determine the best choice for the q-cut parameter, each set of 25000 LHE events should be showered using Pythia with a variety of q-cuts.  Before doing this, you need an SLHA file for each signal mass point you will study.  Do this using a template, as we did above with the MadGraph cards. For the chargino-neutralino example, use:
-```
-source writeslha_SMS-TChiSlepSnu.sh
-```
-This will place an SLHA file in the `jobs` directory for each signal mass.  Your SLHA file should specify the masses of the SUSY particle(s) in your model, and they should match the values used in gridpack generation. The SLHA can also specify decay modes for the SUSY particle(s), but this is not needed because it does not play a role in the determination of the q-cut.  
-
-The script `test/scripts/submitPythiaCondorJob.py` will shower a single mass point using a range of different q-cuts.  To run this script on all mass points, use (for chargino-neutralino production, with q-cut running from 80 to 86):
+To determine the best choice for the q-cut parameter, each set of 25000 LHE events should be showered using Pythia with a variety of q-cuts.  The script `test/scripts/submitPythiaCondorJob.py` will shower a single mass point using a range of different q-cuts.  To run this script on all mass points, use (for chargino-neutralino production, with q-cut running from 80 to 86):
 ```
 source submitallpythiajobs_SMS-TChiSlepSnu.sh 80 86
 ```
@@ -60,6 +55,6 @@ Each GEN-SIM job will store its output on Hadoop, by default in `/hadoop/cms/sto
 
 After all jobs have finished, make differential jet rate plots for each q-cut:
 ```
-source makealldjrplots_SMS-TChiSlepSnu.sh
+source makealldjrplots_SMS-TChiSlepSnu.sh 80 86
 ```
-This script calls `test/scripts/djr.py` for each signal mass point.  It will produce PDF files with the DJR plots for each q-cut value.  
+Note that this will only succeed if you have ROOT set up. This script calls `test/scripts/djr.py` for each signal mass point.  It will produce PDF files with the DJR plots for each q-cut value.  
