@@ -1,5 +1,5 @@
 #!/bin/sh
-SCRIPT="../../../test/scripts/submitLHECondorJob.py"
+SCRIPT="../../test/scripts/submitLHECondorJob.py"
 MODEL="SMS-TChiSlepSnu_mChi-"
 
 for MNLSP in {100..1300..25}; do

@@ -1,7 +1,7 @@
 #!/bin/sh
 QMIN=$1
 QMAX=$2
-SCRIPT="../../../test/scripts/djr.py"
+SCRIPT="../../test/scripts/djr.py"
 MODEL="SMS-TChiSlepSnu_mChi-"
 
 for MNLSP in {100..1300..100}; do

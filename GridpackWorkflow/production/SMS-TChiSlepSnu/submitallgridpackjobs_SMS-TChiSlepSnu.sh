@@ -1,5 +1,5 @@
 #!/bin/sh
-SCRIPT="../../../test/scripts/submitGridpackCondorJob.py"
+SCRIPT="../../test/scripts/submitGridpackCondorJob.py"
 MODEL="SMS-TChiSlepSnu_mChi-"
 JOBS="jobs"
 

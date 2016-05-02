@@ -1,7 +1,7 @@
 #!/bin/sh
 QMIN=$1
 QMAX=$2
-SCRIPT="../../../test/scripts/submitPythiaCondorJob.py"
+SCRIPT="../../test/scripts/submitPythiaCondorJob.py"
 MODEL="SMS-TChiSlepSnu_mChi-"
 JOBS="jobs"
 
