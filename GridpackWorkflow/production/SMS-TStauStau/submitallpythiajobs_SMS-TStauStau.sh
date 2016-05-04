@@ -2,7 +2,7 @@
 QMIN=$1
 QMAX=$2
 SCRIPT="../../test/scripts/submitPythiaCondorJob.py"
-#MODEL="SMS-TStauStau_mStau-"
+MODEL="SMS-TStauStau_mStau-"
 JOBS="jobs"
 
 for MNLSP in {100..1300..100}; do
