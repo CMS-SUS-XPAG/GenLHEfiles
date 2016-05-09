@@ -1,3 +1,9 @@
 # emacs backups
 *~
 *#
+*.0
+*.cmd
+*.log
+*.pyc
+*.tar.xz
+jobs

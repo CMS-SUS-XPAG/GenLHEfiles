@@ -8,4 +8,4 @@ generate p p > go go @1
 add process p p > go go j @2
 add process p p > go go j j @3
 
-output SMS-GlGl_mGl-%MGl% -nojpeg
+output SMS-GlGl_mGl-%MGL% -nojpeg

@@ -9,7 +9,7 @@ BLOCK MASS  # Mass Spectrum
    2000003     1.00000000E+05   # ~s_R
    1000004     1.00000000E+05   # ~c_L
    2000004     1.00000000E+05   # ~c_R
-   1000005     1.00000000E+05   # ~b_1
+   1000005     %MPROD%          # ~b_1
    2000005     1.00000000E+05   # ~b_2
    1000006     1.00000000E+05   # ~t_1
    2000006     1.00000000E+05   # ~t_2
@@ -22,7 +22,7 @@ BLOCK MASS  # Mass Spectrum
    1000015     1.00000000E+05   # ~tau_1
    2000015     1.00000000E+05   # ~tau_2
    1000016     1.00000000E+05   # ~nu_tauL
-   1000021     %MGL%          # ~g
+   1000021     1.00000000E+05   # ~g
    1000022     1.               # ~chi_10
    1000023     1.00000000E+05   # ~chi_20
    1000025     1.00000000E+05   # ~chi_30
@@ -42,7 +42,8 @@ DECAY   2000003     0.00000000E+00   # sstrange_R decays
 DECAY   1000004     0.00000000E+00   # scharm_L decays
 DECAY   2000004     0.00000000E+00   # scharm_R decays
 
-DECAY   1000005     0.00000000E+00   # sbottom1 decays
+DECAY   1000005     1.00000000E+00   # sbottom1 decays
+      1.00000000E+00    2     1000022        5  
 DECAY   2000005     0.00000000E+00   # sbottom2 decays
 DECAY   1000006     0.00000000E+00   # stop1 decays
 DECAY   2000006     0.00000000E+00   # stop2 decays
@@ -57,8 +58,7 @@ DECAY   1000015     0.00000000E+00   # stau_1 decays
 DECAY   2000015     0.00000000E+00   # stau_2 decays
 DECAY   1000016     0.00000000E+00   # snu_tauL decays
 
-DECAY   1000021     1.00000000E+00   # gluino decays
-      1.00000000E+00    3     1000022        -5         5   # BR(~gl -> N1 bbar b)
+DECAY   1000021     0.00000000E+00   # gluino decays
 
 DECAY   1000022     0.00000000E+00   # neutralino1 decays
 DECAY   1000023     0.00000000E+00   # neutralino2 decays

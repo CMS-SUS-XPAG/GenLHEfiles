@@ -1,14 +1,14 @@
 #
 BLOCK MASS  # Mass Spectrum
 # PDG code           mass       particle
-   1000001     1.00000000E+05   # ~d_L
-   2000001     1.00000000E+05   # ~d_R
-   1000002     1.00000000E+05   # ~u_L
-   2000002     1.00000000E+05   # ~u_R
-   1000003     1.00000000E+05   # ~s_L
-   2000003     1.00000000E+05   # ~s_R
-   1000004     1.00000000E+05   # ~c_L
-   2000004     1.00000000E+05   # ~c_R
+   1000001     %MPROD%          # ~d_L
+   2000001     %MPROD%          # ~d_R
+   1000002     %MPROD%          # ~u_L
+   2000002     %MPROD%          # ~u_R
+   1000003     %MPROD%          # ~s_L
+   2000003     %MPROD%          # ~s_R
+   1000004     %MPROD%          # ~c_L
+   2000004     %MPROD%          # ~c_R
    1000005     1.00000000E+05   # ~b_1
    2000005     1.00000000E+05   # ~b_2
    1000006     1.00000000E+05   # ~t_1
@@ -22,7 +22,7 @@ BLOCK MASS  # Mass Spectrum
    1000015     1.00000000E+05   # ~tau_1
    2000015     1.00000000E+05   # ~tau_2
    1000016     1.00000000E+05   # ~nu_tauL
-   1000021     %MGL%          # ~g
+   1000021     1.00000000E+05   # ~g
    1000022     1.               # ~chi_10
    1000023     1.00000000E+05   # ~chi_20
    1000025     1.00000000E+05   # ~chi_30
@@ -33,14 +33,22 @@ BLOCK MASS  # Mass Spectrum
 #
 #
 #         PDG            Width
-DECAY   1000001     0.00000000E+00   # sdown_L decays
-DECAY   2000001     0.00000000E+00   # sdown_R decays
-DECAY   1000002     0.00000000E+00   # sup_L decays
-DECAY   2000002     0.00000000E+00   # sup_R decays
-DECAY   1000003     0.00000000E+00   # sstrange_L decays
-DECAY   2000003     0.00000000E+00   # sstrange_R decays
-DECAY   1000004     0.00000000E+00   # scharm_L decays
-DECAY   2000004     0.00000000E+00   # scharm_R decays
+DECAY   1000001     0.10000000E+00   # sdown_L decays
+      1.00000000E+00    2     1000022        1  
+DECAY   2000001     0.10000000E+00   # sdown_R decays
+      1.00000000E+00    2     1000022        1  
+DECAY   1000002     0.10000000E+00   # sup_L decays
+      1.00000000E+00    2     1000022        2  
+DECAY   2000002     0.10000000E+00   # sup_R decays
+      1.00000000E+00    2     1000022        2  
+DECAY   1000003     0.10000000E+00   # sstrange_L decays
+      1.00000000E+00    2     1000022        3  
+DECAY   2000003     0.10000000E+00   # sstrange_R decays
+      1.00000000E+00    2     1000022        3  
+DECAY   1000004     0.10000000E+00   # scharm_L decays
+      1.00000000E+00    2     1000022        4  
+DECAY   2000004     0.10000000E+00   # scharm_R decays
+      1.00000000E+00    2     1000022        4  
 
 DECAY   1000005     0.00000000E+00   # sbottom1 decays
 DECAY   2000005     0.00000000E+00   # sbottom2 decays
@@ -57,8 +65,7 @@ DECAY   1000015     0.00000000E+00   # stau_1 decays
 DECAY   2000015     0.00000000E+00   # stau_2 decays
 DECAY   1000016     0.00000000E+00   # snu_tauL decays
 
-DECAY   1000021     1.00000000E+00   # gluino decays
-      1.00000000E+00    3     1000022        -5         5   # BR(~gl -> N1 bbar b)
+DECAY   1000021     0.00000000E+00   # gluino decays
 
 DECAY   1000022     0.00000000E+00   # neutralino1 decays
 DECAY   1000023     0.00000000E+00   # neutralino2 decays
