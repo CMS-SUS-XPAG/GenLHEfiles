@@ -6,6 +6,6 @@ SCRIPT="../../test/scripts/submitPythiaCondorJob.py"
 MODEL="SMS-N2N3_mN-"
 JOBS="jobs"
 
-for MNLSP in {100..1300..100}; do
-    python ${SCRIPT} ${MODEL}${MNLSP} --in-dir /hadoop/cms/store/user/${USER}/mcProduction/LHE/${MODEL}${MNLSP} --slha ${JOBS}/${MODEL}${MNLSP}/${MODEL}${MNLSP}.slha --qcut-range ${QMIN} ${QMAX}
+for MNLSP in {100..1000..100}; do
+    python ${SCRIPT} ${MODEL}${MNLSP} --in-dir /hadoop/cms/store/user/${USER}/mcProduction/LHE/${MODEL}${MNLSP} --slha ${JOBS}/${MODEL}${MNLSP}/${MODEL}${MNLSP}.slha --qcut-range ${QMIN} ${QMAX} --proxy ${vomsdir}
 done
