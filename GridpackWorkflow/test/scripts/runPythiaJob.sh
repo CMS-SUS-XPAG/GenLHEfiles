@@ -11,15 +11,16 @@ PROCESS=$1
 SLHA=$2
 QCUT=$3
 OUTDIR=$4
+INFILES=$5
 
 echo "Process:"
 echo $PROCESS
 
-INFILES=""
-for f in $( ls ${PROCESS}_*.lhe ); do
-    INFILES="file:${f},"$INFILES
-done
-INFILES=${INFILES%?}
+# INFILES=""
+# for f in $( ls ${PROCESS}_*.lhe ); do
+#     INFILES="file:${f},"$INFILES
+# done
+# INFILES=${INFILES%?}
 echo "Input files:"
 echo $INFILES
 
@@ -36,7 +37,6 @@ echo $SCRAM_ARCH
 echo $HOSTNAME
 echo "Setting up a CMSSW release..."
 eval `scramv1 project CMSSW CMSSW_7_1_20_patch3`
-cp *.lhe CMSSW_7_1_20_patch3/src
 cp $SLHA CMSSW_7_1_20_patch3/src
 cd CMSSW_7_1_20_patch3/src
 eval `scramv1 runtime -sh`
