@@ -43,12 +43,15 @@ if __name__ == '__main__':
     parser.add_argument('--njobs', '-j', help="Number of condor jobs", type=int, default=1)
     parser.add_argument('--no-sub', dest='noSub', action='store_true', help='Do not submit jobs')
     parser.add_argument('--proxy', dest="proxy", help="Path to proxy", default='/tmp/x509up_u31156')
+    parser.add_argument('--rseed-start', dest='rseedStart', help='Initial value for random seed', 
+            type=int, default=500)
     args = parser.parse_args()
 
     proc = args.proc
     nevents = args.nevents
     njobs = args.njobs
     infile = args.infile
+    rseedStart = args.rseedStart
 
     script_dir = os.path.dirname(os.path.realpath(__file__))
     executable = script_dir+'/runLHEJob.sh'
@@ -59,6 +62,6 @@ if __name__ == '__main__':
     options = [proc, str(nevents), outdir]
     print "Options:",(' '.join(options))
     for j in range(0,njobs):
-        rseed = str(500+j)
+        rseed = str(rseedStart+j)
         print "Random seed",rseed
         submitCondorJob(proc, executable, options+[rseed], infile, label=rseed, submit=(not args.noSub), proxy=args.proxy)
