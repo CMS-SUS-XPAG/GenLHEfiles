@@ -21,8 +21,8 @@ class gridBlock:
 model = "T5qqqqVV"
 process = "GlGl"
 
-# Number of events: min(xfactor*xsec*ifb, maxEvents) (always in thousands)
-ifb, xfactor = 20, 40 
+# Number of events: min(goalLumi*xsec, maxEvents) (always in thousands)
+goalLumi = 800
 minLumi = 40
 minEvents, maxEvents = 20, 150
 diagStep = 50
@@ -38,7 +38,7 @@ ymin, ymed, ymax = 0, 400, 1600
 # Number of events for mass point, in thousands
 def events(mass):
   xs = xsec(mass,process)
-  nev = min(xfactor*xs*ifb, maxEvents*1000)
+  nev = min(goalLumi*xs, maxEvents*1000)
   if nev < xs*minLumi: nev = xs*minLumi
   nev = max(nev/1000, minEvents)
   return math.ceil(nev) # Rounds up
@@ -84,8 +84,8 @@ for col in cols: mpoints.extend(col)
 # -------------------------------
 #     Plotting and printing
 
-makePlot(cols, 'events', model, process, xmin, xmax, ymin, ymax, ifb)
-Ntot = makePlot(cols, 'lumi', model, process, xmin, xmax, ymin, ymax, ifb)
+makePlot(cols, 'events', model, process, xmin, xmax, ymin, ymax)
+Ntot = makePlot(cols, 'lumi', model, process, xmin, xmax, ymin, ymax)
 #makePlot(cols, 'factor')
 
 Ntot = Ntot/1e3
