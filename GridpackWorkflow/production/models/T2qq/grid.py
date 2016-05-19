@@ -18,21 +18,20 @@ class gridBlock:
     self.xstep = xstep
     self.ystep = ystep
     
-model = "T1qqqq"
-process = "GlGl"
+model = "T2qq"
+process = "SqSq"
 
 # Number of events: min(goalLumi*xsec, maxEvents) (always in thousands)
-goalLumi = 800
-minLumi = 40
-minEvents, maxEvents = 10, 150
+goalLumi = 3200
+minLumi = 10
+minEvents, maxEvents = 10, 300
 diagStep = 50
-maxDM = 1000
+maxDM = 700
 
 scanBlocks = []
-scanBlocks.append(gridBlock(600,  1200, 100, 100))
-scanBlocks.append(gridBlock(1200, 2301, 50, 100))
+scanBlocks.append(gridBlock(200,  1801, 50, 100))
 minDM = 25
-ymin, ymed, ymax = 0, 500, 1600 
+ymin, ymed, ymax = 0, 200, 1400 
 
 
 # Number of events for mass point, in thousands
@@ -56,7 +55,7 @@ for block in scanBlocks:
     xmax = max(xmax, block.xmax)
     col = []
     my = 0
-    begDiag = max(ymed, mx-maxDM)
+    begDiag = min(max(ymed, mx-maxDM), mx-minDM)
     # Adding bulk points
     if (mx-block.xmin)%block.xstep == 0 :
       for my in range(ymin, begDiag, block.ystep):
@@ -86,7 +85,10 @@ for col in cols: mpoints.extend(col)
 
 makePlot(cols, 'events', model, process, xmin, xmax, ymin, ymax)
 Ntot = makePlot(cols, 'lumi', model, process, xmin, xmax, ymin, ymax)
-#makePlot(cols, 'factor')
+# Plotting equivalent lumi for 8 times the cross-section
+model = "T2qq_8flavor"
+makePlot(cols, 'lumix8', model, process, xmin, xmax, ymin, ymax)
+
 
 Ntot = Ntot/1e3
 print '\nScan contains '+"{0:.1f}".format(Ntot)+" million events\n"
