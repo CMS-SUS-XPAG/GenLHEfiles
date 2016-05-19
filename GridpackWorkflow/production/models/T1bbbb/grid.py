@@ -12,26 +12,27 @@ from grid_utils import *
 
 # Parameters that define the grid in the bulk and diagonal
 class gridBlock:
-  def __init__(self, xmin, xmax, xstep, ystep, maxDM, dstep, minEvents):
+  def __init__(self, xmin, xmax, xstep, ystep):
     self.xmin = xmin
     self.xmax = xmax
     self.xstep = xstep
     self.ystep = ystep
-    self.maxDM = maxDM
-    self.dstep = dstep
-    self.minEvents = minEvents
     
-model = "T1tttt"
+model = "T1bbbb"
 process = "GlGl"
 
 # Number of events: min(xfactor*xsec*ifb, maxEvents) (always in thousands)
-ifb, xfactor, maxEvents, minLumi = 20, 40, 150, 40
+ifb, xfactor = 20, 40 
+minLumi = 40
+minEvents, maxEvents = 10, 150
+diagStep = 50
+maxDM = 1000
 
 scanBlocks = []
-scanBlocks.append(gridBlock(600,  1200, 100, 100, 1000, 50, 10))
-scanBlocks.append(gridBlock(1200, 2301, 50, 100, 1000, 50, 20))
-minDM = 225
-ymin, ymed, ymax = 0, 300, 1600 
+scanBlocks.append(gridBlock(600,  1200, 100, 100))
+scanBlocks.append(gridBlock(1200, 2301, 50, 100))
+minDM = 25
+ymin, ymed, ymax = 0, 500, 1600 
 
 
 # Number of events for mass point, in thousands
@@ -50,13 +51,12 @@ Nevents = []
 xmin, xmax = 9999, 0
 for block in scanBlocks:
   Nbulk, Ndiag = 0, 0
-  minEvents = block.minEvents
-  for mx in range(block.xmin, block.xmax, block.dstep):
+  for mx in range(block.xmin, block.xmax, diagStep):
     xmin = min(xmin, block.xmin)
     xmax = max(xmax, block.xmax)
     col = []
     my = 0
-    begDiag = max(ymed, mx-block.maxDM)
+    begDiag = max(ymed, mx-maxDM)
     # Adding bulk points
     if (mx-block.xmin)%block.xstep == 0 :
       for my in range(ymin, begDiag, block.ystep):
@@ -65,7 +65,7 @@ for block in scanBlocks:
         col.append([mx,my, nev])
         Nbulk += nev
     # Adding diagonal points
-    for my in range(begDiag, mx-minDM+1, block.dstep):
+    for my in range(begDiag, mx-minDM+1, diagStep):
       if my > ymax: continue
       nev = events(mx)
       col.append([mx,my, nev])

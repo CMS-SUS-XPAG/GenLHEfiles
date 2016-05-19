@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 
-### Utilities for constructing and plotting scan grids (contributed by Manuel Franco Sevilla)
+### Utilities for constructing and plotting scan grids 
+
+### Authors:
+### Manuel Franco Sevilla
+### Ana Ovcharova
 
 import os,sys,math
 import numpy as np
@@ -8,8 +12,10 @@ import matplotlib.pyplot as plt
 
 # Fit to gluino cross-section in fb
 def xsec(mass, proc):
-  if proc=="GlGl": return 4.563e+17*math.pow(mass, -4.761*math.exp(5.848e-05*mass))
-  else: sys.exit("grid_utils::xsec - Unknown process name %s" % proc)
+  if proc=="GlGl":
+    return 4.563e+17*math.pow(mass, -4.761*math.exp(5.848e-05*mass))
+  else:
+    sys.exit("grid_utils::xsec - Unknown process name %s" % proc)
   
 def matchParams(mass, proc):
   if proc=="GlGl":
