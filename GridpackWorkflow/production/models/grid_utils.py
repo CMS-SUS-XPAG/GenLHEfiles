@@ -26,7 +26,7 @@ def matchParams(mass, proc):
     if mass>599 and  mass<799: return 118., 0.235
     elif mass<999: return 128., 0.235
     elif mass<1199: return 140., 0.235
-    elif mass<1399: return 143., 0.1245
+    elif mass<1399: return 143., 0.245
     elif mass<1499: return 147., 0.255
     elif mass<1799: return 150., 0.267
     elif mass<2099: return 156., 0.290
