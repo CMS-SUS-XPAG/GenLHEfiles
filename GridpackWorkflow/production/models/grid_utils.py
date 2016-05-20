@@ -26,7 +26,7 @@ def matchParams(mass, proc):
     if mass>599 and  mass<799: return 118., 0.235
     elif mass<999: return 128., 0.235
     elif mass<1199: return 140., 0.235
-    elif mass<1399: return 143., 0.245
+    elif mass<1399: return 143., 0.1245
     elif mass<1499: return 147., 0.255
     elif mass<1799: return 150., 0.267
     elif mass<2099: return 156., 0.290
@@ -65,9 +65,17 @@ def makePlot(mpoints, type, model, proc, xmin, xmax, ymin, ymax):
       else:
         plt.text(mpoint[0],mpoint[1], "{0:.1f}".format(val/1000), fontweight='bold', 
                  verticalalignment='center', horizontalalignment='center', fontsize=8, color='red')
-  plt.axis([xmin-100, xmax+100, -50, ymax+100])
-  plt.xticks(np.arange(xmin, xmax, 200))
-  plt.yticks(np.arange(ymin, ymax+100, 200))
+  tickmin = xmin-(xmin%100)
+  tickstep = 200
+  xbuffer, ybuffer = 100, 100
+  if xmax-xmin<1000: 
+    tickstep = 100
+    xbuffer = 50
+  if ymax-ymin<1000: 
+    ybuffer = 50
+  plt.axis([xmin-xbuffer, xmax+xbuffer, ymin-ybuffer, ymax+ybuffer])
+  plt.xticks(np.arange(tickmin, xmax, tickstep))
+  plt.yticks(np.arange(ymin, ymax+100, tickstep))
   plt.grid(True)
   if type == 'events': title = 'Thousands of '+model+' events to generate'
   if 'lumi' in type: title = 'Equivalent '+model+' MC luminosity in fb$^{-1}$'
