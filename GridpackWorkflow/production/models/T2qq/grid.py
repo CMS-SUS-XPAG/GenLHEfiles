@@ -24,12 +24,12 @@ process = "SqSq"
 # Number of events: min(goalLumi*xsec, maxEvents) (always in thousands)
 goalLumi = 3200
 minLumi = 10
-minEvents, maxEvents = 10, 300
+minEvents, maxEvents = 10, 250
 diagStep = 50
 maxDM = 700
 
 scanBlocks = []
-scanBlocks.append(gridBlock(200,  1801, 50, 100))
+scanBlocks.append(gridBlock(300,  1801, 50, 100))
 minDM = 25
 ymin, ymed, ymax = 0, 200, 1400 
 
@@ -79,6 +79,12 @@ for block in scanBlocks:
 
 mpoints = []
 for col in cols: mpoints.extend(col)
+# ## Test for repeated points
+# mset = set()
+# for mp in mpoints:
+#   mset.add(mp[0]*10000+mp[1])
+# print "Total points in mpoints: "+str(len(mpoints))
+# print "Total points in mset: "+str(len(mset))
 
 # -------------------------------
 #     Plotting and printing
