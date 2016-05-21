@@ -18,6 +18,8 @@ def xsec(mass, proc):
   if proc=="StopStop" or proc=="SbotSbot" or proc=="SqSq":
     if mass < 300: return 319925471928717.38*math.pow(mass, -4.10396285974583*math.exp(mass*0.0001317804474363))
     else: return 6953884830281245*math.pow(mass, -4.7171617288678069*math.exp(mass*6.1752771466190749e-05))
+  if proc=="C1N2" or proc=="C1C1" or proc=="N2N3" or proc=="StauStau":
+    return 1.
   else:
     sys.exit("grid_utils::xsec - Unknown process name %s" % proc)
   
@@ -49,6 +51,7 @@ def makePlot(mpoints, type, model, proc, xmin, xmax, ymin, ymax):
   if("StopStop" in proc): plt.xlabel('$m(\widetilde{t})$ [GeV]', fontsize=18)
   if("SbotSbot" in proc): plt.xlabel('$m(\widetilde{b})$ [GeV]', fontsize=18)
   if("SqSq" in proc): plt.xlabel('$m(\widetilde{q})$ [GeV]', fontsize=18)
+  if("C1N2" in proc): plt.xlabel('$m(\chi^{\pm}_{1})$ [GeV]', fontsize=18)
 
   plt.ylabel('$m(\chi^0_1)$ [GeV]', fontsize=18)
   Ntot = 0
