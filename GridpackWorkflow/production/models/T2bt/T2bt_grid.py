@@ -97,8 +97,9 @@ for col in cols: mpoints.extend(col)
 ## Test print out for repeated points
 mset = set()
 for mp in mpoints: mset.add(mp[0]*10000+mp[1])
-print "Total points in mpoints: "+str(len(mpoints))
-print "Total points in mset: "+str(len(mset))
+Ntot, Ndiff = len(mpoints), len(mset)
+if Ntot==Ndiff: print "\nGrid contains "+str(Ntot)+" mass points. No duplicates\n"
+else: print "\n\nGRID CONTAINS "+str(Ntot-Ndiff)+" DUPLICATE POINTS!!\n\n"
 
 # -------------------------------
 #     Plotting and printing

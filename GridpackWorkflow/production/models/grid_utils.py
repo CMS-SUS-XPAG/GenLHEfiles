@@ -45,10 +45,10 @@ def getAveEff(mpoints, proc):
   
 def makePlot(mpoints, type, model, proc, xmin, xmax, ymin, ymax):
   plt.figure(figsize=(17,10))
-  if("T1" in model or "T5" in model): plt.xlabel('$m(\widetilde{g})$ [GeV]', fontsize=18)
-  if("T2tt"==model): plt.xlabel('$m(\widetilde{t})$ [GeV]', fontsize=18)
-  if("T2qq" in model): plt.xlabel('$m(\widetilde{q})$ [GeV]', fontsize=18)
-  if("T2bb"==model): plt.xlabel('$m(\widetilde{b})$ [GeV]', fontsize=18)
+  if("GlGl" in proc): plt.xlabel('$m(\widetilde{g})$ [GeV]', fontsize=18)
+  if("StopStop" in proc): plt.xlabel('$m(\widetilde{t})$ [GeV]', fontsize=18)
+  if("SbotSbot" in proc): plt.xlabel('$m(\widetilde{b})$ [GeV]', fontsize=18)
+  if("SqSq" in proc): plt.xlabel('$m(\widetilde{q})$ [GeV]', fontsize=18)
 
   plt.ylabel('$m(\chi^0_1)$ [GeV]', fontsize=18)
   Ntot = 0
@@ -67,17 +67,25 @@ def makePlot(mpoints, type, model, proc, xmin, xmax, ymin, ymax):
       else:
         plt.text(mpoint[0],mpoint[1], "{0:.1f}".format(val/1000), fontweight='bold', 
                  verticalalignment='center', horizontalalignment='center', fontsize=8, color='red')
+
+  xmin = min([min([pt[0] for pt in column]) for column in mpoints if len(column)>0]) 
+  xmax = max([max([pt[0] for pt in column]) for column in mpoints if len(column)>0]) 
+  ymin = min([min([pt[1] for pt in column]) for column in mpoints if len(column)>0]) 
+  ymax = max([max([pt[1] for pt in column]) for column in mpoints if len(column)>0]) 
   tickmin = xmin-(xmin%100)
-  tickstep = 200
+  ytickmin = ymin-(ymin%100)
+  tickstep, ytickstep = 200, 200
   xbuffer, ybuffer = 100, 100
-  if xmax-xmin<1000: 
+  if xmax-xmin<1200: 
     tickstep = 100
     xbuffer = 50
-  if ymax-ymin<1000: 
+  if ymax-ymin<1200: 
+    ytickstep = 100
     ybuffer = 50
+  #print "xmax is "+str(xmax)+", xmin is "+str(xmin)+", tickstep is "+str(tickstep)
   plt.axis([xmin-xbuffer, xmax+xbuffer, ymin-ybuffer, ymax+ybuffer])
   plt.xticks(np.arange(tickmin, xmax, tickstep))
-  plt.yticks(np.arange(ymin, ymax+100, tickstep))
+  plt.yticks(np.arange(ytickmin, ymax+100, ytickstep))
   plt.grid(True)
   if type == 'events': title = 'Thousands of '+model+' events to generate'
   if 'lumi' in type: title = 'Equivalent '+model+' MC luminosity in fb$^{-1}$'

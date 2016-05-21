@@ -80,7 +80,12 @@ for block in scanBlocks:
       nev = events(mx)
       col.append([mx,my, nev])
       Ndiag += nev
-    if(my !=  mx-minDM and mx-minDM <= ymax):
+    if block.diagStep<100:
+      my = mx-25
+      nev = events(mx)
+      col.append([mx,my, nev])
+      Ndiag += nev
+    if my !=  mx-minDM and mx-minDM <= ymax:
       my = mx-minDM
       nev = events(mx)
       col.append([mx,my, nev])
@@ -90,6 +95,13 @@ for block in scanBlocks:
 
 mpoints = []
 for col in cols: mpoints.extend(col)
+
+## Test print out for repeated points
+mset = set()
+for mp in mpoints: mset.add(mp[0]*10000+mp[1])
+Ntot, Ndiff = len(mpoints), len(mset)
+if Ntot==Ndiff: print "\nGrid contains "+str(Ntot)+" mass points. No duplicates\n"
+else: print "\n\nGRID CONTAINS "+str(Ntot-Ndiff)+" DUPLICATE POINTS!!\n\n"
 
 # -------------------------------
 #     Plotting and printing
