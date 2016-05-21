@@ -30,7 +30,7 @@ midDM, maxDM = 300, 700
 addDiag = [183, 167, 85] # DeltaM for additional diagonal lines to be added
 
 scanBlocks = []
-scanBlocks.append(gridBlock(250,  1201, 50, 100))
+scanBlocks.append(gridBlock(250,  1201, 50, 50))
 minDM = 100
 ymin, ymed, ymax = 0, 0, 650 
 
@@ -116,6 +116,13 @@ for block in scanBlocks:
 
 mpoints = []
 for col in cols: mpoints.extend(col)
+
+## Test print out for repeated points
+mset = set()
+for mp in mpoints: mset.add(mp[0]*10000+mp[1])
+Ntot, Ndiff = len(mpoints), len(mset)
+if Ntot==Ndiff: print "\nGrid contains "+str(Ntot)+" mass points. No duplicates\n"
+else: print "\n\nGRID CONTAINS "+str(Ntot-Ndiff)+" DUPLICATE POINTS!!\n\n"
 
 # -------------------------------
 #     Plotting and printing

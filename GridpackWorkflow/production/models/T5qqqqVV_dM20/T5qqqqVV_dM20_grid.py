@@ -21,7 +21,7 @@ class gridBlock:
     self.dstep = dstep
     self.minEvents = minEvents
     
-model = "T5qqqqqVV_dM20"
+model = "T5qqqqVV_dM20"
 process = "GlGl"
 
 # Number of events: min(goalLumi*xsec, maxEvents) (always in thousands)
@@ -80,6 +80,13 @@ for block in scanBlocks:
 
 mpoints = []
 for col in cols: mpoints.extend(col)
+
+## Test print out for repeated points
+mset = set()
+for mp in mpoints: mset.add(mp[0]*10000+mp[1])
+Ntot, Ndiff = len(mpoints), len(mset)
+if Ntot==Ndiff: print "\nGrid contains "+str(Ntot)+" mass points. No duplicates\n"
+else: print "\n\nGRID CONTAINS "+str(Ntot-Ndiff)+" DUPLICATE POINTS!!\n\n"
 
 # -------------------------------
 #     Plotting and printing
