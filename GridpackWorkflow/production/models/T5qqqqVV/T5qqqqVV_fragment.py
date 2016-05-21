@@ -72,7 +72,7 @@ DECAY   1000021     1.00000000E+00   # gluino decays
 0.16666666E+00    3    -1000024        -1        2   # BR(~gl -> C1 qq'bar)
 0.16666666E+00    3    -1000024        -3        4   #BR(~gl -> C1 qq'bar)
 DECAY   1000022     0.00000000E+00   # neutralino1 decays
-DECAY   1000023     0.00000000E+00   # neutralino2 decays
+DECAY   1000023     0.10000000E+00   # neutralino2 decays
 #           BR         NDA      ID1       ID2 
 0.00000000E+00    3     1000022        -1      1     # Dummy decay to allow off-shell Z
 1.00000000E+00    2     1000022        23            # BR(N2 -> N1 + Z)
