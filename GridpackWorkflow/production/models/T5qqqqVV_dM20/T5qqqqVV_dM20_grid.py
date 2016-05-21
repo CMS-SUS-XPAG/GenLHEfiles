@@ -24,13 +24,18 @@ class gridBlock:
 model = "T5qqqqVV_dM20"
 process = "GlGl"
 
+## Efficiency of the 1 lepton filter
+##  double pw = 2/3., pz = 1/3., pwl = 1/3., pzl = 1/10.
+##  bf_1L = pw*pw*(1-pow(1-pwl,2)) + pz*pz*(1-pow(1-pzl,2)) + 2*pw*pz*(1-(1-pwl)*(1-pzl))
+bf_1L = 0.446 
+
 # Number of events: min(goalLumi*xsec, maxEvents) (always in thousands)
-goalLumi, minLumi, maxEvents = 400, 10, 50
+goalLumi, minLumi, maxEvents = 800*bf_1L, 20*bf_1L, 50
 
 scanBlocks = []
-scanBlocks.append(gridBlock(600,  800, 100, 100, 1000, 50, 20))
+scanBlocks.append(gridBlock(600,  800, 50, 50, 1000, 50, 20))
 scanBlocks.append(gridBlock(800,  1701, 50, 50, 1000, 50, 20))
-minDM = 50
+minDM = 25
 ymin, ymed, ymax = 0, 200, 1200 
 
 
