@@ -52,6 +52,7 @@ def makePlot(mpoints, type, model, proc, xmin, xmax, ymin, ymax):
   if("SbotSbot" in proc): plt.xlabel('$m(\widetilde{b})$ [GeV]', fontsize=18)
   if("SqSq" in proc): plt.xlabel('$m(\widetilde{q})$ [GeV]', fontsize=18)
   if("C1N2" in proc): plt.xlabel('$m(\chi^{\pm}_{1})$ [GeV]', fontsize=18)
+  if("StauStau" in proc): plt.xlabel('$m(\widetilde{\\tau})$ [GeV]', fontsize=18)
 
   plt.ylabel('$m(\chi^0_1)$ [GeV]', fontsize=18)
   Ntot = 0

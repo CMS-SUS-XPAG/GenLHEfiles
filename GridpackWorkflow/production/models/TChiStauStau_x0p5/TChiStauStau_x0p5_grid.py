@@ -10,15 +10,15 @@ import os,sys,math
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from grid_utils import *
 
-model = "TChiSlepSnu_x0p5"
-process = "C1N2"
+model = "TChiStauStau_x0p5"
+process = "StauStau"
 
 # Number of events for mass point, in thousands
-nevt = 10
+nevt = 50
 
-diag_low, diag_high = 100, 25
-xmin, xmax, xstep = 100, 1200, 50
-ymin, ymax, ystep_low, ystep_high = 0, 800, 50, 25 
+diag_low, diag_high = 25, 25
+xmin, xmax, xstep = 100, 700, 25
+ymin, ymax, ystep_low, ystep_high = 0, 300, 25, 25 
 
 # -------------------------------
 #    Constructing grid
