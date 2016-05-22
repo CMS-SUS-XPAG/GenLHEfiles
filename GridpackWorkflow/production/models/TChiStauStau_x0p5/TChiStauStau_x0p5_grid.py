@@ -11,7 +11,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from grid_utils import *
 
 model = "TChiStauStau_x0p5"
-process = "StauStau"
+process = "N2C1"
 
 # Number of events for mass point, in thousands
 nevt = 50
@@ -36,7 +36,7 @@ for mx in range(xmin, xmax+1, xstep):
     ylist.extend(range(mx - diag_low, mx-diag_high+1, ystep_high))
   for my in ylist:
     mpoints.append([mx,my,nevt])
-    
+print mpoints    
 ## Test print out for repeated points
 mset = set()
 for mp in mpoints: mset.add(mp[0]*10000+mp[1])
