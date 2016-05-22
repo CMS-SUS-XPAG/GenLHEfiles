@@ -15,9 +15,11 @@ import matplotlib.pyplot as plt
 def xsec(mass, proc):
   if proc=="GlGl":
     return 4.563e+17*math.pow(mass, -4.761*math.exp(5.848e-05*mass))
-  if proc=="StopStop" or proc=="SbotSbot" or proc=="SqSq":
+  elif proc=="StopStop" or proc=="SbotSbot" or proc=="SqSq":
     if mass < 300: return 319925471928717.38*math.pow(mass, -4.10396285974583*math.exp(mass*0.0001317804474363))
     else: return 6953884830281245*math.pow(mass, -4.7171617288678069*math.exp(mass*6.1752771466190749e-05))
+  elif proc=="C1N2" or proc=="C1C1" or proc=="N2N3" or proc=="StauStau":
+    return 1.
   else:
     sys.exit("grid_utils::xsec - Unknown process name %s" % proc)
   
@@ -31,6 +33,15 @@ def matchParams(mass, proc):
     elif mass<1799: return 150., 0.267
     elif mass<2099: return 156., 0.290
     elif mass<2301: return 160., 0.315
+    else: sys.exit("grid_utils::matchParams - Mass out of range %i" % mass)
+  elif proc=="SqSq" or proc=="StopStop" or proc=="SbotSbot":
+    if mass>99 and mass<199: return 62., 0.498
+    elif mass<299: return 62., 0.361
+    elif mass<399: return 62., 0.302
+    elif mass<499: return 64., 0.275
+    elif mass<599: return 64., 0.254
+    elif mass<1299: return 68., 0.237
+    elif mass<1801: return 70., 0.243
     else: sys.exit("grid_utils::matchParams - Mass out of range %i" % mass)
   else: sys.exit("grid_utils::matchParams - Unknown process name %s" % proc)
     
@@ -49,6 +60,8 @@ def makePlot(mpoints, type, model, proc, xmin, xmax, ymin, ymax):
   if("StopStop" in proc): plt.xlabel('$m(\widetilde{t})$ [GeV]', fontsize=18)
   if("SbotSbot" in proc): plt.xlabel('$m(\widetilde{b})$ [GeV]', fontsize=18)
   if("SqSq" in proc): plt.xlabel('$m(\widetilde{q})$ [GeV]', fontsize=18)
+  if("C1N2" in proc): plt.xlabel('$m(\chi^{\pm}_{1})$ [GeV]', fontsize=18)
+  if("StauStau" in proc): plt.xlabel('$m(\widetilde{\\tau})$ [GeV]', fontsize=18)
 
   plt.ylabel('$m(\chi^0_1)$ [GeV]', fontsize=18)
   if model == 'T6ttWW':  plt.ylabel('$m(\chi^\pm_1)$ [GeV]', fontsize=18)
