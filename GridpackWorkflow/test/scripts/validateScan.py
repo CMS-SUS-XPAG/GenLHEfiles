@@ -31,7 +31,7 @@ if __name__ == '__main__':
     f = rt.TFile.Open("genbaby_"+mname+".root")
     t = f.Get("tree")
     if mname not in models:
-        sys.exit("Model",mname,"not implemented!")
+        sys.exit("Model "+mname+" not implemented!")
     m = models[mname]
 
     #sanity checks
