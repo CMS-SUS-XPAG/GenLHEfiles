@@ -20,6 +20,7 @@ class model:
 models = {}
 models["T5qqqqVV"] = model(34, 600, 2300, 32, 0, 1600, 500)
 models["T5qqqqVV_dM20"] = model(24, 600, 1800, 26, 0, 1300, 500)
+models["T5ZZ"] = model(20, 800, 1800, 36, 0, 1800, 500)
 
 if __name__ == '__main__':
     rt.gROOT.SetBatch()
@@ -49,7 +50,7 @@ if __name__ == '__main__':
                   ("mlsp:mprod##colztext", "Grid", (m.nbinsx,m.xmin,m.xmax,m.nbinsy,m.ymin,m.ymax)),
                   ]
 
-    if mname == 'T5qqqqVV' or mname == 'T5qqqqVV_dM20':
+    if mname == 'T5qqqqVV' or mname == 'T5qqqqVV_dM20' or mname == 'T5ZZ':
         histparams += [
                   ("mc_mass#abs(mc_id)==24", "W Mass", (100, 0, 150)),
                   ("mc_mass#abs(mc_id)==23", "Z Mass", (100, 0, 150)),
