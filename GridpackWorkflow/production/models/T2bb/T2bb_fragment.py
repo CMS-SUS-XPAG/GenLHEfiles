@@ -87,17 +87,6 @@ model = "T2bb"
 # must equal the number entered in McM generator params
 mcm_eff = 0.257
 
-# Number of events: min(xfactor*xsec*ifb, maxEvents) (always in thousands)
-ifb, xfactor, maxEvents, minLumi = 20, 40, 150, 40
-
-# Parameters that define the grid in the bulk and diagonal
-class gridBlock:
-  def __init__(self, xmin, xmax, xstep, ystep):
-    self.xmin = xmin
-    self.xmax = xmax
-    self.xstep = xstep
-    self.ystep = ystep
-
 # Fit to sbottom-sbottom cross-section in fb
 def xsec(mass):
     if mass < 300: return 319925471928717.38*math.pow(mass, -4.10396285974583*math.exp(mass*0.0001317804474363))
@@ -113,13 +102,14 @@ def matchParams(mass):
     elif mass<1801: return 70., 0.243
     else: sys.exit("grid_utils::matchParams - Mass out of range %i" % mass)
 
-# Number of events for mass point, in thousands
-def events(mass):
-  xs = xsec(mass)
-  nev = min(goalLumi*xs, maxEvents*1000)
-  if nev < xs*minLumi: nev = xs*minLumi
-  nev = max(nev/1000, minEvents)
-  return math.ceil(nev) # Rounds up
+# Parameters that define the grid in the bulk and diagonal
+class gridBlock:
+  def __init__(self, xmin, xmax, xstep, ystep):
+    self.xmin = xmin
+    self.xmax = xmax
+    self.xstep = xstep
+    self.ystep = ystep
+
 
 
 # Parameters to define the grid
@@ -134,6 +124,19 @@ scanBlocks.append(gridBlock(300,  500, 100, 100))
 scanBlocks.append(gridBlock(500,  1601, 50, 100))
 minDM = 25
 ymin, ymed, ymax = 0, 250, 1100 
+
+
+# Number of events for mass point, in thousands
+def events(mass):
+  xs = xsec(mass)
+  nev = min(goalLumi*xs, maxEvents*1000)
+  if nev < xs*minLumi: nev = xs*minLumi
+  nev = max(nev/1000, minEvents)
+  return math.ceil(nev) # Rounds up
+
+
+# -------------------------------
+#    Constructing grid
 
 cols = []
 Nevents = []
