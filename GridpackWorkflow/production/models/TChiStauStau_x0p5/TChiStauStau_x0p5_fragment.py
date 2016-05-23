@@ -87,38 +87,11 @@ model = "TChiStauStau_x0p5"
 # must equal the number entered in McM generator params
 mcm_eff = 0.485
 
-# Number of events: min(xfactor*xsec*ifb, maxEvents) (always in thousands)
-ifb, xfactor, maxEvents, minLumi = 20, 40, 150, 40
-
-# Parameters that define the grid in the bulk and diagonal
-class gridBlock:
-    def __init__(self, xmin, xmax, xstep, ystep, maxDM, dstep, minEvents):
-        self.xmin = xmin
-        self.xmax = xmax
-        self.xstep = xstep
-        self.ystep = ystep
-        self.maxDM = maxDM
-        self.dstep = dstep
-        self.minEvents = minEvents
-
-# Fit to stau cross-section in fb  ---> to be done
-def xsec(mass):
-    return 4.563e+17*math.pow(mass, -4.761*math.exp(5.848e-05*mass))
-
 def matchParams(mass):
-    if mass>99 and mass < 199: return 72,60.5e-2
-    elif mass>199 and mass < 299: return 72,52.8e-2
-    elif mass>299 and mass < 399: return 72,48.2e-2
-    elif mass>399 : return 72,45.5e-2
-
-# Number of events for mass point, in thousands
-def events(mass):
-    xs = xsec(mass)
-    nev = min(xfactor*xs*ifb, maxEvents*1000)
-    if nev < xs*minLumi: nev = xs*minLumi
-    nev = max(nev/1000, minEvents)
-    return math.ceil(nev) # Rounds up
-
+    if mass>99 and mass < 199: return 76,60.5e-2
+    elif mass>199 and mass < 299: return 76,52.8e-2
+    elif mass>299 and mass < 399: return 76,48.2e-2
+    elif mass>399 : return 76,45.5e-2
 
 # Number of events for mass point, in thousands
 nevt = 50
