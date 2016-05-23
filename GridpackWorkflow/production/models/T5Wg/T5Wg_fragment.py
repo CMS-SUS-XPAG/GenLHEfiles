@@ -32,10 +32,10 @@ BLOCK MASS
    1000014     1.00000000E+05
    1000015     1.00000000E+05
    1000016     1.00000000E+05
-   1000021     MASS1
+   1000021     %MGLU%
    1000022     1.00000000E+00
-   1000023     MASS2
-   1000024     MASS2
+   1000023     %MCHI%
+   1000024     %MCHI%
    1000025     1.00000000E+05
    1000035     1.00000000E+05
    1000037     1.00000000E+05
@@ -204,13 +204,13 @@ for col in cols: mpoints.extend(col)
 
 
 for point in mpoints:
-    mglu, mlsp = point[0], point[1]
+    mglu, mchi = point[0], point[1]
     qcut, tru_eff = matchParams(mglu)
     wgt = point[2]*(mcm_eff/tru_eff)
     
-    if mlsp==0: mlsp = 1
+    if mchi==0: mchi = 1
     slhatable = baseSLHATable.replace('%MGLU%','%e' % mglu)
-    slhatable = slhatable.replace('%MLSP%','%e' % mlsp)
+    slhatable = slhatable.replace('%MCHI%','%e' % mchi)
 
     basePythiaParameters = cms.PSet(
         pythia8CommonSettingsBlock,
@@ -241,7 +241,7 @@ for point in mpoints:
         cms.PSet(
             ConfigWeight = cms.double(wgt),
             GridpackPath =  cms.string('/cvmfs/cms.cern.ch/phys_generator/gridpacks/slc6_amd64_gcc481/13TeV/madgraph/V5_2.3.3/sus_sms/SMS-GlGl/SMS-GlGl_mGl-%i_tarball.tar.xz' % mglu),
-            ConfigDescription = cms.string('%s_%i_%i' % (model, mglu, mlsp)),
+            ConfigDescription = cms.string('%s_%i_%i' % (model, mglu, mchi)),
             SLHATableForPythia8 = cms.string('%s' % slhatable),
             PythiaParameters = basePythiaParameters,
         ),
