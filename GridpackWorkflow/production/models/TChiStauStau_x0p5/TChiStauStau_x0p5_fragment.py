@@ -58,15 +58,15 @@ DECAY   1000012     0.00000000E+00   # snu_elL decays
 DECAY   1000013     0.00000000E+00   # smuon_L decays
 DECAY   2000013     0.00000000E+00   # smuon_R decays
 DECAY   1000014     0.00000000E+00   # snu_muL decays
-DECAY   1000015     1.00000000E+00   # stau_1 decays
+DECAY   1000015     1.00000000E-1   # stau_1 decays
     1.00000000E+00    2    1000022   15
 DECAY   2000015     0.00000000E+00   # stau_2 decays
 DECAY   1000016     0.00000000E+00   # snu_tauL decays
 DECAY   1000021     0.00000000E+00   # gluino decays
 DECAY   1000022     0.00000000E+00   # neutralino1 decays
-DECAY   1000023     1.00000000E+00   # neutralino2 decays
+DECAY   1000023     1.00000000E-1   # neutralino2 decays
     1.00000000E+00   2    1000015   15
-DECAY   1000024     1.00000000E+00   # chargino1+ decays
+DECAY   1000024     1.00000000E-1   # chargino1+ decays
     1.00000000E+00   2    1000015   16
 DECAY   1000025     0.00000000E+00   # neutralino3 decays
 DECAY   1000035     0.00000000E+00   # neutralino4 decays
