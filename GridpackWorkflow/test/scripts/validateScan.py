@@ -21,6 +21,8 @@ models = {}
 models["T5qqqqVV"] = model(34, 600, 2300, 32, 0, 1600, 500)
 models["T5qqqqVV_dM20"] = model(24, 600, 1800, 26, 0, 1300, 500)
 models["T5ZZ"] = model(20, 800, 1800, 36, 0, 1800, 500)
+models["T2bb"] = model(52,300,1600,44,0,1100,500)
+models["T5Wg"] = model(52,800,2100,76,200,2100,500)
 
 if __name__ == '__main__':
     rt.gROOT.SetBatch()
