@@ -8,11 +8,6 @@ import math
 baseSLHATable="""
 BLOCK MASS  # Mass Spectrum
 # PDG code           mass       particle
-        25     1.00000000E+03
-        35     1.00000000E+03
-        36     1.00000000E+03
-        37     1.00000000E+03
-        6      1.72500000E+02
    1000001     100000.0         # ~d_L
    2000001     1.00000000E+05   # ~d_R
    1000002     100000.0         # ~u_L
@@ -45,7 +40,6 @@ BLOCK MASS  # Mass Spectrum
 #
 #
 #         PDG            Width
-DECAY         6     1.134E+00        # top decays
 DECAY   1000006     0.00000000E+00   # stop2 decays
 DECAY   2000006     0.00000000E+00   # stop2 decays
 DECAY   2000005     0.00000000E+00   # sbottom2 decays
