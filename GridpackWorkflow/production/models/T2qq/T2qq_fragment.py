@@ -113,7 +113,7 @@ def matchParams(mass):
     elif mass<599: return 64., 0.254
     elif mass<1299: return 68., 0.237
     elif mass<1801: return 70., 0.243
-    else: sys.exit("matchParams - Mass out of range %i" % mass)
+    else: return 70., 0.243
 
 # Parameters that define the grid in the bulk and diagonal
 class gridBlock:
