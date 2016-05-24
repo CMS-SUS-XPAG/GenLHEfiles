@@ -7,4 +7,5 @@
 *.pyc
 *.tar.xz
 *.pdf
+*.root
 jobs

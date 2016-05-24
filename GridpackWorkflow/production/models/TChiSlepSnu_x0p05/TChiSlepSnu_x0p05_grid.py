@@ -10,7 +10,7 @@ import os,sys,math
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from grid_utils import *
 
-model = "TChiSlepSnu_x0p5"
+model = "TChiSlepSnu_x0p05"
 process = "C1N2"
 
 # Number of events for mass point, in thousands

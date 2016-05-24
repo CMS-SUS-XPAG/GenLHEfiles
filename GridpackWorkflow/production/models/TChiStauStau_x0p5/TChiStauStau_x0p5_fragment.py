@@ -36,7 +36,6 @@ BLOCK MASS  # Mass Spectrum
    1000035     1.00000000E+05   # ~chi_40
    1000024     %MN2%           # ~chi_1+
    1000037     1.00000000E+05   # ~chi_2+
-
 # DECAY TABLE
 #         PDG            Width
 DECAY   1000001     0.00000000E+00   # sdown_L decays
@@ -51,7 +50,6 @@ DECAY   1000005     0.00000000E+00   # sbottom1 decays
 DECAY   2000005     0.00000000E+00   # sbottom2 decays
 DECAY   1000006     0.00000000E+00   # stop1 decays
 DECAY   2000006     0.00000000E+00   # stop2 decays
-
 DECAY   1000011     0.00000000E+00   # selectron_L decays
 DECAY   2000011     0.00000000E+00   # selectron_R decays
 DECAY   1000012     0.00000000E+00   # snu_elL decays
@@ -65,9 +63,10 @@ DECAY   1000016     0.00000000E+00   # snu_tauL decays
 DECAY   1000021     0.00000000E+00   # gluino decays
 DECAY   1000022     0.00000000E+00   # neutralino1 decays
 DECAY   1000023     1.00000000E-1   # neutralino2 decays
-    1.00000000E+00   2    1000015   15
+    0.50000000E+00   2    1000015   -15
+    0.50000000E+00   2    -1000015   15
 DECAY   1000024     1.00000000E-1   # chargino1+ decays
-    1.00000000E+00   2    1000015   16
+    1.00000000E+00   2    -1000015   16
 DECAY   1000025     0.00000000E+00   # neutralino3 decays
 DECAY   1000035     0.00000000E+00   # neutralino4 decays
 DECAY   1000037     0.00000000E+00   # chargino2+ decays
@@ -85,13 +84,17 @@ generator = cms.EDFilter("Pythia8GeneratorFilter",
 model = "TChiStauStau_x0p5"
 # weighted average of matching efficiencies for the full scan
 # must equal the number entered in McM generator params
-mcm_eff = 0.485
+mcm_eff = 0.481
 
 def matchParams(mass):
-    if mass>99 and mass < 199: return 76,60.5e-2
-    elif mass>199 and mass < 299: return 76,52.8e-2
-    elif mass>299 and mass < 399: return 76,48.2e-2
-    elif mass>399 : return 76,45.5e-2
+  if mass < 124: return 76,0.64
+  elif mass < 151: return 76, 0.6
+  elif mass < 176: return 76, 0.57
+  elif mass < 226: return 76, 0.54
+  elif mass < 326: return 76, 0.51
+  elif mass < 451: return 76, 0.48
+  elif mass < 651: return 76, 0.45
+  else: return 76, 0.42
 
 # Number of events for mass point, in thousands
 nevt = 50
