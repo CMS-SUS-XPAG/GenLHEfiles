@@ -30,7 +30,6 @@ minDM, midDM, maxDM = 200, 300, 300
 
 scanBlocks = []
 scanBlocks.append(gridBlock(200,  1201, 50, 50))
-# scanBlocks.append(gridBlock(500,  1601, 50, 100))
 ymin, ymed, ymax = 0, 75, 650
 hlines_below_grid = [25]
 hline_xmin = 0
@@ -109,7 +108,7 @@ Ntot = makePlot(cols, 'lumi', model, process, xmin, xmax, ymin, ymax)
 
 
 Ntot = Ntot/1e3
-print '\nScan contains '+"{0:.1f}".format(Ntot)+" million events\n"
+print '\nScan contains '+"{0:,.0f}".format(Ntot*1e6)+" events\n"
 print 'Average matching efficiency (for McM and GEN fragment) = '+"{0:.3f}".format(getAveEff(mpoints,process))
 print
 
