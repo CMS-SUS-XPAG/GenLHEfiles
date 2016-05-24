@@ -84,6 +84,7 @@ def makePlot(mpoints, type, model, proc, xmin, xmax, ymin, ymax):
       if type == 'lumi': val = nev/xsec(mpoint[0], proc)*1000
       if type == 'lumix8': val = nev/xsec(mpoint[0], proc)*1000/8
       if type == 'lumi_br5': val = nev/xsec(mpoint[0], proc)*1000*5
+      if type == 'lumi_br4': val = nev/xsec(mpoint[0], proc)*1000*4
       if type == 'lumi_br2': val = nev/xsec(mpoint[0], proc)*1000/0.446
 
       font_col = colors[-1]

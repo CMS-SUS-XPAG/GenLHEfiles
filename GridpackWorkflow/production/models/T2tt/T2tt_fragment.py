@@ -18,7 +18,7 @@ BLOCK MASS  # Mass Spectrum
    2000004     1.00000000E+05   # ~c_R
    1000005     1.00000000E+05   # ~b_1
    2000005     1.00000000E+05   # ~b_2
-   1000006     1.00000000E+05   # ~t_1
+   1000006     %MSTOP%          # ~t_1
    2000006     1.00000000E+05   # ~t_2
    1000011     1.00000000E+05   # ~e_L
    2000011     1.00000000E+05   # ~e_R
@@ -29,7 +29,7 @@ BLOCK MASS  # Mass Spectrum
    1000015     1.00000000E+05   # ~tau_1
    2000015     1.00000000E+05   # ~tau_2
    1000016     1.00000000E+05   # ~nu_tauL
-   1000021     %MGLU%           # ~g
+   1000021     1.00000000E+05    # ~g
    1000022     %MLSP%           # ~chi_10
    1000023     1.00000000E+05   # ~chi_20
    1000025     1.00000000E+05   # ~chi_30
@@ -49,7 +49,9 @@ DECAY   1000004     0.00000000E+00   # scharm_L decays
 DECAY   2000004     0.00000000E+00   # scharm_R decays
 DECAY   1000005     0.00000000E+00   # sbottom1 decays
 DECAY   2000005     0.00000000E+00   # sbottom2 decays
-DECAY   1000006     0.00000000E+00   # stop1 decays
+DECAY   1000006     1.00000000E+00   # stop1 decays
+    0.00000000E+00    3    1000022      5     24  # dummy allowed decay, in order to turn on off-shell decays
+    1.00000000E+00    2    1000022      6
 DECAY   2000006     0.00000000E+00   # stop2 decays
 
 DECAY   1000011     0.00000000E+00   # selectron_L decays
@@ -61,14 +63,7 @@ DECAY   1000014     0.00000000E+00   # snu_muL decays
 DECAY   1000015     0.00000000E+00   # stau_1 decays
 DECAY   2000015     0.00000000E+00   # stau_2 decays
 DECAY   1000016     0.00000000E+00   # snu_tauL decays
-##### gluino decays - no offshell decays needed
-DECAY   1000021     1.00000000E+00   # gluino decays
-#           BR         NDA      ID1       ID2       ID3
-      2.50000000E-01    3     1000022        -1         1   # BR(~gl -> N1 ubar u)
-      2.50000000E-01    3     1000022        -2         2   # BR(~gl -> N1 dbar d)
-      2.50000000E-01    3     1000022        -3         3   # BR(~gl -> N1 cbar c)
-      2.50000000E-01    3     1000022        -4         4   # BR(~gl -> N1 sbar s)
-
+DECAY   1000021     0.00000000E+00   # gluino decays
 DECAY   1000022     0.00000000E+00   # neutralino1 decays
 DECAY   1000023     0.00000000E+00   # neutralino2 decays
 DECAY   1000024     0.00000000E+00   # chargino1+ decays
@@ -86,47 +81,50 @@ generator = cms.EDFilter("Pythia8GeneratorFilter",
     RandomizedParameters = cms.VPSet(),
 )
 
-model = "T1qqqq"
+model = "T2tt"
+batch = 1
+# batch 1 contains 33,504,000 events in 37 points
+# batch 2 contains 31,675,000 events in 368 points
+
 # weighted average of matching efficiencies for the full scan
 # must equal the number entered in McM generator params
-mcm_eff = 0.244
+mcm_eff = 0.295
+if batch==2: mcm_eff = 0.261
 
+# Number of events: min(goalLumi*xsec, maxEvents) (always in thousands)
+goalLumi = 400
+minLumi = 1e-40 # Skip minimum lumi
+minEvents, maxEvents = 20, 1000
+diagStep, bandStep = 25, 50
+midDM, maxDM = 300, 700
+addDiag = [183, 167] # DeltaM for additional diagonal lines to be added
 
 # Parameters that define the grid in the bulk and diagonal
 class gridBlock:
-    def __init__(self, xmin, xmax, xstep, ystep):
-        self.xmin = xmin
-        self.xmax = xmax
-        self.xstep = xstep
-        self.ystep = ystep
-
-# Fit to gluino cross-section in fb
-def xsec(mass):
-    return 4.563e+17*math.pow(mass, -4.761*math.exp(5.848e-05*mass))
-
-def matchParams(mass):
-    if   mass<799: return 118., 0.235
-    elif mass<999: return 128., 0.235
-    elif mass<1199: return 140., 0.235
-    elif mass<1399: return 143., 0.245
-    elif mass<1499: return 147., 0.255
-    elif mass<1799: return 150., 0.267
-    elif mass<2099: return 156., 0.290
-    else: return 160., 0.315
-
-# Number of events: min(goalLumi*xsec, maxEvents) (always in thousands)
-goalLumi = 800
-minLumi = 40
-minEvents, maxEvents = 10, 150
-diagStep = 50
-maxDM = 1000
+  def __init__(self, xmin, xmax, xstep, ystep):
+    self.xmin = xmin
+    self.xmax = xmax
+    self.xstep = xstep
+    self.ystep = ystep
 
 scanBlocks = []
-scanBlocks.append(gridBlock(600,  1200, 100, 100))
-scanBlocks.append(gridBlock(1200, 2301, 50, 100))
-minDM = 25
-ymin, ymed, ymax = 0, 500, 1600 
+if (batch==1): scanBlocks.append(gridBlock(350,  425, 50, 50))
+elif (batch==2): scanBlocks.append(gridBlock(400,  1201, 50, 50))
+minDM = 85
+ymin, ymed, ymax = 0, 0, 650 
 
+def matchParams(mass):
+  if mass>99 and mass<199: return 62., 0.498
+  elif mass<299: return 62., 0.361
+  elif mass<399: return 62., 0.302
+  elif mass<499: return 64., 0.275
+  elif mass<599: return 64., 0.254
+  elif mass<1299: return 68., 0.237
+  elif mass<1801: return 70., 0.243
+
+def xsec(mass):
+  if mass < 300: return 319925471928717.38*math.pow(mass, -4.10396285974583*math.exp(mass*0.0001317804474363))
+  else: return 6953884830281245*math.pow(mass, -4.7171617288678069*math.exp(mass*6.1752771466190749e-05))
 
 # Number of events for mass point, in thousands
 def events(mass):
@@ -136,31 +134,67 @@ def events(mass):
   nev = max(nev/1000, minEvents)
   return math.ceil(nev) # Rounds up
 
+# -------------------------------
 #    Constructing grid
-
-print "Starting grid construction"
 
 cols = []
 Nevents = []
 xmin, xmax = 9999, 0
 for block in scanBlocks:
   Nbulk, Ndiag = 0, 0
-  for mx in range(block.xmin, block.xmax, diagStep):
+  for mx in range(block.xmin, block.xmax, min(bandStep, diagStep)):
+    if (batch==2 and mx==block.xmin): continue
     xmin = min(xmin, block.xmin)
     xmax = max(xmax, block.xmax)
     col = []
     my = 0
-    begDiag = max(ymed, mx-maxDM)
+    begBand = min(max(ymed, mx-maxDM), mx-minDM)
+    begDiag = min(max(ymed, mx-midDM), mx-minDM)
     # Adding bulk points
     if (mx-block.xmin)%block.xstep == 0 :
-      for my in range(ymin, begDiag, block.ystep):
+      for my in range(ymin, begBand, block.ystep):
         if my > ymax: continue
+        # Adding extra diagonals to the bulk
+        for dm in addDiag:
+          if(len(cols)==0 and batch==1): continue # Don't add point before the beginning
+          dm_before = mx-block.xstep -my
+          dm_after = mx - my
+          if(dm>dm_before and dm<dm_after):
+            nev = events(my+dm)
+            col.append([my+dm,my, nev])
+            Nbulk += nev
         nev = events(mx)
         col.append([mx,my, nev])
         Nbulk += nev
-    # Adding diagonal points
+    # Adding diagonal points in inside band
+    if (mx-block.xmin)%bandStep == 0 :
+      for my in range(begBand, mx-midDM, bandStep):
+        if my > ymax: continue
+        # Adding extra diagonals to the band
+        for dm in addDiag:
+          if(len(cols)==0 and batch==1): continue # Don't add point before the beginning
+          dm_before = mx-bandStep -my
+          dm_after = mx - my
+          if(dm>dm_before and dm<dm_after):
+            nev = events(my+dm)
+            col.append([my+dm,my, nev])
+            Ndiag += nev
+        # Adding standard diagonal points
+        nev = events(mx)
+        col.append([mx,my, nev])
+        Ndiag += nev
+    # Adding diagonal points in band closest to outer diagonal
     for my in range(begDiag, mx-minDM+1, diagStep):
       if my > ymax: continue
+      # Adding extra diagonals to the band
+      for dm in addDiag:
+        if(len(cols)==0 and batch==1): continue # Don't add point before the beginning
+        dm_before = mx-diagStep -my
+        dm_after = mx - my
+        if(dm>dm_before and dm<dm_after):
+          nev = events(my+dm)
+          col.append([my+dm,my, nev])
+          Ndiag += nev
       nev = events(mx)
       col.append([mx,my, nev])
       Ndiag += nev
@@ -173,18 +207,15 @@ for block in scanBlocks:
   Nevents.append([Nbulk, Ndiag])
 
 mpoints = []
-
 for col in cols: mpoints.extend(col)
 
-print "Finished grid construction"
-
 for point in mpoints:
-    mglu, mlsp = point[0], point[1]
-    qcut, tru_eff = matchParams(mglu)
+    mstop, mlsp = point[0], point[1]
+    qcut, tru_eff = matchParams(mstop)
     wgt = point[2]*(mcm_eff/tru_eff)
     
     if mlsp==0: mlsp = 1
-    slhatable = baseSLHATable.replace('%MGLU%','%e' % mglu)
+    slhatable = baseSLHATable.replace('%MSTOP%','%e' % mstop)
     slhatable = slhatable.replace('%MLSP%','%e' % mlsp)
 
     basePythiaParameters = cms.PSet(
@@ -214,8 +245,8 @@ for point in mpoints:
     generator.RandomizedParameters.append(
         cms.PSet(
             ConfigWeight = cms.double(wgt),
-            GridpackPath =  cms.string('/cvmfs/cms.cern.ch/phys_generator/gridpacks/slc6_amd64_gcc481/13TeV/madgraph/V5_2.3.3/sus_sms/SMS-GlGl/SMS-GlGl_mGl-%i_tarball.tar.xz' % mglu),
-            ConfigDescription = cms.string('%s_%i_%i' % (model, mglu, mlsp)),
+            GridpackPath =  cms.string('/cvmfs/cms.cern.ch/phys_generator/gridpacks/slc6_amd64_gcc481/13TeV/madgraph/V5_2.3.3/sus_sms/SMS-StopStop/SMS-StopStop_mStop-%i_tarball.tar.xz' % mstop),
+            ConfigDescription = cms.string('%s_%i_%i' % (model, mstop, mlsp)),
             SLHATableForPythia8 = cms.string('%s' % slhatable),
             PythiaParameters = basePythiaParameters,
         ),
