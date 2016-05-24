@@ -20,6 +20,7 @@ class gridBlock:
     
 model = "T2tt"
 process = "StopStop"
+batch = 1
 
 # Number of events: min(goalLumi*xsec, maxEvents) (always in thousands)
 goalLumi = 400
@@ -27,12 +28,14 @@ minLumi = 1e-40 # Skip minimum lumi
 minEvents, maxEvents = 20, 1000
 diagStep, bandStep = 25, 50
 midDM, maxDM = 300, 700
-addDiag = [183, 167, 85] # DeltaM for additional diagonal lines to be added
+addDiag = [183, 167] # DeltaM for additional diagonal lines to be added
 
 scanBlocks = []
-scanBlocks.append(gridBlock(350,  1201, 50, 50))
-minDM = 100
+if (batch==1): scanBlocks.append(gridBlock(350,  425, 50, 50))
+elif (batch==2): scanBlocks.append(gridBlock(400,  1201, 50, 50))
+minDM = 85
 ymin, ymed, ymax = 0, 0, 650 
+
 
 
 # Number of events for mass point, in thousands
@@ -52,6 +55,7 @@ xmin, xmax = 9999, 0
 for block in scanBlocks:
   Nbulk, Ndiag = 0, 0
   for mx in range(block.xmin, block.xmax, min(bandStep, diagStep)):
+    if (batch==2 and mx==block.xmin): continue
     xmin = min(xmin, block.xmin)
     xmax = max(xmax, block.xmax)
     col = []
@@ -64,7 +68,7 @@ for block in scanBlocks:
         if my > ymax: continue
         # Adding extra diagonals to the bulk
         for dm in addDiag:
-          if(len(cols)==0): continue # Don't add point before the beginning
+          if(len(cols)==0 and batch==1): continue # Don't add point before the beginning
           dm_before = mx-block.xstep -my
           dm_after = mx - my
           if(dm>dm_before and dm<dm_after):
@@ -80,7 +84,7 @@ for block in scanBlocks:
         if my > ymax: continue
         # Adding extra diagonals to the band
         for dm in addDiag:
-          if(len(cols)==0): continue # Don't add point before the beginning
+          if(len(cols)==0 and batch==1): continue # Don't add point before the beginning
           dm_before = mx-bandStep -my
           dm_after = mx - my
           if(dm>dm_before and dm<dm_after):
@@ -96,7 +100,7 @@ for block in scanBlocks:
       if my > ymax: continue
       # Adding extra diagonals to the band
       for dm in addDiag:
-        if(len(cols)==0): continue # Don't add point before the beginning
+        if(len(cols)==0 and batch==1): continue # Don't add point before the beginning
         dm_before = mx-diagStep -my
         dm_after = mx - my
         if(dm>dm_before and dm<dm_after):
@@ -132,7 +136,7 @@ Ntot = makePlot(cols, 'lumi', model, process, xmin, xmax, ymin, ymax)
 
 
 Ntot = Ntot/1e3
-print '\nScan contains '+"{0:.1f}".format(Ntot)+" million events\n"
+print '\nScan contains '+"{0:,.0f}".format(Ntot*1e6)+" events\n"
 print 'Average matching efficiency (for McM and GEN fragment) = '+"{0:.3f}".format(getAveEff(mpoints,process))
 print
 
