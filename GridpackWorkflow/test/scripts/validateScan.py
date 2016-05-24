@@ -61,12 +61,21 @@ if __name__ == '__main__':
                   ("Sum$(abs(mc_id)==23||abs(mc_id)==24)", "Number of bosons in event", (5, 0, 5)),
                   ("ntruleps", "Lepton multiplicity", (5, 0, 5)),
                   ]
+
     if mname == 'T5Wg':
         histparams += [
             ("mc_mass#abs(mc_id)==24&&mlsp==10", "W Mass (m_{LSP} = 10 GeV)", (60, 0, 20)),
             ("mc_mass#abs(mc_id)==24&&mlsp==25", "W Mass (m_{LSP} = 25 GeV)", (100, 0, 50)),
             ("mc_mass#abs(mc_id)==24&&mlsp==50", "W Mass (m_{LSP} = 50 GeV)", (140, 0, 70)),
             ]
+
+    if mname == 'T5ZZ':
+        histparams += [
+                ("mc_mass#abs(mc_id)==23&&mlsp<90", "Z Mass (m_{NLSP} < 90 GeV)", (100, 0, 150)),
+                ("mc_mass#abs(mc_id)==23&&mlsp==25", "Z Mass (m_{NLSP} = 25 GeV)", (100, 0, 150)),
+                ("mc_mass#abs(mc_id)==23&&mlsp==50", "Z Mass (m_{NLSP} = 50 GeV)", (100, 0, 150)),
+                ]
+
 
     hists = {}
     for params in histparams:

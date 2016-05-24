@@ -130,10 +130,9 @@ ymin, ymed, ymax = 100, 100, 1800
 hlines_below_grid = [25,50]
 hline_xmin = 1000
 
-
 # Number of events for mass point, in thousands
 def events(mass):
-  xs = xsec(mass,process)
+  xs = xsec(mass)
   nev = min(goalLumi*xs, maxEvents*1000)
   if nev < xs*minLumi: nev = xs*minLumi
   nev = max(nev/1000, minEvents)
