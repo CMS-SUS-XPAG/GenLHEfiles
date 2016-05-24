@@ -61,7 +61,6 @@ DECAY   1000014     0.00000000E+00   # snu_muL decays
 DECAY   1000015     0.00000000E+00   # stau_1 decays
 DECAY   2000015     0.00000000E+00   # stau_2 decays
 DECAY   1000016     0.00000000E+00   # snu_tauL decays
-DECAY   1000021     1.00000000E+00   # gluino decays
 ##### gluino decays - no offshell decays needed
 DECAY   1000021     1.00000000E+00   # gluino decays
 #           BR         NDA      ID1       ID2       ID3
