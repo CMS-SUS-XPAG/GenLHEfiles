@@ -24,6 +24,9 @@ models["T5ZZ"] = model(20, 800, 1800, 36, 0, 1800, 500)
 models["T2bb"] = model(52,300,1600,44,0,1100,500)
 models["T5Wg"] = model(52,800,2100,78,150,2100,500)
 models['T2qq'] = model(30,300,1800,70,0,1400,500)
+models["T2bt"] = model(41,200,1225,27,0,675,308)
+models["T2tt"] = model(35,350,1225,27,0,675,308)
+models["TChiStauStau_x0p5"] = model(25,100,725,13,0,325,280)
 
 if __name__ == '__main__':
     rt.gROOT.SetBatch()
@@ -43,7 +46,9 @@ if __name__ == '__main__':
     print "Number of events in tree:",t.GetEntries()
 
     #make histograms
-    histparams = [("20*run+lumiblock", "Lumiblock index", (200, 21, 221)),
+    # each lumiblock must be in one bin, to see whether there are lumiblocks where no events were produced
+    # which would indicate a problem 
+    histparams = [("20*(run-1)+lumiblock", "Lumiblock index", (2000, 0, 2000)),
                   ("mprod", "Produced particle mass", (m.nbinsx, m.xmin, m.xmax)),
                   ("mlsp", "LSP mass", (m.nbinsy, m.ymin, m.ymax)),
                   ("gen_cfgid", "Config ID", (m.nconfigs, 0, m.nconfigs)),
@@ -76,7 +81,10 @@ if __name__ == '__main__':
                 ("mc_mass#abs(mc_id)==23&&mlsp==25", "Z Mass (m_{NLSP} = 25 GeV)", (100, 0, 150)),
                 ("mc_mass#abs(mc_id)==23&&mlsp==50", "Z Mass (m_{NLSP} = 50 GeV)", (100, 0, 150)),
                 ]
-
+    if mname == 'T2bt':
+        histparams += [
+                ("mc_mass#abs(mc_id)==6", "Top Mass", (100, 100, 250)),
+                ]
 
     hists = {}
     for params in histparams:

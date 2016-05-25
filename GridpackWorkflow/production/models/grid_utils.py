@@ -49,6 +49,16 @@ def matchParams(mass, proc):
     elif mass<1299: return 68., 0.237
     elif mass<1801: return 70., 0.243
     else: sys.exit("grid_utils::matchParams - Mass out of range %i" % mass)
+  elif proc=="C1N2":
+    if mass < 124: return 76,0.64
+    elif mass < 151: return 76, 0.6
+    elif mass < 176: return 76, 0.57
+    elif mass < 226: return 76, 0.54
+    elif mass < 326: return 76, 0.51
+    elif mass < 451: return 76, 0.48
+    elif mass < 651: return 76, 0.45
+    elif mass < 1176: return 76, 0.42
+    else: return 76,0.4
   else: sys.exit("grid_utils::matchParams - Unknown process name %s" % proc)
     
 def getAveEff(mpoints, proc):

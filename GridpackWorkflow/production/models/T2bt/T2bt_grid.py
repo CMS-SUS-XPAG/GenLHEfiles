@@ -9,15 +9,8 @@
 import os,sys,math
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from grid_utils import *
+import pprint
 
-# Parameters that define the grid in the bulk and diagonal
-class gridBlock:
-  def __init__(self, xmin, xmax, xstep, ystep):
-    self.xmin = xmin
-    self.xmax = xmax
-    self.xstep = xstep
-    self.ystep = ystep
-    
 model = "T2bt"
 process = "StopStop"
 
@@ -28,6 +21,14 @@ minEvents, maxEvents = 20, 500
 diagStep, bandStep = 25, 50
 minDM, midDM, maxDM = 200, 300, 300
 
+# Parameters that define the grid in the bulk and diagonal
+class gridBlock:
+  def __init__(self, xmin, xmax, xstep, ystep):
+    self.xmin = xmin
+    self.xmax = xmax
+    self.xstep = xstep
+    self.ystep = ystep
+    
 scanBlocks = []
 scanBlocks.append(gridBlock(200,  1201, 50, 50))
 ymin, ymed, ymax = 0, 75, 650
@@ -92,7 +93,7 @@ for block in scanBlocks:
 
 mpoints = []
 for col in cols: mpoints.extend(col)
-
+pprint.pprint(cols)
 ## Test print out for repeated points
 mset = set()
 for mp in mpoints: mset.add(mp[0]*10000+mp[1])
