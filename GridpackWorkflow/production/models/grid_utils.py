@@ -35,10 +35,10 @@ def matchParams(mass, proc):
     elif mass<2301: return 160., 0.315
     else: sys.exit("grid_utils::matchParams - Mass out of range %i" % mass)
   elif proc=="StauStau":
-    if mass>99 and mass < 199: return 72,60.5e-2
-    elif mass>199 and mass < 299: return 72,52.8e-2
-    elif mass>299 and mass < 399: return 72,48.2e-2
-    elif mass>399 : return 72,45.5e-2
+    if mass < 199: return 76,0.608
+    elif mass < 299: return 76,52.5e-2
+    elif mass < 399: return 76,48.5e-2
+    elif mass > 399 : return 76,45.7e-2
     else: sys.exit("grid_utils::matchParams - Mass out of range %i" % mass)
   elif proc=="SqSq" or proc=="StopStop" or proc=="SbotSbot":
     if mass>99 and mass<199: return 62., 0.498
@@ -59,8 +59,20 @@ def matchParams(mass, proc):
     elif mass < 651: return 76, 0.45
     elif mass < 1176: return 76, 0.42
     else: return 76,0.4
+  elif proc=='N2N3':
+    if mass < 199: return 76,0.52
+    elif mass<299: return 76,0.524
+    elif mass<399: return 76,0.492
+    elif mass<499: return 76,0.464
+    elif mass<599: return 76,0.451
+    elif mass<699: return 76,0.437
+    elif mass<799: return 76,0.425
+    elif mass<899: return 76,0.413
+    elif mass<999: return 76,0.402
+    elif mass<1099: return 76,0.40
+    else: return 76,0.4
   else: sys.exit("grid_utils::matchParams - Unknown process name %s" % proc)
-    
+ 
 def getAveEff(mpoints, proc):
   sum_wgt = 0.
   sum_evt = 0.
