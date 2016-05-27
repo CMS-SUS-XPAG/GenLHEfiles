@@ -25,7 +25,7 @@ process = "C1N2"
 diagStep = 100
 maxDM = 150
 extras = range(10,141,10)
-extras.extend([7.5,15])
+extras.extend([7,15])
 
 scanBlocks = []
 scanBlocks.append(gridBlock(100, 701, 25, 25))

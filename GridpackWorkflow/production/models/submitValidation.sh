@@ -20,7 +20,7 @@ fi
 SCRIPT="${PWD}/../../test/scripts/submitFragmentValidation.py"
 
 if [[ -z "${TAG}" ]]; then
-    python ${SCRIPT} --model ${MODEL} --fragment ${FRAGMENT} --proxy "/tmp/x509up_u31582" --njobs ${NJOBS} --nevents ${NEVENTS}
+    python ${SCRIPT} --model ${MODEL} --fragment ${FRAGMENT} --proxy ${vomsdir} --njobs ${NJOBS} --nevents ${NEVENTS}
 else 
-    python ${SCRIPT} --model ${MODEL} --fragment ${FRAGMENT} --tag ${TAG} --proxy "/tmp/x509up_u31582" --njobs ${NJOBS} --nevents ${NEVENTS}
+    python ${SCRIPT} --model ${MODEL} --fragment ${FRAGMENT} --tag ${TAG} --proxy ${vomsdir} --njobs ${NJOBS} --nevents ${NEVENTS}
 fi

@@ -58,3 +58,22 @@ After all jobs have finished, make differential jet rate plots for each q-cut:
 source makealldjrplots_SMS-TChiSlepSnu.sh 80 86
 ```
 Note that this will only succeed if you have ROOT set up. This script calls `test/scripts/djr.py` for each signal mass point.  It will produce PDF files with the DJR plots for each q-cut value.  
+
+### Fragment validation
+
+Inside `GridpackWorkflow/production/models` create a directory with the model name. In it, place the fragment named `${MODEL}_fragment.py`. To check if the fragment is ok locally before submitting jobs to condor, from inside the directory for the particular model do, e.g.:
+```
+./../../../test/scripts/runFragmentValidation.sh 1 $MODEL $PWD 50 local
+```
+Here, 1 is the random seed and 50 is the number of events. If you have more than one fragment for the model (e.g. there are two datasets) and you want to test all of them. Create a separate fragment for each attaching a tag s.t. the name is `${MODEL}_${TAG}_fragment.py`. Then run:
+```
+./../../../test/scripts/runFragmentValidation.sh 1 $MODEL $PWD 50 local $TAG
+```
+Once the fragment is verified locally, go to the `models` directory and submit condor validation like:
+```
+./submitValidation.sh $MODEL $NJOBS $NEVETNS $TAG
+```
+If no tag, just omit the last argument. The output will be sent to:`/hadoop/cms/store/$USER/mcProduction/AODSIM/${MODEL}/`.
+
+
+
