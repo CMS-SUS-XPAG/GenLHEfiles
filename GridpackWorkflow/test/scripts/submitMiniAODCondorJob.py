@@ -21,7 +21,6 @@ parser.add_argument('--out-dir', help="Output directory", dest='outdir',
 parser.add_argument('--out-dir-eos', help="Output directory (EOS)", dest='outdirEos',
         default="")
 parser.add_argument('--no-sub', dest='noSub', action='store_true', help='Do not submit jobs')
-parser.add_argument('--pu-input', dest="puOpt", help="Specify how to retrieve the PU dataset: 'dbs', 'local_safe'", default='dbs')
 parser.add_argument('--proxy', dest="proxy", help="Path to proxy", default='/tmp/x509up_u31156')
 args = parser.parse_args()
 
@@ -38,12 +37,6 @@ print "Running this executable:",executable
 for j in range(njobs):
     rseed = str(10000+j)
     print "Random seed",rseed
-    if args.puOpt == "dbs": puInputStr = "dbs:/MinBias_TuneCUETP8M1_13TeV-pythia8/RunIIWinter15GS-MCRUN2_71_V1-v1/GEN-SIM"
-    elif args.puOpt == "local_safe": 
-        puFilesAll = glob.glob("/hadoop/cms/phedex/store/mc/RunIIWinter15GS/MinBias_TuneCUETP8M1_13TeV-pythia8/GEN-SIM/MCRUN2_71_V1-v1/*/*")
-        puFiles = random.sample(puFilesAll,10)
-        puFiles = ["file:"+i for i in puFiles]
-        puInputStr = "{0}".format(",".join(puFiles))
-    options = [str(nevents), str(rseed), outdir, puInputStr, outdirEos]
+    options = [str(nevents), str(rseed), outdir, outdirEos]
     submitCondorJob('miniaod', executable, options, infile, label=str(rseed), 
             submit=(not args.noSub),proxy=args.proxy)
