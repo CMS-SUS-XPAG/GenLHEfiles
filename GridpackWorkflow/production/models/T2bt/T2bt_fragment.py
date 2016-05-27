@@ -99,12 +99,6 @@ model = "T2bt"
 # must equal the number entered in McM generator params
 mcm_eff = 0.283
 
-scanBlocks = []
-if (batch==1): scanBlocks.append(gridBlock(350,  425, 50, 50))
-elif (batch==2): scanBlocks.append(gridBlock(400,  1201, 50, 50))
-minDM = 85
-ymin, ymed, ymax = 0, 0, 650 
-
 def matchParams(mass):
   if mass>99 and mass<199: return 62., 0.498
   elif mass<299: return 62., 0.361
@@ -112,11 +106,18 @@ def matchParams(mass):
   elif mass<499: return 64., 0.275
   elif mass<599: return 64., 0.254
   elif mass<1299: return 68., 0.237
-  elif mass<1801: return 70., 0.243
+  else: return 70., 0.243
 
 def xsec(mass):
   if mass < 300: return 319925471928717.38*math.pow(mass, -4.10396285974583*math.exp(mass*0.0001317804474363))
   else: return 6953884830281245*math.pow(mass, -4.7171617288678069*math.exp(mass*6.1752771466190749e-05))
+
+# Number of events: min(goalLumi*xsec, maxEvents) (always in thousands)
+goalLumi = 400
+minLumi = 20 
+minEvents, maxEvents = 20, 500
+diagStep, bandStep = 25, 50
+minDM, midDM, maxDM = 200, 300, 300
 
 # Parameters that define the grid in the bulk and diagonal
 class gridBlock:
@@ -126,23 +127,15 @@ class gridBlock:
     self.xstep = xstep
     self.ystep = ystep
 
-# Number of events: min(goalLumi*xsec, maxEvents) (always in thousands)
-goalLumi = 400
-minLumi = 20 
-minEvents, maxEvents = 20, 500
-diagStep, bandStep = 25, 50
-minDM, midDM, maxDM = 200, 300, 300
-
 scanBlocks = []
 scanBlocks.append(gridBlock(200,  1201, 50, 50))
 ymin, ymed, ymax = 0, 75, 650
 hlines_below_grid = [25]
 hline_xmin = 0
 
-
 # Number of events for mass point, in thousands
 def events(mass):
-  xs = xsec(mass,process)
+  xs = xsec(mass)
   nev = min(goalLumi*xs, maxEvents*1000)
   if nev < xs*minLumi: nev = xs*minLumi
   nev = max(nev/1000, minEvents)
@@ -150,7 +143,6 @@ def events(mass):
 
 # -------------------------------
 #    Constructing grid
-
 cols = []
 Nevents = []
 xmin, xmax = 9999, 0

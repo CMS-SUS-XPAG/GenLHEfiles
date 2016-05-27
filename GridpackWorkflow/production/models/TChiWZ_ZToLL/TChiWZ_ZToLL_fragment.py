@@ -109,7 +109,7 @@ class gridBlock:
 diagStep = 100
 maxDM = 150
 extras = range(10,141,10)
-extras.extend([7.5,15])
+extras.extend([7,15])
 
 scanBlocks = []
 scanBlocks.append(gridBlock(100, 701, 25, 25))
@@ -157,6 +157,7 @@ for col in cols: mpoints.extend(col)
 
 for point in mpoints:
     mn2, mlsp = point[0], point[1]
+    if mn2-mlsp>9: continue
     qcut, tru_eff = matchParams(mn2)
     wgt = point[2]*(mcm_eff/tru_eff)
     
