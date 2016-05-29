@@ -80,7 +80,7 @@ generator = cms.EDFilter("Pythia8GeneratorFilter",
 
 # weighted average of matching efficiencies for the full scan
 # must equal the number entered in McM generator params
-mcm_eff = 0.512
+mcm_eff = 0.511
 model = "TStauStau"
 process = "StauStau"
 
@@ -93,7 +93,7 @@ def matchParams(mass):
 # Number of events for mass point, in thousands
 nevt = 50
 
-diag_low, diag_high = 50, 0
+diag_low, diag_high = 0, 0
 xmin, xmax, xstep = 100, 450,25
 ymin, ymax, ystep_low, ystep_high = 0, 250, 10, 10
 
@@ -106,11 +106,9 @@ for mx in range(xmin, xmax+1, xstep):
   if mx > (ymax + (diag_low - diag_high)): 
     ylist.extend(range(ymin, ymax+1, ystep_low))
   elif mx > ymax:
-    ylist.extend(range(ymin, mx - diag_low, ystep_low))
-    ylist.extend(range(mx - diag_low, ymax+1, ystep_high))
+    ylist.extend(range(ymin,ymax+1,ystep_low))
   else:
-    ylist.extend(range(ymin, mx - diag_low, ystep_low))
-    ylist.extend(range(mx - diag_low, mx-diag_high+1, ystep_high))
+    ylist.extend(range(ymin,mx-diag_high+1,ystep_low))
   for my in ylist:
     mpoints.append([mx,my,nevt])
  

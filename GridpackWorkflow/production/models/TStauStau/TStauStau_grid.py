@@ -16,8 +16,8 @@ process = "StauStau"
 # Number of events for mass point, in thousands
 nevt = 50
 
-diag_low, diag_high = 50, 0
-xmin, xmax, xstep = 100, 450,25
+diag_low, diag_high = 0, 0
+xmin, xmax, xstep = 100, 450, 25
 ymin, ymax, ystep_low, ystep_high = 0, 250, 10, 10
 
 # -------------------------------
@@ -29,11 +29,13 @@ for mx in range(xmin, xmax+1, xstep):
   if mx > (ymax + (diag_low - diag_high)): 
     ylist.extend(range(ymin, ymax+1, ystep_low))
   elif mx > ymax:
-    ylist.extend(range(ymin, mx - diag_low, ystep_low))
-    ylist.extend(range(mx - diag_low, ymax+1, ystep_high))
+#    ylist.extend(range(ymin, mx - diag_low, ystep_low))
+#    ylist.extend(range(mx - diag_low, ymax+1, ystep_high))
+    ylist.extend(range(ymin,ymax+1,ystep_low))
   else:
-    ylist.extend(range(ymin, mx - diag_low, ystep_low))
-    ylist.extend(range(mx - diag_low, mx-diag_high+1, ystep_high))
+    #ylist.extend(range(ymin, mx - diag_low, ystep_low))
+    #ylist.extend(range(mx - diag_low, mx-diag_high+1, ystep_high))
+    ylist.extend(range(ymin,mx-diag_high+1,ystep_low))
   for my in ylist:
     mpoints.append([mx,my,nevt])
     
