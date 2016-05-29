@@ -62,8 +62,10 @@ DECAY   1000016     0.00000000E+00   # snu_tauL decays
 DECAY   1000021     0.00000000E+00   # gluino decays
 DECAY   1000022     0.00000000E+00   # neutralino1 decays
 DECAY   1000023     0.10000000E+00   # neutralino2 decays
+   0.00000000E+00   3    1000022   11   -11
    1.00000000E+00     2    1000022    25
 DECAY   1000024     0.10000000E+00   # chargino1+ decays
+   0.00000000E+00   3    1000022   12   -11
    1.00000000E+00     2    1000022    24
 DECAY   1000025     0.00000000E+00   # neutralino3 decays
 DECAY   1000035     0.00000000E+00   # neutralino4 decays
@@ -149,12 +151,12 @@ for point in mpoints:
             'JetMatching:nJetMax = 2', #number of partons in born matrix element for highest multiplicity
             'JetMatching:doShowerKt = off', #off for MLM matching, turn on for shower-kT matching
             '6:m0 = 172.5',
-            'Check:abortIfVeto = on',
             '24:onMode = off', # w lepton filter
-            '24:onIfAny = 11 12 13 14 15 16'
+            '24:onIfAny = 11,12,13,14,15,16'
             '25:m0 = 125.0',# higgs to bb filter
-            '25:onMode = off'
-            '25:onIfAny = 5'
+            '25:onMode = off',
+            '25:onIfAny = 5',
+            'Check:abortIfVeto = on',
         ), 
         parameterSets = cms.vstring('pythia8CommonSettings',
                                     'pythia8CUEP8M1Settings',
