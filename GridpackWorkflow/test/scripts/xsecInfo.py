@@ -29,6 +29,7 @@ if __name__ == '__main__':
         #get all log files for this mass point
         #(filenames look like gen_<process>_<qcut>.err.<job ID>.0)
         fnames = glob.glob('gen_%s-%d_%d.err.*.0'%(proc,m,qcut))
+        fnames.sort(key=os.path.getmtime, reverse=True)
         #look in all such files -- take the first one that yields a value
         found = False
         for f in fnames:

@@ -22,6 +22,8 @@ parser.add_argument('--out-dir-eos', help="Output directory (EOS)", dest='outdir
         default="")
 parser.add_argument('--no-sub', dest='noSub', action='store_true', help='Do not submit jobs')
 parser.add_argument('--proxy', dest="proxy", help="Path to proxy", default='/tmp/x509up_u31156')
+parser.add_argument('--rseed-start', dest='rseedStart', help='Initial value for random seed', 
+        type=int, default=10000)
 args = parser.parse_args()
 
 executable = args.exe
@@ -30,12 +32,13 @@ nevents = args.nevents
 njobs = args.njobs
 outdir=args.outdir
 outdirEos=args.outdirEos
+rseedStart = args.rseedStart
 
 print "Will run",njobs,"jobs with",nevents,"events each"
 print "Running this executable:",executable
 
 for j in range(njobs):
-    rseed = str(10000+j)
+    rseed = str(rseedStart+j)
     print "Random seed",rseed
     options = [str(nevents), str(rseed), outdir, outdirEos]
     submitCondorJob('miniaod', executable, options, infile, label=str(rseed), 
