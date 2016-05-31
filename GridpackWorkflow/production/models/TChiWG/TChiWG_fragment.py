@@ -81,15 +81,17 @@ generator = cms.EDFilter("Pythia8GeneratorFilter",
     RandomizedParameters = cms.VPSet(),
 )
 
-if mass < 124: return 76,0.64
-    elif mass < 151: return 76, 0.6
-    elif mass < 176: return 76, 0.57
-    elif mass < 226: return 76, 0.54
-    elif mass < 326: return 76, 0.51
-    elif mass < 451: return 76, 0.48
-    elif mass < 651: return 76, 0.45
-    elif mass < 1176: return 76, 0.42
-    else: return 76,0.4
+
+def matchParams(mass):
+  if mass < 124: return 76,0.64
+  elif mass < 151: return 76, 0.6
+  elif mass < 176: return 76, 0.57
+  elif mass < 226: return 76, 0.54
+  elif mass < 326: return 76, 0.51
+  elif mass < 451: return 76, 0.48
+  elif mass < 651: return 76, 0.45
+  elif mass < 1176: return 76, 0.42
+  else: return 76,0.4
 
 # weighted average of matching efficiencies for the full scan
 # must equal the number entered in McM generator params
