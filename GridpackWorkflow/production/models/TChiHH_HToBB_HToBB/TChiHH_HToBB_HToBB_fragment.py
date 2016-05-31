@@ -29,13 +29,13 @@ BLOCK MASS  # Mass Spectrum
    2000015     1.00000000E+05   # ~tau_2
    1000016     1.00000000E+05   # ~nu_tauL
    1000021     1.00000000E+05   # ~g
-   1000022     1.00000000E+05   # ~chi_10
+   1000022     1.00000000E+00   # ~chi_10
    1000023     %MCHI%           # ~chi_20
    1000025     %MCHI%           # ~chi_30
    1000035     1.00000000E+05   # ~chi_40
    1000024     1.00000000E+05   # ~chi_1+
    1000037     1.00000000E+05   # ~chi_2+
-   1000039     1.00000000E+00   # ~gravitino
+   1000039     1.00000000E+05   # ~gravitino
 
 # DECAY TABLE
 #         PDG            Width
@@ -63,12 +63,12 @@ DECAY   1000016     0.00000000E+00   # snu_tauL decays
 DECAY   1000021     0.00000000E+00   # gluino decays
 DECAY   1000022     0.00000000E+00   # neutralino1 decays
 DECAY   1000023     0.10000000E+00   # neutralino2 decays
-    0.00000000E+00   3    1000039   22   22
-    1.00000000E+00   2    1000039   25
+    0.00000000E+00   3    1000022   22   22
+    1.00000000E+00   2    1000022   25
 DECAY   1000024     0.00000000E+00   # chargino1+ decays
 DECAY   1000025     0.10000000E+00   # neutralino3 decays
-    0.00000000E+00   3    1000039   22   22
-    1.00000000E+00   2    1000039   25
+    0.00000000E+00   3    1000022   22   22
+    1.00000000E+00   2    1000022   25
 DECAY   1000035     0.00000000E+00   # neutralino4 decays
 DECAY   1000037     0.00000000E+00   # chargino2+ decays
 """
@@ -83,14 +83,17 @@ generator = cms.EDFilter("Pythia8GeneratorFilter",
 )
 
 def matchParams(mass):
-  if mass < 124: return 76,0.64
-  elif mass < 151: return 76, 0.6
-  elif mass < 176: return 76, 0.57
-  elif mass < 226: return 76, 0.54
-  elif mass < 326: return 76, 0.51
-  elif mass < 451: return 76, 0.48
-  elif mass < 651: return 76, 0.45
-  else: return 76, 0.42
+  if mass < 199: return 76,0.52
+  elif mass<299: return 76,0.524
+  elif mass<399: return 76,0.492
+  elif mass<499: return 76,0.464
+  elif mass<599: return 76,0.451
+  elif mass<699: return 76,0.437
+  elif mass<799: return 76,0.425
+  elif mass<899: return 76,0.413
+  elif mass<999: return 76,0.402
+  elif mass<1099: return 76,0.40
+  else: return 76,0.4
 
 # weighted average of matching efficiencies for the full scan
 # must equal the number entered in McM generator params
@@ -116,7 +119,7 @@ for mx in range(xmin, xmax+1, xstep):
 
 for point in mpoints:
     mchi, mchi30 = point[0], point[1]
-    mlsp = 10000
+    mlsp = 1.
     qcut, tru_eff = matchParams(mchi)
     wgt = point[2]*(mcm_eff/tru_eff)
     
@@ -141,7 +144,6 @@ for point in mpoints:
             '6:m0 = 172.5',
             '25:onMode = off',
             '25:onIfAny = 5',
-            '25:mMin = 124.',
             'Check:abortIfVeto = on',
         ), 
         parameterSets = cms.vstring('pythia8CommonSettings',
