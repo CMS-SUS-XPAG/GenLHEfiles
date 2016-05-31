@@ -62,11 +62,11 @@ DECAY   1000016     0.00000000E+00   # snu_tauL decays
 DECAY   1000021     0.00000000E+00   # gluino decays
 DECAY   1000022     0.00000000E+00   # neutralino1 decays
 DECAY   1000023     0.10000000E+00   # neutralino2 decays
-   0.00000000E+00   3    1000022   11   -11
+    0.00000000E+00   3    1000022   11   -11
    1.00000000E+00     2    1000022    25
 DECAY   1000024     0.10000000E+00   # chargino1+ decays
-   0.00000000E+00   3    1000022   12   -11
-   1.00000000E+00     2    1000022    24
+    0.00000000E+00   3    1000022   12   -11
+   1.00000000E+00     2    -1000013    14
 DECAY   1000025     0.00000000E+00   # neutralino3 decays
 DECAY   1000035     0.00000000E+00   # neutralino4 decays
 DECAY   1000037     0.00000000E+00   # chargino2+ decays
@@ -93,13 +93,13 @@ def matchParams(mass):
 
 # weighted average of matching efficiencies for the full scan
 # must equal the number entered in McM generator params
-mcm_eff = 0.481
+mcm_eff = 0.469
 
-model = "TChiWH_WToLNu_HToBB"
+model = "TChiWH_WToLNu_HToVVTauTau"
 process = "C1N2"
 
 # Number of events for mass point, in thousands
-nevt = 30
+nevt = 100
 
 diag_low, diag_high = 125, 125
 xmin, xmax, xstep = 125, 700, 25
@@ -120,9 +120,6 @@ for mx in range(xmin, xmax+1, xstep):
     ylist.extend(range(ymin, mx - diag_low, ystep_low))
     ylist.extend(range(mx - diag_low, mx-diag_high+1, ystep_high))
   for my in ylist:
-    if mx<my +175:
-       nevt=100
-    else:nevt=30
     if mx>my+120:
        mpoints.append([mx,my,nevt])
     
@@ -151,12 +148,10 @@ for point in mpoints:
             'JetMatching:nJetMax = 2', #number of partons in born matrix element for highest multiplicity
             'JetMatching:doShowerKt = off', #off for MLM matching, turn on for shower-kT matching
             '6:m0 = 172.5',
-            '24:onMode = off', # w lepton filter
-            '24:onIfAny = 11,12,13,14,15,16'
-            '25:m0 = 125.0',# higgs to bb filter
-            '25:onMode = off',
-            '25:onIfAny = 5',
             'Check:abortIfVeto = on',
+            '25:m0 = 125.0',# 
+            '25:onMode = off',
+            '25:onIfAny = 22'
         ), 
         parameterSets = cms.vstring('pythia8CommonSettings',
                                     'pythia8CUEP8M1Settings',
