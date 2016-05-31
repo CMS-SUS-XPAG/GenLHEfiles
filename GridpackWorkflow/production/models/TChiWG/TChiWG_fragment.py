@@ -29,13 +29,13 @@ BLOCK MASS  # Mass Spectrum
    2000015     1.00000000E+05   # ~tau_2
    1000016     1.00000000E+05   # ~nu_tauL
    1000021     1.00000000E+05   # ~g
-   1000022     %MCHI%           # ~chi_10
-   1000023     1.00000000E+05   # ~chi_20
+   1000022     1.00000000E+00   # ~chi_10
+   1000023     %MCHI%           # ~chi_20
    1000025     1.00000000E+05   # ~chi_30
    1000035     1.00000000E+05   # ~chi_40
    1000024     %MCHI%           # ~chi_1+
    1000037     1.00000000E+05   # ~chi_2+
-   1000039     1.00000000E+00   # ~gravitino
+   1000039     1.00000000E+05   # ~gravitino
 
 # DECAY TABLE
 #         PDG            Width
@@ -61,12 +61,12 @@ DECAY   1000015     0.00000000E+00   # stau_1 decays
 DECAY   2000015     0.00000000E+00   # stau_2 decays
 DECAY   1000016     0.00000000E+00   # snu_tauL decays
 DECAY   1000021     0.00000000E+00   # gluino decays
-DECAY   1000022     0.10000000E+00   # neutralino1 decays
-    1.00000000E+00     2    1000039    21
+DECAY   1000022     0.00000000E+00   # neutralino1 decays
+    1.00000000E+00     2    1000022    21
 DECAY   1000023     0.00000000E+00   # neutralino2 decays
 DECAY   1000024     0.10000000E+00   # chargino1+ decays
-    0.00000000E+00   3    1000039   12   -11
-    1.00000000E+00   2    1000039   24
+    0.00000000E+00   3    1000022   12   -11
+    1.00000000E+00   2    1000022   24
 DECAY   1000025     0.00000000E+00   # neutralino3 decays
 DECAY   1000035     0.00000000E+00   # neutralino4 decays
 DECAY   1000037     0.00000000E+00   # chargino2+ decays
@@ -81,22 +81,22 @@ generator = cms.EDFilter("Pythia8GeneratorFilter",
     RandomizedParameters = cms.VPSet(),
 )
 
-def matchParams(mass):
-  if mass < 124: return 76,0.64
-  elif mass < 151: return 76, 0.6
-  elif mass < 176: return 76, 0.57
-  elif mass < 226: return 76, 0.54
-  elif mass < 326: return 76, 0.51
-  elif mass < 451: return 76, 0.48
-  elif mass < 651: return 76, 0.45
-  else: return 76, 0.42
+if mass < 124: return 76,0.64
+    elif mass < 151: return 76, 0.6
+    elif mass < 176: return 76, 0.57
+    elif mass < 226: return 76, 0.54
+    elif mass < 326: return 76, 0.51
+    elif mass < 451: return 76, 0.48
+    elif mass < 651: return 76, 0.45
+    elif mass < 1176: return 76, 0.42
+    else: return 76,0.4
 
 # weighted average of matching efficiencies for the full scan
 # must equal the number entered in McM generator params
 mcm_eff = 0.435
 
 model = "TChiWG"
-process = "C1N1"
+process = "C1N2"
 
 # Number of events for mass point, in thousands
 nevt = 100
