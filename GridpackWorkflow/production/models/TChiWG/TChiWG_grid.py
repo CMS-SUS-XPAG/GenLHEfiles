@@ -16,7 +16,6 @@ process = "C1N2"
 # Number of events for mass point, in thousands
 nevt = 100
 
-diag_low, diag_high = 100, 25
 xmin, xmax, xstep = 300, 1300, 25
 ymin, ymax, ystep = 300, 1300, 25
 
