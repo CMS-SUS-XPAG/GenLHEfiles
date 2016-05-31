@@ -15,7 +15,7 @@ def parseCrossSectionAndMatchingEfficiency(fname):
                 eff,pm,efferr = splitline[-2].split(' ')
                 xsec,pm,xsecerr = splitline[-4].split(' ')
                 return float(xsec),float(xsecerr),float(eff),float(efferr)
-    print "Warning in parseMatchingEfficiencyAndUncertainty: didn't find matching efficiency!"
+    print "Warning in parseMatchingEfficiencyAndUncertainty: didn't find matching efficiency from %s!" % fname
     return None,None,None,None
 
 if __name__ == '__main__':
