@@ -3,18 +3,20 @@
 NEVENTS=$1
 RANDOM_SEED=$2
 OUTDIR=$3
+OUTDIR_EOS=$4
+
 
 GRIDPACK_PATH=$PWD
-# GRIDPACK_PATH=/home/users/ana/gridpacks
-PROCESS="SMS-T2tt_mStop-170_mLSP-1"
-STOP_MASS="170"
-MODEL="# model T2tt-2bd_170_1"
-TAG="_2bd"
-STOP_DECAY=\
+
+PROCESS="SMS-T2tt_mStop-300"
+STOP_MASS="300"
+MODEL="# model T2tt-2bd_300_150"
+TAG="_mLSP-150"
+# STOP_DECAY=\
 "DECAY   1000006     1.00000000E+00   # stop1 decays
      0.00000000E+00    3     1000022         5      24
      1.00000000E+00    2     1000022         6"
-QCUT=58
+QCUT=57
 
 source /code/osgcode/cmssoft/cmsset_default.sh
 # on lxplus only
@@ -94,7 +96,7 @@ BLOCK MASS  # Mass Spectrum
    2000015     1.00000000E+04   # ~tau_2
    1000016     1.00000000E+04   # ~nu_tauL
    1000021     1.00000000E+04   # ~g
-   1000022     1            # ~chi_10
+   1000022     150.             # ~chi_10
    1000023     1.00000000E+04   # ~chi_20
    1000025     1.00000000E+04   # ~chi_30
    1000035     1.00000000E+04   # ~chi_40
@@ -228,20 +230,22 @@ eval `scram runtime -sh`
 scram b
 cd ../../
 cmsDriver.py step1 --filein file:${PROCESS}_AODSIM.root \
-	     --fileout file:${PROCESS}${TAG}_madgraphMLM-pythia8_RunIISpring15MiniAODv2-FastAsympt25ns_74X_MINIAODSIM_b${RANDOM_SEED}.root \
+	     --fileout file:${PROCESS}${TAG}_madgraphMLM-pythia8_RunIISpring15MiniAODv2-FastAsympt25ns_74X_MINIAODSIM_${RANDOM_SEED}.root \
 	     --mc --eventcontent MINIAODSIM --runUnscheduled --fast \
 	     --customise SLHCUpgradeSimulations/Configuration/postLS1CustomsPreMixing.customisePostLS1,Configuration/DataProcessing/Utils.addMonitoring \
 	     --datatier MINIAODSIM --conditions 74X_mcRun2_asymptotic_v2 \
 	     --step PAT --python_filename mini_driver.py --no_exec -n -1 || exit $? ; 
 cmsRun -e -j mini_rt.xml mini_driver.py || exit $? ;
 
-echo "Copy MiniAODv2 to eos"
+echo "Copy MiniAODv2 to eos and hadoop"
 
-lcg-cp -b -D srmv2 --vo cms -t 2400 --verbose file:${PROCESS}${TAG}_madgraphMLM-pythia8_RunIISpring15MiniAODv2-FastAsympt25ns_74X_MINIAODSIM_b${RANDOM_SEED}.root srm://bsrm-3.t2.ucsd.edu:8443/srm/v2/server?SFN=${OUTDIR}/${PROCESS}${TAG}_madgraphMLM-pythia8_RunIISpring15MiniAODv2-FastAsympt25ns_74X_MINIAODSIM_b${RANDOM_SEED}.root
+lcg-cp -b -D srmv2 --vo cms -t 2400 --verbose file:${PROCESS}${TAG}_madgraphMLM-pythia8_RunIISpring15MiniAODv2-FastAsympt25ns_74X_MINIAODSIM_${RANDOM_SEED}.root srm://bsrm-3.t2.ucsd.edu:8443/srm/v2/server?SFN=${OUTDIR}/${PROCESS/T2tt/T2tt-2bd}${TAG}_madgraphMLM-pythia8_RunIISpring15MiniAODv2-FastAsympt25ns_74X_MINIAODSIM_${RANDOM_SEED}.root
 
-xrdcp ${PROCESS}${TAG}_madgraphMLM-pythia8_RunIISpring15MiniAODv2-FastAsympt25ns_74X_MINIAODSIM_b${RANDOM_SEED}.root root://eoscms.cern.ch//eos/cms/store/group/phys_susy/LHE/private_samples/.
+if ! [[ "${OUTDIR_EOS}" == "" ]]; then
+    xrdcp ${PROCESS}${TAG}_madgraphMLM-pythia8_RunIISpring15MiniAODv2-FastAsympt25ns_74X_MINIAODSIM_${RANDOM_SEED}.root root://eoscms.cern.ch//eos/cms/${OUTDIR_EOS}/${PROCESS/T2tt/T2tt-2bd}${TAG}_madgraphMLM-pythia8_RunIISpring15MiniAODv2-FastAsympt25ns_74X_MINIAODSIM_${RANDOM_SEED}.root
+fi
 
 rm -rf CMSSW_7_4_14
-# rm *root *lhe *xml *py
+rm *root *lhe *xml *py *txt
 
 echo "Bye."
