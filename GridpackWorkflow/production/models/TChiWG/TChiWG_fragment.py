@@ -63,7 +63,7 @@ DECAY   1000016     0.00000000E+00   # snu_tauL decays
 DECAY   1000021     0.00000000E+00   # gluino decays
 DECAY   1000022     0.00000000E+00   # neutralino1 decays
 DECAY   1000023     0.10000000E+00   # neutralino2 decays
-    1.00000000E+00     2    1000022    21
+    1.00000000E+00     2    1000022    22
 DECAY   1000024     0.10000000E+00   # chargino1+ decays
     0.00000000E+00   3    1000022   12   -11
     1.00000000E+00   2    1000022   24
