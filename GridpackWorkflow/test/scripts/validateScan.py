@@ -8,7 +8,7 @@ def cleanstring(s):
 
 #define models
 class model:
-    def __init__(self, nbinsx, xmin, xmax, nbinsy, ymin, ymax, nconfigs):
+    def __init__(self, nbinsx, xmin, xmax, nbinsy=1, ymin=0, ymax=0, nconfigs=500):
         self.nbinsx = nbinsx
         self.xmin = xmin
         self.xmax = xmax
@@ -16,6 +16,8 @@ class model:
         self.ymin = ymin
         self.ymax = ymax
         self.nconfigs = nconfigs
+
+
 
 models = {}
 models["T5qqqqVV"] = model(34, 600, 2300, 32, 0, 1600, 500)
@@ -29,6 +31,7 @@ models["T2tt"] = model(35,350,1225,27,0,675,308)
 models["TChiStauStau_x0p5"] = model(25,100,725,13,0,325,280)
 models["T5ttcc"] = model(44,600,1700,140,0,1400,500)
 models["TChipmSlepSnu"] = model(28,100,800,24,0,600,500)
+models["TChiWG"] = model(nbinsx=41,xmin=300,xmax=1300,nconfigs=41)
 
 if __name__ == '__main__':
     rt.gROOT.SetBatch()
@@ -59,6 +62,7 @@ if __name__ == '__main__':
     histparams2D = [
                   ("mlsp:mprod##colztext", "Grid", (m.nbinsx,m.xmin,m.xmax,m.nbinsy,m.ymin,m.ymax)),
                   ]
+
 
     if mname in ['T5qqqqVV','T5qqqqVV_dM20','T5ZZ','T5ttcc','TChipmSlepSnu']:
         histparams += [
