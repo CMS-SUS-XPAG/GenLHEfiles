@@ -57,15 +57,13 @@ for block in scanBlocks:
         nev = events(mx-my)
         col.append([mx,my, nev])
     if(my !=  mx-minDM and mx-minDM <= ymax) or (my ==  mx-minDM):
-      mx2 = mx
-      if mx%50!=0: mx2 = mx-5
-      if mx2-minDM>=0:
-        my = mx2-minDM
-        nev = events(mx2-my)
+      if mx-minDM>=0:
+        my = mx-minDM
+        nev = events(mx-my)
         col.append([mx,my, nev])
       for ydm in extras:
         nev = events(ydm)
-        if (mx2-ydm <= ymax) and (mx2-ydm>=0): col.append([mx,mx2-ydm, nev])
+        if (mx-ydm <= ymax) and (mx-ydm>=0): col.append([mx,mx-ydm, nev])
     cols.append(col)
 
 mpoints = []

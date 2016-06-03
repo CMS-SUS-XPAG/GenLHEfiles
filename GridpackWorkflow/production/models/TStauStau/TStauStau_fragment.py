@@ -80,7 +80,7 @@ generator = cms.EDFilter("Pythia8GeneratorFilter",
 
 # weighted average of matching efficiencies for the full scan
 # must equal the number entered in McM generator params
-mcm_eff = 0.511
+mcm_eff = 0.512
 model = "TStauStau"
 process = "StauStau"
 
@@ -93,9 +93,10 @@ def matchParams(mass):
 # Number of events for mass point, in thousands
 nevt = 50
 
-diag_low, diag_high = 0, 0
-xmin, xmax, xstep = 100, 450,25
-ymin, ymax, ystep_low, ystep_high = 0, 250, 10, 10
+diag = 0
+xmin, xmax, xstep = 100, 450, 25
+ymin, ymax, ystep = 0, 250, 10
+minDM = 0
 
 # -------------------------------
 #    Constructing grid
@@ -103,14 +104,14 @@ ymin, ymax, ystep_low, ystep_high = 0, 250, 10, 10
 mpoints = []
 for mx in range(xmin, xmax+1, xstep):
   ylist = []
-  if mx > (ymax + (diag_low - diag_high)): 
-    ylist.extend(range(ymin, ymax+1, ystep_low))
-  elif mx > ymax:
-    ylist.extend(range(ymin,ymax+1,ystep_low))
+  if mx > ymax + diag: 
+    ylist.extend(range(ymin, ymax+1, ystep))
   else:
-    ylist.extend(range(ymin,mx-diag_high+1,ystep_low))
+    ylist.extend(range(ymin, mx-diag+1, ystep))
   for my in ylist:
     mpoints.append([mx,my,nevt])
+  if my < minDM+mx and minDM+mx <= ymax:
+    mpoints.append([mx,minDM+mx,nevt])
  
 for point in mpoints:
     m_slep, mlsp = point[0], point[1]
