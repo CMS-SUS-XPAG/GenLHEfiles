@@ -12,7 +12,7 @@ PROCESS="SMS-T2tt_mStop-300"
 STOP_MASS="300"
 MODEL="# model T2tt-2bd_300_150"
 TAG="_mLSP-150"
-# STOP_DECAY=\
+STOP_DECAY=\
 "DECAY   1000006     1.00000000E+00   # stop1 decays
      0.00000000E+00    3     1000022         5      24
      1.00000000E+00    2     1000022         6"
@@ -245,7 +245,7 @@ if ! [[ "${OUTDIR_EOS}" == "" ]]; then
     xrdcp ${PROCESS}${TAG}_madgraphMLM-pythia8_RunIISpring15MiniAODv2-FastAsympt25ns_74X_MINIAODSIM_${RANDOM_SEED}.root root://eoscms.cern.ch//eos/cms/${OUTDIR_EOS}/${PROCESS/T2tt/T2tt-2bd}${TAG}_madgraphMLM-pythia8_RunIISpring15MiniAODv2-FastAsympt25ns_74X_MINIAODSIM_${RANDOM_SEED}.root
 fi
 
-rm -rf CMSSW_7_4_14
-rm *root *lhe *xml *py *txt
+# rm -rf CMSSW_7_4_14
+# rm *root *lhe *xml *py *txt
 
 echo "Bye."
