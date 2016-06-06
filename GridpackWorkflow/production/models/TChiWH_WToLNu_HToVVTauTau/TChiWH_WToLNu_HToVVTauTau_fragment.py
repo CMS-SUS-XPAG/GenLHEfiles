@@ -66,7 +66,7 @@ DECAY   1000023     0.10000000E+00   # neutralino2 decays
    1.00000000E+00     2    1000022    25
 DECAY   1000024     0.10000000E+00   # chargino1+ decays
     0.00000000E+00   3    1000022   12   -11
-   1.00000000E+00     2    -1000013    14
+   1.00000000E+00     2    1000022    24
 DECAY   1000025     0.00000000E+00   # neutralino3 decays
 DECAY   1000035     0.00000000E+00   # neutralino4 decays
 DECAY   1000037     0.00000000E+00   # chargino2+ decays
@@ -129,6 +129,7 @@ for point in mpoints:
     wgt = point[2]*(mcm_eff/tru_eff)
     
     if mlsp==0: mlsp = 1
+    if mn2==125:mn2=126
     slhatable = baseSLHATable.replace('%MN2%','%e' % mn2)
     slhatable = slhatable.replace('%MLSP%','%e' % mlsp)
 

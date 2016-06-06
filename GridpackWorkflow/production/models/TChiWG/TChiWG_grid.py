@@ -11,7 +11,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from grid_utils import *
 
 model = "TChiWG"
-process = "C1N1"
+process = "C1N2"
 
 # Number of events for mass point, in thousands
 nevt = 100

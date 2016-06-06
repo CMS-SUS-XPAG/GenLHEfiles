@@ -132,6 +132,7 @@ for point in mpoints:
     wgt = point[2]*(mcm_eff/tru_eff)
     
     if mlsp==0: mlsp = 1
+    if mn2==125:mn2=126
     slhatable = baseSLHATable.replace('%MN2%','%e' % mn2)
     slhatable = slhatable.replace('%MLSP%','%e' % mlsp)
 

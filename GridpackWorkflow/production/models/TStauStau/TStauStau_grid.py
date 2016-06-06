@@ -16,28 +16,26 @@ process = "StauStau"
 # Number of events for mass point, in thousands
 nevt = 50
 
-diag_low, diag_high = 0, 0
+diag = 0
 xmin, xmax, xstep = 100, 450, 25
-ymin, ymax, ystep_low, ystep_high = 0, 250, 10, 10
+ymin, ymax, ystep = 0, 250, 10
+minDM = 0
 
 # -------------------------------
 #    Constructing grid
 
+
 mpoints = []
 for mx in range(xmin, xmax+1, xstep):
   ylist = []
-  if mx > (ymax + (diag_low - diag_high)): 
-    ylist.extend(range(ymin, ymax+1, ystep_low))
-  elif mx > ymax:
-#    ylist.extend(range(ymin, mx - diag_low, ystep_low))
-#    ylist.extend(range(mx - diag_low, ymax+1, ystep_high))
-    ylist.extend(range(ymin,ymax+1,ystep_low))
+  if mx > ymax + diag: 
+    ylist.extend(range(ymin, ymax+1, ystep))
   else:
-    #ylist.extend(range(ymin, mx - diag_low, ystep_low))
-    #ylist.extend(range(mx - diag_low, mx-diag_high+1, ystep_high))
-    ylist.extend(range(ymin,mx-diag_high+1,ystep_low))
+    ylist.extend(range(ymin, mx-diag+1, ystep))
   for my in ylist:
     mpoints.append([mx,my,nevt])
+  if my < minDM+mx and minDM+mx <= ymax:
+    mpoints.append([mx,minDM+mx,nevt])
     
 ## Test print out for repeated points
 mset = set()

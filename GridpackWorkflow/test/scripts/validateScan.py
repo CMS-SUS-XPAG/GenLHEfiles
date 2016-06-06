@@ -8,7 +8,7 @@ def cleanstring(s):
 
 #define models
 class model:
-    def __init__(self, nbinsx, xmin, xmax, nbinsy, ymin, ymax, nconfigs):
+    def __init__(self, nbinsx, xmin, xmax, nbinsy=1, ymin=0, ymax=0, nconfigs=500):
         self.nbinsx = nbinsx
         self.xmin = xmin
         self.xmax = xmax
@@ -16,6 +16,8 @@ class model:
         self.ymin = ymin
         self.ymax = ymax
         self.nconfigs = nconfigs
+
+
 
 models = {}
 models["T5qqqqVV"] = model(34, 600, 2300, 32, 0, 1600, 500)
@@ -30,6 +32,7 @@ models["TChiStauStau_x0p5"] = model(25,100,725,13,0,325,280)
 models["T5ttcc"] = model(44,600,1700,140,0,1400,500)
 models["TChipmSlepSnu"] = model(28,100,800,24,0,600,500)
 models["T6ttWW"] = model(36,300,1200,48,0,1200,500)
+models["TChiWG"] = model(nbinsx=41,xmin=300,xmax=1300,nconfigs=41)
 
 if __name__ == '__main__':
     rt.gROOT.SetBatch()
