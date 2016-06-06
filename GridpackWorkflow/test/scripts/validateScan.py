@@ -29,6 +29,7 @@ models["T2tt"] = model(35,350,1225,27,0,675,308)
 models["TChiStauStau_x0p5"] = model(25,100,725,13,0,325,280)
 models["T5ttcc"] = model(44,600,1700,140,0,1400,500)
 models["TChipmSlepSnu"] = model(28,100,800,24,0,600,500)
+models["T6ttWW"] = model(36,300,1200,48,0,1200,500)
 
 if __name__ == '__main__':
     rt.gROOT.SetBatch()
@@ -60,7 +61,7 @@ if __name__ == '__main__':
                   ("mlsp:mprod##colztext", "Grid", (m.nbinsx,m.xmin,m.xmax,m.nbinsy,m.ymin,m.ymax)),
                   ]
 
-    if mname in ['T5qqqqVV','T5qqqqVV_dM20','T5ZZ','T5ttcc','TChipmSlepSnu']:
+    if mname in ['T5qqqqVV','T5qqqqVV_dM20','T5ZZ','T5ttcc','TChipmSlepSnu','T6ttWW']:
         histparams += [
                   ("mc_mass#abs(mc_id)==24", "W Mass", (100, 0, 150)),
                   ("mc_mass#abs(mc_id)==23", "Z Mass", (100, 0, 150)),
@@ -86,6 +87,10 @@ if __name__ == '__main__':
     if mname == 'T2bt':
         histparams += [
                 ("mc_mass#abs(mc_id)==6", "Top Mass", (100, 100, 250)),
+                ]
+    if mname == 'T6ttWW':
+        histparams += [
+                ("mc_mass#abs(mc_id)==24&&mlsp<130", "W Mass (Chargino mass < 130 GeV)",(100,0,150))
                 ]
 
     hists = {}
