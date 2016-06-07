@@ -31,7 +31,8 @@ models["T2tt"] = model(35,350,1225,27,0,675,308)
 models["TChiStauStau_x0p5"] = model(25,100,725,13,0,325,280)
 models["T5ttcc"] = model(44,600,1700,140,0,1400,500)
 models["TChipmSlepSnu"] = model(28,100,800,24,0,600,500)
-models["T6ttWW"] = model(36,300,1200,48,0,1200,500)
+models["T6ttWW"] = model(36,300,1200,100,0,1200,500)
+#models["T6ttWW"] = model(36,300,1200,48,0,1200,500)
 models["TChiWG"] = model(nbinsx=41,xmin=300,xmax=1300,nconfigs=41)
 
 if __name__ == '__main__':
@@ -93,7 +94,24 @@ if __name__ == '__main__':
                 ]
     if mname == 'T6ttWW':
         histparams += [
-                ("mc_mass#abs(mc_id)==24&&mlsp<130", "W Mass (Chargino mass < 130 GeV)",(100,0,150))
+                ("mc_mass#abs(mc_id)==24&&mlsp<130", "W Mass (Chargino mass < 130 GeV)",(100,0,150)),
+                ("mc_mass#abs(mc_id)==6", "Top Mass", (100, 100, 250)),
+                ("mc_mass#abs(mc_id)==6&&mprod-mlsp<175", "Top Mass (dM < 175)", (100, 50, 250)),
+                ("mc_mass#abs(mc_id)==6&&mprod-mlsp==88", "Top Mass (dM = 88)", (100, 50, 250)),
+                ("mc_mass#abs(mc_id)==6&&mprod-mlsp==100", "Top Mass (dM = 100)", (100, 50, 250)),
+                ("mc_mass#abs(mc_id)==6&&mprod-mlsp==125", "Top Mass (dM = 125)", (100, 50, 250)),
+                ("mc_mass#abs(mc_id)==6&&mprod-mlsp==150", "Top Mass (dM = 150)", (100, 50, 250)),
+                ("mc_mass#abs(mc_id)==6&&mprod-mlsp==175", "Top Mass (dM = 175)", (100, 50, 250)),
+                ("mc_mass#abs(mc_id)==6&&mprod-mlsp==200", "Top Mass (dM = 200)", (100, 50, 250)),
+                ]
+    if mname == 'T5ttcc':
+        histparams += [
+                ("mc_mass#abs(mc_id)==6", "Top Mass", (100, 100, 250)),
+                ("mc_mass#abs(mc_id)==6&&mprod-mlsp==108", "Top Mass (dM = 108)", (100, 50, 250)),
+                ("mc_mass#abs(mc_id)==6&&mprod-mlsp==125", "Top Mass (dM = 125)", (100, 50, 250)),
+                ("mc_mass#abs(mc_id)==6&&mprod-mlsp==150", "Top Mass (dM = 150)", (100, 50, 250)),
+                ("mc_mass#abs(mc_id)==6&&mprod-mlsp==175", "Top Mass (dM = 175)", (100, 50, 250)),
+                ("mc_mass#abs(mc_id)==6&&mprod-mlsp==200", "Top Mass (dM = 200)", (100, 50, 250)),
                 ]
 
     hists = {}

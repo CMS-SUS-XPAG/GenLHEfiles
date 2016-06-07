@@ -3,8 +3,7 @@
 NEVENTS=$1
 RANDOM_SEED=$2
 OUTDIR=$3
-PUINPUTSTR=$4
-OUTDIR_EOS=$5
+OUTDIR_EOS=$4
 
 
 GRIDPACK_PATH=$PWD
@@ -192,11 +191,20 @@ cmsDriver.py Configuration/GenProduction/python/genfragment.py \
         --filein file:${PROCESS}_plhe.root \
         --fileout file:${OUTFILE} \
         --mc --eventcontent AODSIM \
-        --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1,Configuration/DataProcessing/Utils.addMonitoring \
-        --customise_command "process.source.setRunNumber = cms.untracked.uint32($RANDOM_SEED)" \
-        --conditions MCRUN2_71_V1::All --beamspot NominalCollision2015 --step GEN --magField 38T_PostLS1 \
+        --customise_commands "process.source.setRunNumber = cms.untracked.uint32($RANDOM_SEED)" \
+        --conditions MCRUN2_71_V1::All --step GEN \
         --python_filename ${PROCESS}_gen_cfg.py \
         --no_exec -n -1 || exit $? ; 
+
+        #--filein file:${PROCESS}_plhe.root \
+        #--fileout file:${OUTFILE} \
+        #--mc --eventcontent AODSIM \
+        #--customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1,Configuration/DataProcessing/Utils.addMonitoring \
+        #--customise_command "process.source.setRunNumber = cms.untracked.uint32($RANDOM_SEED)" \
+        #--conditions MCRUN2_71_V1::All --beamspot NominalCollision2015 --step GEN --magField 38T_PostLS1 \
+        #--python_filename ${PROCESS}_gen_cfg.py \
+        #--datatier GEN \
+        #--no_exec -n -1 || exit $? ; 
 
 cmsRun -e -j SUS-RunIIWinter15GS-00160_rt.xml ${PROCESS}_gen_cfg.py || exit $? ; 
 

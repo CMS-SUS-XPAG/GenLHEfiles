@@ -113,7 +113,7 @@ class gridBlock:
 goalLumi = 3200
 minLumi = 30
 minEvents, maxEvents = 40, 100
-minDM, midDM, maxDM = 25, 200, 300
+minDM, midDM, maxDM = 88, 200, 300
 bandStep = 50
 
 scanBlocks = []

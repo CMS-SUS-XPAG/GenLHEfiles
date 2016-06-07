@@ -26,7 +26,7 @@ process = "GlGl"
 goalLumi = 800
 minLumi = 20
 minEvents, maxEvents = 20, 100
-minDM, midDM, maxDM = 100, 200, 800
+minDM, midDM, maxDM = 108, 200, 800
 bandStep = 50
 
 scanBlocks = []
