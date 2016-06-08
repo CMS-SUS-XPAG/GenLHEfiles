@@ -6,35 +6,46 @@
 ### Manuel Franco Sevilla
 ### Ana Ovcharova
 
-import os,sys,math,pprint
+import os,sys,math
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from grid_utils import *
+import pprint
+
+model = "T2bW"
+process = "StopStop"
+
+# Number of events: min(goalLumi*xsec, maxEvents) (always in thousands)
+goalLumi = 400
+minLumi = 20 
+minEvents, maxEvents = 20, 500
+bandStep = 50
+minDM, midDM, maxDM = 175, 300, 300
 
 # Parameters that define the grid in the bulk and diagonal
 class gridBlock:
-  def __init__(self, xmin, xmax, xstep, ystep):
+  def __init__(self, xmin, xmax, xstep, ystep, dstep):
     self.xmin = xmin
     self.xmax = xmax
     self.xstep = xstep
     self.ystep = ystep
+    self.dstep = dstep
     
-model = "TChiWH_WToLNu_HToBB"
-process = "C1N2"
-
-# Number of events: min(goalLumi*xsec, maxEvents) (always in thousands)
-
 scanBlocks = []
-scanBlocks.append(gridBlock(150, 701, 25, 25))
+scanBlocks.append(gridBlock(200, 400, 50, 50,50))
+scanBlocks.append(gridBlock(400,  1201, 50, 50, 25))
+ymin, ymed, ymax = 0, 150, 650
+hlines_below_grid = [25]
+hline_xmin = 400
 
-minDM = 126
-maxDM = 176
-ymin, ymax = 0, 300
 
 # Number of events for mass point, in thousands
-def events(dm):
-  if (mx-my)<maxDM: return 100
-  else: return 30
-  
+def events(mass):
+  xs = xsec(mass,process)
+  nev = min(goalLumi*xs, maxEvents*1000)
+  if nev < xs*minLumi: nev = xs*minLumi
+  nev = max(nev/1000, minEvents)
+  return math.ceil(nev) # Rounds up
+
 # -------------------------------
 #    Constructing grid
 
@@ -43,22 +54,39 @@ Nevents = []
 xmin, xmax = 9999, 0
 for block in scanBlocks:
   Nbulk, Ndiag = 0, 0
-  for mx in range(block.xmin, block.xmax, block.xstep):
+  for mx in range(block.xmin, block.xmax, min(bandStep, block.dstep)):
     xmin = min(xmin, block.xmin)
     xmax = max(xmax, block.xmax)
     col = []
     my = 0
-    begDiag = mx-maxDM
+    begBand = min(max(ymed, mx-maxDM), mx-minDM)
+    begDiag = min(max(ymed, mx-midDM), mx-minDM)
     # Adding bulk points
-    if (mx-block.xmin)%block.xstep == 0:
-      for my in range(ymin, mx-minDM, block.ystep):
-        if my > ymax: continue
-        nev = events(mx-my)
+    if (mx-block.xmin)%block.xstep == 0 :
+      yrange = []
+      if (mx>=hline_xmin): yrange.extend(hlines_below_grid)
+      yrange.extend(range(ymin, begBand, block.ystep))
+      for my in yrange:
+        if my > ymax or my>mx-minDM: continue
+        nev = events(mx)
         col.append([mx,my, nev])
         Nbulk += nev
-    if my !=  mx-minDM and mx-minDM <= ymax:
+    # Adding diagonal points in inside band
+    if (mx-block.xmin)%bandStep == 0 :
+      for my in range(begBand, mx-midDM, bandStep):
+        if my > ymax: continue
+        nev = events(mx)
+        col.append([mx,my, nev])
+        Ndiag += nev
+    # Adding diagonal points in band closest to outer diagonal
+    for my in range(begDiag, mx-minDM+1, block.dstep):
+      if my > ymax: continue
+      nev = events(mx)
+      col.append([mx,my, nev])
+      Ndiag += nev
+    if(my !=  mx-minDM and mx-minDM <= ymax):
       my = mx-minDM
-      nev = events(mx-my)
+      nev = events(mx)
       col.append([mx,my, nev])
       Ndiag += nev
     cols.append(col)
@@ -66,8 +94,6 @@ for block in scanBlocks:
 
 mpoints = []
 for col in cols: mpoints.extend(col)
-mpoints.append([126,0,100])
-
 
 ## Test print out for repeated points
 mset = set()
@@ -79,11 +105,12 @@ else: print "\n\nGRID CONTAINS "+str(Ntot-Ndiff)+" DUPLICATE POINTS!!\n\n"
 # -------------------------------
 #     Plotting and printing
 
-makePlot([mpoints], 'events', model, process, xmin, xmax, ymin-200, ymax)
-Ntot = makePlot([mpoints], 'lumi', model, process, xmin, xmax, ymin-200, ymax)
-#makePlot(cols, 'factor')
+makePlot(cols, 'events', model, process, xmin, xmax, ymin, ymax)
+Ntot = makePlot(cols, 'lumi', model, process, xmin, xmax, ymin, ymax)
 
-print '\nScan contains '+"{0:,.0f}".format(Ntot*1e3)+" events\n"
+
+Ntot = Ntot/1e3
+print '\nScan contains '+"{0:,.0f}".format(Ntot*1e6)+" events\n"
 print 'Average matching efficiency (for McM and GEN fragment) = '+"{0:.3f}".format(getAveEff(mpoints,process))
 print
 
