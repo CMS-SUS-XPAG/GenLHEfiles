@@ -18,18 +18,18 @@ class gridBlock:
     self.xstep = xstep
     self.ystep = ystep
     
-model = "T2tt_4bd"
+model = "T2cc"
 process = "StopStop"
 
 # Number of events: min(goalLumi*xsec, maxEvents) (always in thousands)
 goalLumi = 200
-minLumi = 50 
-minEvents, maxEvents = 20, 1000
+minLumi = 0
+minEvents, maxEvents = 10, 1000
 xdiagStep, ydiagStep = 25, 10
-minDM, maxDM = 30, 80
+minDM, maxDM = 10, 80
 
 scanBlocks = []
-scanBlocks.append(gridBlock(250,  801, 100, 100)) #Using only [x,y]diagStep
+scanBlocks.append(gridBlock(100,  801, 100, 100)) #Using only [x,y]diagStep
 ymin, ymax = 0, 1100 
 
 
@@ -44,25 +44,18 @@ def events(mass):
 # -------------------------------
 #    Constructing grid
 
-cols = []
-xmin, xmax = 9999, 0
+mpoints = []
 Ndiag = 0
+xmin, xmax = 9999, 0
 for block in scanBlocks:
   for mx in range(block.xmin, block.xmax, xdiagStep):
-    xmin = min(xmin, block.xmin)
-    xmax = max(xmax, block.xmax)
-    col = []
-    my = 0
-    # Adding diagonal points
+    xmin = min(block.xmin, xmin)
+    xmax = min(block.xmin, xmax)
     for my in range(mx-maxDM, mx-minDM+1, ydiagStep):
       if my > ymax: continue
       nev = events(mx)
-      col.append([mx,my, nev])
       Ndiag += nev
-    cols.append(col)
-
-mpoints = []
-for col in cols: mpoints.extend(col)
+      mpoints.append([mx,my, nev])
 
 ## Test print out for repeated points
 mset = set()
@@ -75,9 +68,9 @@ else: print "\n\nGRID CONTAINS "+str(Ntot-Ndiff)+" DUPLICATE MASS POINTS!!\n\n"
 # -------------------------------
 #     Plotting and printing
 
-makePlot(cols, 'events', model, process, xmin, xmax, ymin, ymax)
-Ntot = makePlot(cols, 'lumi', model, process, xmin, xmax, ymin, ymax)
-Ntot = makePlot(cols, 'lumi_br4', model, process, xmin, xmax, ymin, ymax)
+makePlot([mpoints], 'events', model, process, xmin, xmax, ymin, ymax)
+Ntot = makePlot([mpoints], 'lumi', model, process, xmin, xmax, ymin, ymax)
+Ntot = makePlot([mpoints], 'lumi_br4', model, process, xmin, xmax, ymin, ymax)
 
 
 print 'Average matching efficiency (for McM and GEN fragment) = '+"{0:.3f}".format(getAveEff(mpoints,process))

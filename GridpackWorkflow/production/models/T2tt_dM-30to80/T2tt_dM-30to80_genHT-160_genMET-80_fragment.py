@@ -80,52 +80,104 @@ generator = cms.EDFilter("Pythia8GeneratorFilter",
     RandomizedParameters = cms.VPSet(),
 )
 
-model = "T2tt_4bd"
+# Parameters that define the grid in the bulk and diagonal
+class gridBlock:
+  def __init__(self, xmin, xmax, xstep, ystep):
+    self.xmin = xmin
+    self.xmax = xmax
+    self.xstep = xstep
+    self.ystep = ystep
+    
+model = "T2tt_dM-30to80_genHT-160_genMET-80"
+process = "StopStop"
 
+# Number of events: min(goalLumi*xsec, maxEvents) (always in thousands)
+goalLumi = 200
+minLumi = 50 
+minEvents, maxEvents = 20, 1000
+xdiagStep, ydiagStep = 25, 10
+minDM, maxDM = 30, 80
 
-mpoints = [[300,250,10]]
+scanBlocks = []
+scanBlocks.append(gridBlock(250,  801, 100, 100)) #Using only [x,y]diagStep
+ymin, ymax = 0, 1100 
 
-mstop, mlsp = 300,250
-qcut = 62. 
-wgt = 1.
+def matchParams(mass):
+  if mass>99 and mass<199: return 62., 0.498
+  elif mass<299: return 62., 0.361
+  elif mass<399: return 62., 0.302
+  elif mass<499: return 64., 0.275
+  elif mass<599: return 64., 0.254
+  elif mass<1299: return 68., 0.237
+  elif mass<1801: return 70., 0.243
 
-slhatable = baseSLHATable.replace('%MSTOP%','%e' % mstop)
-slhatable = slhatable.replace('%MLSP%','%e' % mlsp)
+def xsec(mass):
+  if mass < 300: return 319925471928717.38*math.pow(mass, -4.10396285974583*math.exp(mass*0.0001317804474363))
+  else: return 6953884830281245*math.pow(mass, -4.7171617288678069*math.exp(mass*6.1752771466190749e-05))
 
-basePythiaParameters = cms.PSet(
-    pythia8CommonSettingsBlock,
-    pythia8CUEP8M1SettingsBlock,
-    JetMatchingParameters = cms.vstring(
-        'JetMatching:setMad = off',
-        'JetMatching:scheme = 1',
-        'JetMatching:merge = on',
-        'JetMatching:jetAlgorithm = 2',
-        'JetMatching:etaJetMax = 5.',
-        'JetMatching:coneRadius = 1.',
-        'JetMatching:slowJetPower = 1',
-        'JetMatching:qCut = %.0f' % qcut, #this is the actual merging scale
-        'JetMatching:nQmatch = 5', #4 corresponds to 4-flavour scheme (no matching of b-quarks), 5 for 5-flavour scheme
-        'JetMatching:nJetMax = 2', #number of partons in born matrix element for highest multiplicity
-        'JetMatching:doShowerKt = off', #off for MLM matching, turn on for shower-kT matching
-        '24:mMin = 9.',
-        '6:m0 = 172.5',
-        'Check:abortIfVeto = on',
-    ), 
-    parameterSets = cms.vstring('pythia8CommonSettings',
-                                'pythia8CUEP8M1Settings',
-                                'JetMatchingParameters'
+# Number of events for mass point, in thousands
+def events(mass):
+  xs = xsec(mass)
+  nev = min(goalLumi*xs, maxEvents*1000)
+  if nev < xs*minLumi: nev = xs*minLumi
+  nev = max(nev/1000, minEvents)
+  return math.ceil(nev) # Rounds up
+
+# -------------------------------
+#    Constructing grid
+print "grid time"
+mpoints = []
+for block in scanBlocks:
+  for mx in range(block.xmin, block.xmax, xdiagStep):
+    for my in range(mx-maxDM, mx-minDM+1, ydiagStep):
+      if my > ymax: continue
+      nev = events(mx)
+      mpoints.append([mx,my, nev])
+
+print "done grid"
+
+for point in mpoints:
+    mstop, mlsp = point[0], point[1]
+    qcut, tru_eff = matchParams(mstop)
+    wgt = 1. #point[2]/tru_eff
+    
+    if mlsp==0: mlsp = 1
+    slhatable = baseSLHATable.replace('%MSTOP%','%e' % mstop)
+    slhatable = slhatable.replace('%MLSP%','%e' % mlsp)
+
+    basePythiaParameters = cms.PSet(
+        pythia8CommonSettingsBlock,
+        pythia8CUEP8M1SettingsBlock,
+        JetMatchingParameters = cms.vstring(
+            'JetMatching:setMad = off',
+            'JetMatching:scheme = 1',
+            'JetMatching:merge = on',
+            'JetMatching:jetAlgorithm = 2',
+            'JetMatching:etaJetMax = 5.',
+            'JetMatching:coneRadius = 1.',
+            'JetMatching:slowJetPower = 1',
+            'JetMatching:qCut = %.0f' % qcut, #this is the actual merging scale
+            'JetMatching:nQmatch = 5', #4 corresponds to 4-flavour scheme (no matching of b-quarks), 5 for 5-flavour scheme
+            'JetMatching:nJetMax = 2', #number of partons in born matrix element for highest multiplicity
+            'JetMatching:doShowerKt = off', #off for MLM matching, turn on for shower-kT matching
+            '6:m0 = 172.5',
+            'Check:abortIfVeto = on',
+        ), 
+        parameterSets = cms.vstring('pythia8CommonSettings',
+                                    'pythia8CUEP8M1Settings',
+                                    'JetMatchingParameters'
+        )
     )
-)
 
-generator.RandomizedParameters.append(
-    cms.PSet(
-        ConfigWeight = cms.double(wgt),
-        GridpackPath =  cms.string('/cvmfs/cms.cern.ch/phys_generator/gridpacks/slc6_amd64_gcc481/13TeV/madgraph/V5_2.3.3/sus_sms/SMS-StopStop/SMS-StopStop_mStop-%i_tarball.tar.xz' % mstop),
-        ConfigDescription = cms.string('%s_%i_%i' % (model, mstop, mlsp)),
-        SLHATableForPythia8 = cms.string('%s' % slhatable),
-        PythiaParameters = basePythiaParameters,
-    ),
-)
+    generator.RandomizedParameters.append(
+        cms.PSet(
+            ConfigWeight = cms.double(wgt),
+            GridpackPath =  cms.string('/cvmfs/cms.cern.ch/phys_generator/gridpacks/slc6_amd64_gcc481/13TeV/madgraph/V5_2.3.3/sus_sms/SMS-StopStop/SMS-StopStop_mStop-%i_tarball.tar.xz' % mstop),
+            ConfigDescription = cms.string('%s_%i_%i' % (model, mstop, mlsp)),
+            SLHATableForPythia8 = cms.string('%s' % slhatable),
+            PythiaParameters = basePythiaParameters,
+        ),
+    )
 
 
 #     Filter setup
@@ -133,7 +185,7 @@ generator.RandomizedParameters.append(
 # https://github.com/cms-sw/cmssw/blob/CMSSW_8_0_X/PhysicsTools/HepMCCandAlgos/python/genParticles_cfi.py
 tmpGenParticles = cms.EDProducer("GenParticleProducer",
     saveBarCodes = cms.untracked.bool(True),
-    src = cms.InputTag("generator"),
+    src = cms.InputTag("generator","unsmeared"),
     abortOnUnknownPDGCode = cms.untracked.bool(False)
 )
 
@@ -224,11 +276,12 @@ genMETfilter1 = cms.EDFilter("CandViewSelector",
 genMETfilter2 = cms.EDFilter("CandViewCountFilter",
     src = cms.InputTag("genMETfilter1"),
     minNumber = cms.uint32(1),
-)                               
+)
 
-ProductionFilterSequence = cms.Sequence(generator * 
+
+ProductionFilterSequence = cms.Sequence(generator*
                                         tmpGenParticles * tmpGenParticlesForJetsNoNu *
-                                        tmpAk4GenJetsNoNu * genHTFilter *
+                                        tmpAk4GenJetsNoNu * genHTFilter * 
                                         tmpGenMetTrue * genMETfilter1 * genMETfilter2
 )
 
