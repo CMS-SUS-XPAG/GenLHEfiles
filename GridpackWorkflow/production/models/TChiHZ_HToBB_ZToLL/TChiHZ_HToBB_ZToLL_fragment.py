@@ -105,14 +105,14 @@ process = "N2N3"
 # Number of events for mass point, in thousands
 nevt = 30
 
-xmin, xmax, xstep = 125, 1000, 25
-ymin, ymax, ystep = 125, 1000, 25
+xmin, xmax, xstep = 127, 1000, 25
+ymin, ymax, ystep = 127, 1000, 25
 
 # -------------------------------
 #    Constructing grid
 
-mpoints = []
-for mx in range(xmin, xmax+1, xstep):
+mpoints = [[127,127,30]] # hacky because I am lazy ;)
+for mx in range(150, xmax+1, xstep):
   my = mx
   mpoints.append([mx,my,nevt])
    
@@ -145,7 +145,7 @@ for point in mpoints:
             '25:onMode = off',
             '25:onIfAny = 5',
             '23:onMode = off',
-            '23:onIfAny = 11, 13, 15',
+            '23:onIfAny = 11 13 15',
             'Check:abortIfVeto = on',
         ), 
         parameterSets = cms.vstring('pythia8CommonSettings',
