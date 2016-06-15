@@ -22,14 +22,14 @@ model = "T2cc"
 process = "StopStop"
 
 # Number of events: min(goalLumi*xsec, maxEvents) (always in thousands)
-goalLumi = 200
-minLumi = 0
-minEvents, maxEvents = 10, 1000
+goalLumi = 400
+minLumi = 5 
+minEvents, maxEvents = 40, 1000
 xdiagStep, ydiagStep = 25, 10
 minDM, maxDM = 10, 80
 
 scanBlocks = []
-scanBlocks.append(gridBlock(100,  801, 100, 100)) #Using only [x,y]diagStep
+scanBlocks.append(gridBlock(150,  801, 25, 10))
 ymin, ymax = 0, 1100 
 
 
@@ -48,10 +48,10 @@ mpoints = []
 Ndiag = 0
 xmin, xmax = 9999, 0
 for block in scanBlocks:
-  for mx in range(block.xmin, block.xmax, xdiagStep):
+  for mx in range(block.xmin, block.xmax, block.xstep):
     xmin = min(block.xmin, xmin)
     xmax = min(block.xmin, xmax)
-    for my in range(mx-maxDM, mx-minDM+1, ydiagStep):
+    for my in range(mx-maxDM, mx-minDM+1, block.ystep):
       if my > ymax: continue
       nev = events(mx)
       Ndiag += nev
@@ -70,7 +70,6 @@ else: print "\n\nGRID CONTAINS "+str(Ntot-Ndiff)+" DUPLICATE MASS POINTS!!\n\n"
 
 makePlot([mpoints], 'events', model, process, xmin, xmax, ymin, ymax)
 Ntot = makePlot([mpoints], 'lumi', model, process, xmin, xmax, ymin, ymax)
-Ntot = makePlot([mpoints], 'lumi_br4', model, process, xmin, xmax, ymin, ymax)
 
 
 print 'Average matching efficiency (for McM and GEN fragment) = '+"{0:.3f}".format(getAveEff(mpoints,process))
