@@ -26,7 +26,7 @@ process = "SbotSbot"
 goalLumi = 3200
 minLumi = 30
 minEvents, maxEvents = 40, 100
-minDM, midDM, maxDM = 88, 200, 300
+minDM, midDM, maxDM = 90, 200, 300
 bandStep = 50
 
 scanBlocks = []
@@ -114,7 +114,7 @@ Ntot = makePlot(cols, 'lumi', model, process, xmin, xmax, ymin-50, ymax)
 #makePlot(cols, 'factor')
 
 Ntot = Ntot/1e3
-print '\nScan contains '+"{0:.1f}".format(Ntot)+" million events\n"
+print '\nScan contains '+"{0:.6f}".format(Ntot)+" million events\n"
 print 'Average matching efficiency (for McM and GEN fragment) = '+"{0:.3f}".format(getAveEff(mpoints,process))
 print
 

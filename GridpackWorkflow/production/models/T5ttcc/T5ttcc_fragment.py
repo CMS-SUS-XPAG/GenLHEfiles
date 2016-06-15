@@ -120,7 +120,7 @@ def matchParams(mass):
 goalLumi = 800
 minLumi = 20
 minEvents, maxEvents = 20, 100
-minDM, midDM, maxDM = 108, 200, 800
+minDM, midDM, maxDM = 110, 200, 800
 bandStep = 50
 
 scanBlocks = []
@@ -181,6 +181,11 @@ for block in scanBlocks:
     # Adding diagonal points in band closest to outer diagonal
     for my in range(begDiag, mx-minDM+1, block.diagStep):
       if my > ymax: continue
+      nev = events(mx)
+      col.append([mx,my, nev])
+      Ndiag += nev
+    if(my !=  mx-125 and mx-125 <= ymax): #force a line at dM=125
+      my = mx-125
       nev = events(mx)
       col.append([mx,my, nev])
       Ndiag += nev
