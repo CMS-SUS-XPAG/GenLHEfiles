@@ -20,17 +20,17 @@ class gridBlock:
     self.diagStep = diagStep
     self.minEvents = minEvents
     
-model = "T6gg"
+model = "T6Wg"
 process = "SqSq"
 
 # Number of events: min(goalLumi*xsec, maxEvents) (always in thousands)
-goalLumi = 1600
-minLumi = 80
-maxEvents = 150
+goalLumi = 3200*8
+minLumi = 1600
+maxEvents = 40
 maxDM = 300
 
 scanBlocks = []
-scanBlocks.append(gridBlock(1200, 1800, 50, 100, 50,10))
+scanBlocks.append(gridBlock(1000, 1801, 50, 100, 50,40))
 
 minDM = 10
 ymin, ymed, ymax = 200, 700, 2100
@@ -106,7 +106,7 @@ else: print "\n\nGRID CONTAINS "+str(Ntot-Ndiff)+" DUPLICATE POINTS!!\n\n"
 #     Plotting and printing
 
 makePlot(cols, 'events', model, process, xmin, xmax, ymin-200, ymax)
-Ntot = makePlot(cols, 'lumi', model, process, xmin, xmax, ymin-200, ymax)
+# Ntot = makePlot(cols, 'lumi', model, process, xmin, xmax, ymin-200, ymax)
 #makePlot(cols, 'factor')
 Ntot = makePlot(cols, 'lumix8', model, process, xmin, xmax, ymin-200, ymax)
 
