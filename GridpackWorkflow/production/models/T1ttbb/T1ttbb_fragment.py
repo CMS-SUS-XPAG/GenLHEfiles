@@ -63,8 +63,10 @@ DECAY   2000015     0.00000000E+00   # stau_2 decays
 DECAY   1000016     0.00000000E+00   # snu_tauL decays
 DECAY   1000021     1.00000000E+00   # gluino decays
     0.00000000E+00    3    1000024     -1    1 # dummy allowed decay, in order to turn on off-shell decays
-    0.50000000E+00    3    1000024     6    -5
-    0.50000000E+00    3    -1000024    -6    5
+    0.25000000E+00    3    1000024     6    -5
+    0.25000000E+00    3    -1000024    -6    5
+    0.25000000E+00    3    1000022    6    -6
+    0.25000000E+00    3    1000022    5    -5
 DECAY   1000022     0.00000000E+00   # neutralino1 decays
 DECAY   1000023     0.00000000E+00   # neutralino2 decays
 DECAY   1000024     1.00000000E+00   # chargino1+ decays
@@ -209,6 +211,7 @@ for point in mpoints:
             'JetMatching:nJetMax = 2', #number of partons in born matrix element for highest multiplicity
             'JetMatching:doShowerKt = off', #off for MLM matching, turn on for shower-kT matching
             '6:m0 = 172.5',
+            '24:mMin = 4.',
             'Check:abortIfVeto = on',
         ), 
         parameterSets = cms.vstring('pythia8CommonSettings',
