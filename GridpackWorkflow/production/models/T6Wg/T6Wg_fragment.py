@@ -4,31 +4,33 @@ from Configuration.Generator.Pythia8CommonSettings_cfi import *
 from Configuration.Generator.Pythia8CUEP8M1Settings_cfi import *
 
 import math
+import os,sys,math
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 baseSLHATable="""
 BLOCK MASS
-   2000001     1.00000000E+05
-   2000002     1.00000000E+05
+   2000001     1.00000000E+05 
+   2000002     1.00000000E+05 
    2000003     1.00000000E+05
-   2000004     1.00000000E+05
-   2000005     1.00000000E+05
-   2000006     1.00000000E+05
+   2000004     1.00000000E+05 
+   2000005     1.00000000E+05 
+   2000006     1.00000000E+05 
    2000011     1.00000000E+05
    2000013     1.00000000E+05
    2000015     1.00000000E+05
-   1000001     1.00000000E+05
-   1000002     1.00000000E+05
-   1000003     1.00000000E+05
-   1000004     1.00000000E+05
-   1000005     1.00000000E+05
-   1000006     1.00000000E+05
+   1000001     %MGLU% 
+   1000002     %MGLU% 
+   1000003     %MGLU%
+   1000004     %MGLU%
+   1000005     %MGLU%
+   1000006     %MGLU%
    1000011     1.00000000E+05
    1000012     1.00000000E+05
    1000013     1.00000000E+05
    1000014     1.00000000E+05
    1000015     1.00000000E+05
    1000016     1.00000000E+05
-   1000021     %MGLU%
+   1000021     1.00000000E+05 
    1000022     1.00000000E+00
    1000023     %MCHI%
    1000024     %MCHI%
@@ -45,31 +47,37 @@ DECAY   2000006     0.00000000E+00
 DECAY   2000011     0.00000000E+00
 DECAY   2000013     0.00000000E+00
 DECAY   2000015     0.00000000E+00
-DECAY   1000001     0.00000000E+00
-DECAY   1000002     0.00000000E+00
-DECAY   1000003     0.00000000E+00
-DECAY   1000004     0.00000000E+00
-DECAY   1000005     0.00000000E+00
-DECAY   1000006     0.00000000E+00
+DECAY   1000001     1.00000000E+00
+     0.00000000E+00    2          6    1000022
+     5.00000000E-01    2          1    1000023
+     5.00000000E-01    2          1    -1000024
+DECAY   1000002     1.00000000E+00
+     0.00000000E+00    2          6    1000022
+     5.00000000E-01    2          2    1000023
+     5.00000000E-01    2          2    -1000024
+DECAY   1000003     1.00000000E+00
+     0.00000000E+00    2          6    1000022
+     5.00000000E-01    2          3    1000023
+     5.00000000E-01    2          3    -1000024
+DECAY   1000004     1.00000000E+00
+     0.00000000E+00    2          6    1000022
+     5.00000000E-01    2          4    1000023
+     5.00000000E-01    2          4    -1000024
+DECAY   1000005     1.00000000E+00
+     0.00000000E+00    2          6    1000022
+     5.00000000E-01    2          5    1000023
+     5.00000000E-01    2          5    -1000024
+DECAY   1000006     1.00000000E+00
+     0.00000000E+00    2          6    1000022
+     5.00000000E-01    2          6    1000023
+     5.00000000E-01    2          6    -1000024
 DECAY   1000011     0.00000000E+00
 DECAY   1000012     0.00000000E+00
 DECAY   1000013     0.00000000E+00
 DECAY   1000014     0.00000000E+00
 DECAY   1000015     0.00000000E+00
 DECAY   1000016     0.00000000E+00
-
-DECAY   1000021     1.00000000E+00
-     0.00000000E+00    3         -6          6    1000022
-     1.00000000E-01    3         -1          1    1000023
-     1.00000000E-01    3         -2          2    1000023
-     1.00000000E-01    3         -3          3    1000023
-     1.00000000E-01    3         -4          4    1000023
-     1.00000000E-01    3         -5          5    1000023
-     1.25000000E-01    3         -2          1    1000024
-     1.25000000E-01    3          2         -1    -1000024
-     1.25000000E-01    3         -4          3    1000024
-     1.25000000E-01    3          4         -3    -1000024
-
+DECAY   1000021     0.00000000E+00
 DECAY   1000023     1.00000000E-01
      1.00000000E+00    2         22    1000022
 DECAY   1000024     1.00000000E-01
@@ -78,6 +86,7 @@ DECAY   1000024     1.00000000E-01
 
 DECAY   1000022     0.00000000E+00
 """
+
 
 generator = cms.EDFilter("Pythia8GeneratorFilter",
     maxEventsToPrint = cms.untracked.int32(1),
@@ -101,14 +110,14 @@ def xsec(mass):
     return 4.563e+17*math.pow(mass, -4.761*math.exp(5.848e-05*mass))
 
 def matchParams(mass):
-  if mass>599 and  mass<799: return 118., 0.235
-  elif mass<999: return 128., 0.235
-  elif mass<1199: return 140., 0.235
-  elif mass<1399: return 143., 0.245
-  elif mass<1499: return 147., 0.255
-  elif mass<1799: return 150., 0.267
-  elif mass<2099: return 156., 0.290
-  else: return 160., 0.315
+    if mass>99 and mass<199: return 62., 0.498
+    elif mass<299: return 62., 0.361
+    elif mass<399: return 62., 0.302
+    elif mass<499: return 64., 0.275
+    elif mass<599: return 64., 0.254
+    elif mass<1299: return 68., 0.237
+    elif mass<1801: return 70., 0.243
+    else: return 70., 0.243
 
 
 #### copy from grid.py
@@ -139,10 +148,10 @@ hline_xmin = 1000
 
 # Number of events for mass point, in thousands
 def events(mass):
-  xs = xsec(mass,process)
+  xs = xsec(mass)
   nev = min(goalLumi*xs, maxEvents*1000)
   if nev < xs*minLumi: nev = xs*minLumi
-  nev = max(nev/1000, minEvents)
+  nev = max(nev/1000, 40)
   return math.ceil(nev) # Rounds up
 
 # -------------------------------
@@ -160,7 +169,6 @@ for block in scanBlocks:
     col = []
     my = 0
     begDiag = max(ymed, mx-maxDM)
-    # Adding bulk points
     if (mx-block.xmin)%block.xstep == 0:
       # adding extra horizontal lines
       yrange = []
@@ -172,7 +180,6 @@ for block in scanBlocks:
         nev = events(mx)
         col.append([mx,my, nev])
         Nbulk += nev
-    # Adding diagonal points
     for my in range(begDiag, mx-minDM+1, block.diagStep):
       if my > ymax: continue
       nev = events(mx)
@@ -193,7 +200,6 @@ for block in scanBlocks:
 
 mpoints = []
 for col in cols: mpoints.extend(col)
-
 for point in mpoints:
     mglu, mchi = point[0], point[1]
     qcut, tru_eff = matchParams(mglu)
@@ -231,7 +237,7 @@ for point in mpoints:
     generator.RandomizedParameters.append(
         cms.PSet(
             ConfigWeight = cms.double(wgt),
-            GridpackPath =  cms.string('/cvmfs/cms.cern.ch/phys_generator/gridpacks/slc6_amd64_gcc481/13TeV/madgraph/V5_2.3.3/sus_sms/SMS-GlGl/SMS-GlGl_mGl-%i_tarball.tar.xz' % mglu),
+            GridpackPath =  cms.string('/cvmfs/cms.cern.ch/phys_generator/gridpacks/slc6_amd64_gcc481/13TeV/madgraph/V5_2.3.3/sus_sms/SMS-SqSq/SMS-SqSq_mSq-%i_tarball.tar.xz' % mglu),
             ConfigDescription = cms.string('%s_%i_%i' % (model, mglu, mchi)),
             SLHATableForPythia8 = cms.string('%s' % slhatable),
             PythiaParameters = basePythiaParameters,
