@@ -26,7 +26,7 @@ goalLumi = 200
 minLumi = 50 
 minEvents, maxEvents = 20, 1000
 xdiagStep, ydiagStep = 25, 10
-minDM, maxDM = 30, 80
+minDM, maxDM = 10, 80
 
 scanBlocks = []
 scanBlocks.append(gridBlock(250,  801, 100, 100)) #Using only [x,y]diagStep

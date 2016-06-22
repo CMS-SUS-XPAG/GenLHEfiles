@@ -9,28 +9,28 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 baseSLHATable="""
 BLOCK MASS
-   2000001     1.00000000E+05 
-   2000002     1.00000000E+05 
-   2000003     1.00000000E+05
-   2000004     1.00000000E+05 
-   2000005     1.00000000E+05 
-   2000006     1.00000000E+05 
-   2000011     1.00000000E+05
-   2000013     1.00000000E+05
-   2000015     1.00000000E+05
-   1000001     %MGLU% 
-   1000002     %MGLU% 
-   1000003     %MGLU%
-   1000004     %MGLU%
-   1000005     %MGLU%
-   1000006     %MGLU%
-   1000011     1.00000000E+05
-   1000012     1.00000000E+05
-   1000013     1.00000000E+05
-   1000014     1.00000000E+05
-   1000015     1.00000000E+05
-   1000016     1.00000000E+05
-   1000021     1.00000000E+05 
+   1000001     %MSQ%            # ~d_L
+   2000001     %MSQ%            # ~d_R
+   1000002     %MSQ%            # ~u_L
+   2000002     %MSQ%            # ~u_R
+   1000003     %MSQ%            # ~s_L
+   2000003     %MSQ%            # ~s_R
+   1000004     %MSQ%            # ~c_L
+   2000004     %MSQ%            # ~c_R
+   1000005     1.00000000E+05   # ~b_1
+   2000005     1.00000000E+05   # ~b_2
+   1000006     1.00000000E+05   # ~t_1
+   2000006     1.00000000E+05   # ~t_2
+   1000011     1.00000000E+05   # ~e_L
+   2000011     1.00000000E+05   # ~e_R
+   1000012     1.00000000E+05   # ~nu_eL
+   1000013     1.00000000E+05   # ~mu_L
+   2000013     1.00000000E+05   # ~mu_R
+   1000014     1.00000000E+05   # ~nu_muL
+   1000015     1.00000000E+05   # ~tau_1
+   2000015     1.00000000E+05   # ~tau_2
+   1000016     1.00000000E+05   # ~nu_tauL
+   1000021     1.00000000E+05   # ~g
    1000022     1.00000000E+00
    1000023     %MCHI%
    1000024     %MCHI%
@@ -38,39 +38,45 @@ BLOCK MASS
    1000035     1.00000000E+05
    1000037     1.00000000E+05
 #
-DECAY   2000001     0.00000000E+00
-DECAY   2000002     0.00000000E+00
-DECAY   2000003     0.00000000E+00
-DECAY   2000004     0.00000000E+00
+DECAY   2000001     1.00000000E+00
+     0.00000000E+00    2          6    1000022
+     5.00000000E-01    2          1    1000023
+     5.00000000E-01    2          2    -1000024
+DECAY   2000002     1.00000000E+00
+     0.00000000E+00    2          6    1000022
+     5.00000000E-01    2          2    1000023
+     5.00000000E-01    2          1    1000024
+DECAY   2000003     1.00000000E+00
+     0.00000000E+00    2          6    1000022
+     5.00000000E-01    2          3    1000023
+     5.00000000E-01    2          4    -1000024
+DECAY   2000004     1.00000000E+00
+     0.00000000E+00    2          6    1000022
+     5.00000000E-01    2          4    1000023
+     5.00000000E-01    2          3    1000024
 DECAY   2000005     0.00000000E+00
 DECAY   2000006     0.00000000E+00
 DECAY   2000011     0.00000000E+00
 DECAY   2000013     0.00000000E+00
 DECAY   2000015     0.00000000E+00
 DECAY   1000001     1.00000000E+00
-     0.00000000E+00    2          1    1000022
+     0.00000000E+00    2          6    1000022
      5.00000000E-01    2          1    1000023
-     5.00000000E-01    2          2   -1000024
+     5.00000000E-01    2          2    -1000024
 DECAY   1000002     1.00000000E+00
-     0.00000000E+00    2          2    1000022
+     0.00000000E+00    2          6    1000022
      5.00000000E-01    2          2    1000023
      5.00000000E-01    2          1    1000024
 DECAY   1000003     1.00000000E+00
-     0.00000000E+00    2          3    1000022
+     0.00000000E+00    2          6    1000022
      5.00000000E-01    2          3    1000023
      5.00000000E-01    2          4    -1000024
 DECAY   1000004     1.00000000E+00
-     0.00000000E+00    2          4    1000022
+     0.00000000E+00    2          6    1000022
      5.00000000E-01    2          4    1000023
      5.00000000E-01    2          3    1000024
-DECAY   1000005     1.00000000E+00
-     0.00000000E+00    2          5    1000022
-     5.00000000E-01    2          5    1000023
-     5.00000000E-01    2          6    -1000024
-DECAY   1000006     1.00000000E+00
-     0.00000000E+00    2          6    1000022
-     5.00000000E-01    2          6    1000023
-     5.00000000E-01    2          5    1000024
+DECAY   1000005     0.00000000E+00
+DECAY   1000006     0.00000000E+00
 DECAY   1000011     0.00000000E+00
 DECAY   1000012     0.00000000E+00
 DECAY   1000013     0.00000000E+00
@@ -107,7 +113,8 @@ process = "SqSq"
 
 # Fit to gluino-gluino cross-section in fb
 def xsec(mass):
-    return 4.563e+17*math.pow(mass, -4.761*math.exp(5.848e-05*mass))
+    if mass < 300: return 319925471928717.38*math.pow(mass, -4.10396285974583*math.exp(mass*0.0001317804474363))
+    else: return 6953884830281245*math.pow(mass, -4.7171617288678069*math.exp(mass*6.1752771466190749e-05))
 
 def matchParams(mass):
     if mass>99 and mass<199: return 62., 0.498
@@ -201,12 +208,11 @@ for block in scanBlocks:
 mpoints = []
 for col in cols: mpoints.extend(col)
 for point in mpoints:
-    mglu, mchi = point[0], point[1]
-    qcut, tru_eff = matchParams(mglu)
+    msq, mchi = point[0], point[1]
+    qcut, tru_eff = matchParams(msq)
     wgt = point[2]*(mcm_eff/tru_eff)
     
-    if mchi==0: mchi = 1
-    slhatable = baseSLHATable.replace('%MGLU%','%e' % mglu)
+    slhatable = baseSLHATable.replace('%MSQ%','%e' % msq)
     slhatable = slhatable.replace('%MCHI%','%e' % mchi)
 
     basePythiaParameters = cms.PSet(
@@ -237,8 +243,8 @@ for point in mpoints:
     generator.RandomizedParameters.append(
         cms.PSet(
             ConfigWeight = cms.double(wgt),
-            GridpackPath =  cms.string('/cvmfs/cms.cern.ch/phys_generator/gridpacks/slc6_amd64_gcc481/13TeV/madgraph/V5_2.3.3/sus_sms/SMS-SqSq/SMS-SqSq_mSq-%i_tarball.tar.xz' % mglu),
-            ConfigDescription = cms.string('%s_%i_%i' % (model, mglu, mchi)),
+            GridpackPath =  cms.string('/cvmfs/cms.cern.ch/phys_generator/gridpacks/slc6_amd64_gcc481/13TeV/madgraph/V5_2.3.3/sus_sms/SMS-SqSq/SMS-SqSq_mSq-%i_tarball.tar.xz' % msq),
+            ConfigDescription = cms.string('%s_%i_%i' % (model, msq, mchi)),
             SLHATableForPythia8 = cms.string('%s' % slhatable),
             PythiaParameters = basePythiaParameters,
         ),

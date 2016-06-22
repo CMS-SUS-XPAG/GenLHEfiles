@@ -63,8 +63,8 @@ DECAY   2000015     0.00000000E+00   # stau_2 decays
 DECAY   1000016     0.00000000E+00   # snu_tauL decays
 DECAY   1000021     1.00000000E+00   # gluino decays
     0.00000000E+00    3    1000024     -1    1 # dummy allowed decay, in order to turn on off-shell decays
-    0.25000000E+00    3    1000024     6    -5
-    0.25000000E+00    3    -1000024    -6    5
+    0.25000000E+00    3    1000024     -6    5
+    0.25000000E+00    3    -1000024    6    -5
     0.25000000E+00    3    1000022    6    -6
     0.25000000E+00    3    1000022    5    -5
 DECAY   1000022     0.00000000E+00   # neutralino1 decays

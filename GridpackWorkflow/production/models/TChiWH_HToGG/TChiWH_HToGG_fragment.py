@@ -95,7 +95,7 @@ def matchParams(mass):
 # must equal the number entered in McM generator params
 mcm_eff = 0.469
 
-model = "TChiWH_WToLNu_HToVVTauTau"
+model = "TChiWH_WToLNu_HToGG"
 process = "C1N2"
 
 # Parameters that define the grid in the bulk and diagonal
@@ -173,7 +173,7 @@ for point in mpoints:
             'Check:abortIfVeto = on',
             '25:m0 = 125.0',# 
             '25:onMode = off',
-            '25:onIfAny = 22'
+            '25:onIfMatch = 22 22'
         ), 
         parameterSets = cms.vstring('pythia8CommonSettings',
                                     'pythia8CUEP8M1Settings',
