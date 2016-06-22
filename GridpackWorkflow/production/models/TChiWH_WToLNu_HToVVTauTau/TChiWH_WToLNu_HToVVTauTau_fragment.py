@@ -144,7 +144,7 @@ for block in scanBlocks:
 mpoints = []
 for col in cols: mpoints.extend(col)
 # add shifted point
-mpoints.append([126,0,nev])
+mpoints.append([127,0,nev])
     
 for point in mpoints:
     mn2, mlsp = point[0], point[1]
@@ -173,10 +173,11 @@ for point in mpoints:
             '6:m0 = 172.5',
             'Check:abortIfVeto = on',
             '24:onMode = off', # w lepton filter
-            '24:onIfAny = 11,12, 13,14, 15,16'
+            '24:onIfAny = 11 13 15',
             '25:m0 = 125.0',# 
             '25:onMode = off',
-            '25:onIfAny = 23,24,15'
+            '25:onIfAny = 23 24 15',
+            '25:offIfAny = 22'
         ), 
         parameterSets = cms.vstring('pythia8CommonSettings',
                                     'pythia8CUEP8M1Settings',

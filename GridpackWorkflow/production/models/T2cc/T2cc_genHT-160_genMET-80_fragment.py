@@ -91,14 +91,14 @@ model = "T2cc_genHT-160_genMET-80"
 process = "StopStop"
 
 # Number of events: min(goalLumi*xsec, maxEvents) (always in thousands)
-goalLumi = 200
-minLumi = 50 
-minEvents, maxEvents = 20, 1000
+goalLumi = 400
+minLumi = 5 
+minEvents, maxEvents = 40, 1000
 xdiagStep, ydiagStep = 25, 10
-minDM, maxDM = 30, 80
+minDM, maxDM = 10, 80
 
 scanBlocks = []
-scanBlocks.append(gridBlock(100,  801, 100, 100)) #Using only [x,y]diagStep
+scanBlocks.append(gridBlock(150,  801, 25, 10))
 ymin, ymax = 0, 1100 
 
 def matchParams(mass):
@@ -122,23 +122,23 @@ def events(mass):
   nev = max(nev/1000, minEvents)
   return math.ceil(nev) # Rounds up
 
-# -------------------------------
-#    Constructing grid
-print "grid time"
 mpoints = []
+Ndiag = 0
+xmin, xmax = 9999, 0
 for block in scanBlocks:
-  for mx in range(block.xmin, block.xmax, xdiagStep):
-    for my in range(mx-maxDM, mx-minDM+1, ydiagStep):
+  for mx in range(block.xmin, block.xmax, block.xstep):
+    xmin = min(block.xmin, xmin)
+    xmax = min(block.xmin, xmax)
+    for my in range(mx-maxDM, mx-minDM+1, block.ystep):
       if my > ymax: continue
       nev = events(mx)
+      Ndiag += nev
       mpoints.append([mx,my, nev])
-
-print "done grid"
 
 for point in mpoints:
     mstop, mlsp = point[0], point[1]
     qcut, tru_eff = matchParams(mstop)
-    wgt = 1. #point[2]/tru_eff
+    wgt = point[2]/tru_eff
     
     if mlsp==0: mlsp = 1
     slhatable = baseSLHATable.replace('%MSTOP%','%e' % mstop)

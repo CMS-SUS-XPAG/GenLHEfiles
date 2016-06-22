@@ -82,14 +82,6 @@ generator = cms.EDFilter("Pythia8GeneratorFilter",
 )
 
 model = "T2tt"
-batch = 1
-# batch 1 contains 33,504,000 events in 37 points
-# batch 2 contains 31,675,000 events in 368 points
-
-# weighted average of matching efficiencies for the full scan
-# must equal the number entered in McM generator params
-mcm_eff = 0.295
-if batch==2: mcm_eff = 0.261
 
 # Number of events: min(goalLumi*xsec, maxEvents) (always in thousands)
 goalLumi = 400
@@ -108,8 +100,7 @@ class gridBlock:
     self.ystep = ystep
 
 scanBlocks = []
-if (batch==1): scanBlocks.append(gridBlock(350,  425, 50, 50))
-elif (batch==2): scanBlocks.append(gridBlock(400,  1201, 50, 50))
+scanBlocks.append(gridBlock(150,  351, 50, 50))
 minDM = 87
 ymin, ymed, ymax = 0, 0, 650 
 
@@ -143,7 +134,6 @@ xmin, xmax = 9999, 0
 for block in scanBlocks:
   Nbulk, Ndiag = 0, 0
   for mx in range(block.xmin, block.xmax, min(bandStep, diagStep)):
-    if (batch==2 and mx==block.xmin): continue
     xmin = min(xmin, block.xmin)
     xmax = max(xmax, block.xmax)
     col = []
@@ -156,7 +146,6 @@ for block in scanBlocks:
         if my > ymax: continue
         # Adding extra diagonals to the bulk
         for dm in addDiag:
-          if(len(cols)==0 and batch==1): continue # Don't add point before the beginning
           dm_before = mx-block.xstep -my
           dm_after = mx - my
           if(dm>dm_before and dm<dm_after):
@@ -172,7 +161,6 @@ for block in scanBlocks:
         if my > ymax: continue
         # Adding extra diagonals to the band
         for dm in addDiag:
-          if(len(cols)==0 and batch==1): continue # Don't add point before the beginning
           dm_before = mx-bandStep -my
           dm_after = mx - my
           if(dm>dm_before and dm<dm_after):
@@ -188,7 +176,6 @@ for block in scanBlocks:
       if my > ymax: continue
       # Adding extra diagonals to the band
       for dm in addDiag:
-        if(len(cols)==0 and batch==1): continue # Don't add point before the beginning
         dm_before = mx-diagStep -my
         dm_after = mx - my
         if(dm>dm_before and dm<dm_after):
@@ -207,12 +194,14 @@ for block in scanBlocks:
   Nevents.append([Nbulk, Ndiag])
 
 mpoints = []
-for col in cols: mpoints.extend(col)
+for col in cols: 
+  for ipt in col:
+    if (ipt[0]<251): mpoints.append(ipt)
 
 for point in mpoints:
     mstop, mlsp = point[0], point[1]
     qcut, tru_eff = matchParams(mstop)
-    wgt = point[2]*(mcm_eff/tru_eff)
+    wgt = point[2]/tru_eff
     
     if mlsp==0: mlsp = 1
     slhatable = baseSLHATable.replace('%MSTOP%','%e' % mstop)
