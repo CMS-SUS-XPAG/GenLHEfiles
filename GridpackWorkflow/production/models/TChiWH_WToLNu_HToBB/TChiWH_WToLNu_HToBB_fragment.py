@@ -145,7 +145,7 @@ for block in scanBlocks:
 mpoints = []
 for col in cols: mpoints.extend(col)
 # add shifted point
-mpoints.append([126,0,100])
+mpoints.append([127,0,100])
 
 
 for point in mpoints:
@@ -174,7 +174,7 @@ for point in mpoints:
             'JetMatching:doShowerKt = off', #off for MLM matching, turn on for shower-kT matching
             '6:m0 = 172.5',
             '24:onMode = off', # w lepton filter
-            '24:onIfAny = 11,13,15'
+            '24:onIfAny = 11 13 15',
             '25:m0 = 125.0',# higgs to bb filter
             '25:onMode = off',
             '25:onIfAny = 5',

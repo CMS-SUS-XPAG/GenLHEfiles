@@ -88,19 +88,19 @@ class gridBlock:
     self.xstep = xstep
     self.ystep = ystep
     
-model = "T2tt_dM-30to80_genHT-160_genMET-80"
+model = "T2tt_dM-10to80_genHT-160_genMET-80"
 process = "StopStop"
 
 # Number of events: min(goalLumi*xsec, maxEvents) (always in thousands)
-goalLumi = 200
-minLumi = 50 
-minEvents, maxEvents = 20, 1000
+goalLumi = 400
+minLumi = 50
+minEvents, maxEvents = 40, 1000
 xdiagStep, ydiagStep = 25, 10
-minDM, maxDM = 30, 80
+minDM, maxDM = 10, 80
 
 scanBlocks = []
-scanBlocks.append(gridBlock(250,  801, 100, 100)) #Using only [x,y]diagStep
-ymin, ymax = 0, 1100 
+scanBlocks.append(gridBlock(250,  801, 25, 10))
+ymin, ymax = 0, 1100
 
 def matchParams(mass):
   if mass>99 and mass<199: return 62., 0.498
@@ -125,21 +125,23 @@ def events(mass):
 
 # -------------------------------
 #    Constructing grid
-print "grid time"
 mpoints = []
+Ndiag = 0
+xmin, xmax = 9999, 0
 for block in scanBlocks:
   for mx in range(block.xmin, block.xmax, xdiagStep):
+    xmin = min(block.xmin, xmin)
+    xmax = min(block.xmin, xmax)
     for my in range(mx-maxDM, mx-minDM+1, ydiagStep):
       if my > ymax: continue
-      nev = events(mx)
+      nev = events(mx)#*eff[mx][my]
+      Ndiag += nev
       mpoints.append([mx,my, nev])
-
-print "done grid"
 
 for point in mpoints:
     mstop, mlsp = point[0], point[1]
     qcut, tru_eff = matchParams(mstop)
-    wgt = 1. #point[2]/tru_eff
+    wgt = point[2]/tru_eff
     
     if mlsp==0: mlsp = 1
     slhatable = baseSLHATable.replace('%MSTOP%','%e' % mstop)
@@ -161,6 +163,7 @@ for point in mpoints:
             'JetMatching:nJetMax = 2', #number of partons in born matrix element for highest multiplicity
             'JetMatching:doShowerKt = off', #off for MLM matching, turn on for shower-kT matching
             '6:m0 = 172.5',
+            '24:mMin = 5.',
             'Check:abortIfVeto = on',
         ), 
         parameterSets = cms.vstring('pythia8CommonSettings',
