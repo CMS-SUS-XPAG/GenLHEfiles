@@ -68,7 +68,7 @@ DECAY   1000023     0.10000000E+00   # neutralino2 decays
 DECAY   1000024     0.00000000E+00   # chargino1+ decays
 DECAY   1000025     0.10000000E+00   # neutralino3 decays
     0.00000000E+00   3    1000022   22   22  #dummy decay
-    1.00000000E+00   2    1000022   25
+    1.00000000E+00   2    1000022   23
 DECAY   1000035     0.00000000E+00   # neutralino4 decays
 DECAY   1000037     0.00000000E+00   # chargino2+ decays
 """
@@ -102,7 +102,7 @@ def matchParams(mass):
 # must equal the number entered in McM generator params
 mcm_eff = 0.455
 
-model = "TChiHH_HToWWZZTauTau_HToWWZZTauTau"
+model = "TChiHZ_HToWWZZTauTau_ZToLL"
 process = "N2N3"
 
 # Number of events for mass point, in thousands
@@ -149,7 +149,9 @@ for point in mpoints:
             'JetMatching:doShowerKt = off', #off for MLM matching, turn on for shower-kT matching
             '6:m0 = 172.5',
             '25:onMode = off',
-            '25:onIfAny = 24 23 15',
+            '25:onIfAny = 23 24 15',
+            '23:onMode = off',
+            '23:onIfAny = 15 13 11',
             'Check:abortIfVeto = on',
         ), 
         parameterSets = cms.vstring('pythia8CommonSettings',
