@@ -35,6 +35,12 @@ models["T6ttWW"] = model(36,300,1200,100,0,1200,500)
 #models["T6ttWW"] = model(36,300,1200,48,0,1200,500)
 models["TChiWG"] = model(nbinsx=41,xmin=300,xmax=1300,nconfigs=41)
 models["T1ttbb"] = model(nbinsx=31,xmin=800,xmax=2300,nbinsy=33,ymin=0.,ymax=1600,nconfigs=646)
+models["TChiHH_HToGG"] = model(35, 125, 1000, 1, 0.5, 1.5, 35)
+models["TChiHH_HToWWZZTauTau_HToWWZZTauTau"] = model(35, 125, 1000, 1, 0.5, 1.5, 35)
+models["TChiHZ_HToGG"] = model(35, 125, 1000, 1, 0.5, 1.5, 35)
+models["TChiHZ_HToWWZZTauTau_ZToLL"] = model(35, 125, 1000, 1, 0.5, 1.5, 35)
+models["TChiZZ_ZToLL"] = model(36, 100, 1000, 1, 0.5, 1.5, 36)
+models["TChiZZ_ZToLL"] = model(36, 100, 1000, 1, 0.5, 1.5, 36)
 
 if __name__ == '__main__':
     rt.gROOT.SetBatch()
@@ -113,6 +119,14 @@ if __name__ == '__main__':
                 ("mc_mass#abs(mc_id)==6&&mprod-mlsp==150", "Top Mass (dM = 150)", (100, 50, 250)),
                 ("mc_mass#abs(mc_id)==6&&mprod-mlsp==175", "Top Mass (dM = 175)", (100, 50, 250)),
                 ("mc_mass#abs(mc_id)==6&&mprod-mlsp==200", "Top Mass (dM = 200)", (100, 50, 250)),
+                ]
+    if 'TChi' in mname:
+        histparams += [
+                ("mc_mass#abs(mc_id)==23", "Z Mass", (100, 0, 150)),
+                ("mc_mass#abs(mc_id)==25", "Higgs Mass", (100, 0, 150)),
+                ("mc_id#mc_direct_mom==25", "Higgs daughters", (30, 0, 30)), # higgs daughters
+                ("mc_id#mc_direct_mom==23", "Z daughters", (30, 0, 30)), # Z daughters
+                ("ntruleps", "Lepton multiplicity", (5, 0, 5)),
                 ]
 
     hists = {}
