@@ -100,7 +100,7 @@ def matchParams(mass):
 
 # weighted average of matching efficiencies for the full scan
 # must equal the number entered in McM generator params
-mcm_eff = 0.455
+mcm_eff = 0.457
 
 model = "TChiZZ_ZToLL"
 process = "N2N3"
