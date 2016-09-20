@@ -102,7 +102,7 @@ def matchParams(mass):
 # must equal the number entered in McM generator params
 mcm_eff = 0.455
 
-model = "TChiHZ_HToWWZZTauTau_ZToLL"
+model = "TChiHZ_HToWWZZTauTau_2LFilter"
 process = "N2N3"
 
 # Number of events for mass point, in thousands
