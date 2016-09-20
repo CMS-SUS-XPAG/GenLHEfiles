@@ -41,6 +41,7 @@ models["TChiHZ_HToGG"] = model(35, 125, 1000, 1, 0.5, 1.5, 35)
 models["TChiHZ_HToWWZZTauTau_ZToLL"] = model(35, 125, 1000, 1, 0.5, 1.5, 35)
 models["TChiZZ_ZToLL"] = model(36, 100, 1000, 1, 0.5, 1.5, 36)
 models["TChiZZ_ZToLL_ZToLL"] = model(36, 100, 1000, 1, 0.5, 1.5, 36)
+models["TChipmWW"] = model(19, 100., 575.,31 , 0., 310.,264)
 
 if __name__ == '__main__':
     rt.gROOT.SetBatch()
@@ -72,7 +73,7 @@ if __name__ == '__main__':
                   ("mlsp:mprod##colztext", "Grid", (m.nbinsx,m.xmin,m.xmax,m.nbinsy,m.ymin,m.ymax)),
                   ]
 
-    if mname in ['T5qqqqVV','T5qqqqVV_dM20','T5ZZ','T5ttcc','TChipmSlepSnu','T6ttWW']:
+    if mname in ['T5qqqqVV','T5qqqqVV_dM20','T5ZZ','T5ttcc','TChipmSlepSnu','T6ttWW','TChipmWW']:
         histparams += [
                   ("mc_mass#abs(mc_id)==24", "W Mass", (100, 0, 150)),
                   ("mc_mass#abs(mc_id)==23", "Z Mass", (100, 0, 150)),
