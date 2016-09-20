@@ -30,7 +30,7 @@ BLOCK MASS  # Mass Spectrum
    1000014     %MSTAU%          # ~nu_muL
    1000015     %MSTAU%          # ~tau_1
    2000015     1.00000000E+05   # ~tau_2
-   1000016     1.00000000E+05   # ~nu_tauL
+   1000016     %MSTAU%          # ~nu_tauL
    1000021     1.00000000E+05   # ~g
    1000022     %MLSP%           # ~chi_10
    1000023     %MN2%            # ~chi_20
@@ -52,30 +52,42 @@ DECAY   1000005     0.00000000E+00   # sbottom1 decays
 DECAY   2000005     0.00000000E+00   # sbottom2 decays
 DECAY   1000006     0.00000000E+00   # stop1 decays
 DECAY   2000006     0.00000000E+00   # stop2 decays
-DECAY   1000011     0.00000000E+00   # selectron_L decays
+DECAY   1000011     0.10000000E+00   # selectron_L decays
+    1.00000000E+00    2    1000022    11
 DECAY   2000011     0.00000000E+00   # selectron_R decays
-DECAY   1000012     0.00000000E+00   # snu_elL decays
-DECAY   1000013     0.00000000E+00   # smuon_L decays
-DECAY   2000013     0.00000000E+00   # smuon_R decays
-DECAY   1000014     0.00000000E+00   # snu_muL decays
-DECAY   1000015     1.00000000E-1   # stau_1 decays
-    1.00000000E+00    2    1000022   15
-DECAY   2000015     0.00000000E+00   # stau_2 decays
-DECAY   1000016     0.00000000E+00   # snu_tauL decays
-DECAY   1000021     0.00000000E+00   # gluino decays
-DECAY   1000022     0.00000000E+00   # neutralino1 decays
-DECAY   1000023     1.00000000E-1   # neutralino2 decays
-    0.16666666E+00    2    1000011    -11
-    0.16666666E+00    2    -1000011    11
-    0.16666666E+00    2    1000013    -13
-    0.16666666E+00    2    -1000013    13
-    0.16666666E+00    2    1000015    -15
-    0.16666666E+00    2    -1000015    15
-DECAY   1000024     1.00000000E-1   # chargino1+ decays
-    1.00000000E+00   2    -1000015   16
-DECAY   1000025     0.00000000E+00   # neutralino3 decays
-DECAY   1000035     0.00000000E+00   # neutralino4 decays
-DECAY   1000037     0.00000000E+00   # chargino2+ decays
+DECAY   1000012     0.10000000E+00   # snu_elL decays
+    1.00000000E+00    2    1000022    12
+DECAY   1000013     0.10000000E+00   # smuon_L decays
+BLOCK MASS  # Mass Spectrum
+# PDG code           mass       particle
+   1000001     1.00000000E+05   # ~d_L
+   2000001     1.00000000E+05   # ~d_R
+   1000002     1.00000000E+05   # ~u_L
+   2000002     1.00000000E+05   # ~u_R
+   1000003     1.00000000E+05   # ~s_L
+   2000003     1.00000000E+05   # ~s_R
+   1000004     1.00000000E+05   # ~c_L
+   2000004     1.00000000E+05   # ~c_R
+   1000005     1.00000000E+05   # ~b_1
+   2000005     1.00000000E+05   # ~b_2
+   1000006     1.00000000E+05   # ~t_1
+   2000006     1.00000000E+05   # ~t_2
+   1000011     %MSTAU%          # ~e_L
+   2000011     1.00000000E+05   # ~e_R
+   1000012     %MSTAU%          # ~nu_eL
+   1000013     %MSTAU%          # ~mu_L
+   2000013     1.00000000E+05   # ~mu_R
+   1000014     %MSTAU%          # ~nu_muL
+   1000015     %MSTAU%          # ~tau_1
+   2000015     1.00000000E+05   # ~tau_2
+   1000016     1.00000000E+05   # ~nu_tauL
+   1000021     1.00000000E+05   # ~g
+   1000022     %MLSP%           # ~chi_10
+   1000023     %MN2%            # ~chi_20
+   1000025     1.00000000E+05   # ~chi_30
+   1000035     1.00000000E+05   # ~chi_40
+   1000024     %MN2%           # ~chi_1+
+   1000037     1.00000000E+05   # ~chi_2+
 """
 
 generator = cms.EDFilter("Pythia8GeneratorFilter",
@@ -154,8 +166,6 @@ for point in mpoints:
             'JetMatching:nJetMax = 2', #number of partons in born matrix element for highest multiplicity
             'JetMatching:doShowerKt = off', #off for MLM matching, turn on for shower-kT matching
             '6:m0 = 172.5',
-            '15:onMode = off', # w lepton filter
-            '15:onIfAny = 11 13',
             'Check:abortIfVeto = on',
         ), 
         parameterSets = cms.vstring('pythia8CommonSettings',

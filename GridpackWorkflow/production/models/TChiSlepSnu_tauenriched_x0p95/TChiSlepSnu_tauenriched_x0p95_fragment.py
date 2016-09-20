@@ -29,7 +29,7 @@ BLOCK MASS  # Mass Spectrum
    1000014     %MSTAU%          # ~nu_muL
    1000015     %MSTAU%          # ~tau_1
    2000015     1.00000000E+05   # ~tau_2
-   1000016     1.00000000E+05   # ~nu_tauL
+   1000016     %MSTAU%          # ~nu_tauL
    1000021     1.00000000E+05   # ~g
    1000022     %MLSP%           # ~chi_10
    1000023     %MN2%            # ~chi_20
@@ -51,16 +51,23 @@ DECAY   1000005     0.00000000E+00   # sbottom1 decays
 DECAY   2000005     0.00000000E+00   # sbottom2 decays
 DECAY   1000006     0.00000000E+00   # stop1 decays
 DECAY   2000006     0.00000000E+00   # stop2 decays
-DECAY   1000011     0.00000000E+00   # selectron_L decays
+DECAY   1000011     0.10000000E+00   # selectron_L decays
+    1.00000000E+00    2    1000022    11
 DECAY   2000011     0.00000000E+00   # selectron_R decays
-DECAY   1000012     0.00000000E+00   # snu_elL decays
-DECAY   1000013     0.00000000E+00   # smuon_L decays
+DECAY   1000012     0.10000000E+00   # snu_elL decays
+    1.00000000E+00    2    1000022    12
+DECAY   1000013     0.10000000E+00   # smuon_L decays
+    1.00000000E+00    2    1000022    13
 DECAY   2000013     0.00000000E+00   # smuon_R decays
-DECAY   1000014     0.00000000E+00   # snu_muL decays
+DECAY   1000014     0.10000000E+00   # snu_muL decays
+    1.00000000E+00    2    1000022    14
+DECAY   1000015     0.10000000E+00   # stau_1 decays
+    1.00000000E+00    2    1000022    15
+DECAY   2000015     0.00000000E+00   # stau_2 decays
+DECAY   1000016     0.10000000E+00   # snu_tauL decays
+    1.00000000E+00    2    1000022    16
 DECAY   1000015     1.00000000E-1   # stau_1 decays
     1.00000000E+00    2    1000022   15
-DECAY   2000015     0.00000000E+00   # stau_2 decays
-DECAY   1000016     0.00000000E+00   # snu_tauL decays
 DECAY   1000021     0.00000000E+00   # gluino decays
 DECAY   1000022     0.00000000E+00   # neutralino1 decays
 DECAY   1000023     1.00000000E-1   # neutralino2 decays
@@ -152,8 +159,6 @@ for point in mpoints:
             'JetMatching:nJetMax = 2', #number of partons in born matrix element for highest multiplicity
             'JetMatching:doShowerKt = off', #off for MLM matching, turn on for shower-kT matching
             '6:m0 = 172.5',
-            '15:onMode = off', # w lepton filter
-            '15:onIfAny = 11 13',
             'Check:abortIfVeto = on',
         ), 
         parameterSets = cms.vstring('pythia8CommonSettings',
