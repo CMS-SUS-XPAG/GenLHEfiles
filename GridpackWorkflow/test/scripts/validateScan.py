@@ -40,7 +40,7 @@ models["TChiHH_HToWWZZTauTau_HToWWZZTauTau"] = model(35, 125, 1000, 1, 0.5, 1.5,
 models["TChiHZ_HToGG"] = model(35, 125, 1000, 1, 0.5, 1.5, 35)
 models["TChiHZ_HToWWZZTauTau_ZToLL"] = model(35, 125, 1000, 1, 0.5, 1.5, 35)
 models["TChiZZ_ZToLL"] = model(36, 100, 1000, 1, 0.5, 1.5, 36)
-models["TChiZZ_ZToLL"] = model(36, 100, 1000, 1, 0.5, 1.5, 36)
+models["TChiZZ_ZToLL_ZToLL"] = model(36, 100, 1000, 1, 0.5, 1.5, 36)
 
 if __name__ == '__main__':
     rt.gROOT.SetBatch()
