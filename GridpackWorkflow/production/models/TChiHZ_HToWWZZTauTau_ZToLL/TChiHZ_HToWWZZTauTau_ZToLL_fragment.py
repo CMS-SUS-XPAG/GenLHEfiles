@@ -150,8 +150,12 @@ for point in mpoints:
             '6:m0 = 172.5',
             '25:onMode = off',
             '25:onIfAny = 23 24 15',
-            '23:onMode = off',
-            '23:onIfAny = 15 13 11',
+            'ResonanceDecayFilter:filter = on', 
+            'ResonanceDecayFilter:exclusive = off', #off: require at least the specified number of daughters, on: require exactly the specified number of daughters
+            'ResonanceDecayFilter:eMuAsEquivalent = off', #on: treat electrons and muons as equivalent
+            'ResonanceDecayFilter:eMuTauAsEquivalent = on', #on: treat electrons, muons , and taus as equivalent
+            'ResonanceDecayFilter:allNuAsEquivalent = on', #on: treat all three neutrino flavours as equivalent
+            'ResonanceDecayFilter:daughters = 11,11',
             'Check:abortIfVeto = on',
         ), 
         parameterSets = cms.vstring('pythia8CommonSettings',
