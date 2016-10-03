@@ -96,12 +96,14 @@ def matchParams(mass):
   elif mass<899: return 76,0.413
   elif mass<999: return 76,0.402
   elif mass<1099: return 76,0.40
-  else: return 76,0.4
-
+  elif mass<1199: return 76,0.398
+  elif mass<1299: return 76,0.394
+  else: return 76,0.394
+  
 
 # weighted average of matching efficiencies for the full scan
 # must equal the number entered in McM generator params
-mcm_eff = 0.428
+mcm_eff = 0.427
 
 model = "TChiNG"
 process = "N2N3"
