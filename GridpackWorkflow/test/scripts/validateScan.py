@@ -46,6 +46,7 @@ models["TChiHZ_HToWWZZTauTau_ZToLL"] = model(35, 125, 1000, 1, 0.5, 1.5, 35)
 models["TChiZZ_ZToLL"] = model(36, 100, 1000, 1, 0.5, 1.5, 36)
 models["TChiZZ_ZToLL_ZToLL"] = model(36, 100, 1000, 1, 0.5, 1.5, 36)
 models["TChipmWW"] = model(19, 100., 575.,31 , 0., 310.,264)
+models["TChiNG"] = model(nbinsx=41,xmin=300,xmax=1325,nconfigs=41)
 
 if __name__ == '__main__':
     rt.gROOT.SetBatch()
