@@ -1,0 +1,22 @@
+import model mssm
+
+define p = g u c d s u~ c~ d~ s~
+define j = g u c d s u~ c~ d~ s~
+
+#squarks - go ul ul~ ur ur~ dl dl~ dr dr~ sl sl~ sr sr~ cl cl~ cr cr~ b1 b1~ b2 b2~ t1 t1~ t2 t2~
+#sleptons - el+ er+ mul+ mur+ ta1+ ta2+ el- er- mul- mur- ta1- ta2- sve svm svt sve~ svm~ svt~
+#neutralinos - n1 n2 n3 n4 
+#charginos - x2+ x2- x1+ x1- 
+
+generate    p p > x1+ x1- j j QCD=0  @0
+add process p p > x1+ x1+ j j QCD=0  @1
+add process p p > x1- x1- j j QCD=0  @2
+add process p p > x1+ n2  j j QCD=0  @3
+add process p p > x1- n2  j j QCD=0  @4
+add process p p > n2  n2  j j QCD=0  @5
+add process p p > x1+ x1- j j QED=2  @6
+add process p p > x1+ n2  j j QED=2  @7
+add process p p > x1- n2  j j QED=2  @8
+add process p p > n2  n2  j j QED=2  @9
+
+output VBF-C1N2_mChi-%MNLSP% -nojpeg
