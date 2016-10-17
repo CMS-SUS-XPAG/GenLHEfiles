@@ -163,7 +163,7 @@ for point in mpoints:
             'JetMatching:nJetMax = 2', #number of partons in born matrix element for highest multiplicity
             'JetMatching:doShowerKt = off', #off for MLM matching, turn on for shower-kT matching
             '6:m0 = 172.5',
-            '24:mMin = 5.',
+            '24:mMin = 0.1',
             'Check:abortIfVeto = on',
         ), 
         parameterSets = cms.vstring('pythia8CommonSettings',
