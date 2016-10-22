@@ -33,7 +33,7 @@ BLOCK MASS  # Mass Spectrum
    1000023     1.00000000E+05   # ~chi_20
    1000025     1.00000000E+05   # ~chi_30
    1000035     1.00000000E+05   # ~chi_40
-   1000024     1.00000000E+05   # ~chi_1+
+   1000024     %MCHI%           # ~chi_1+
    1000037     1.00000000E+05   # ~chi_2+
 
 # DECAY TABLE
@@ -49,8 +49,7 @@ DECAY   2000004     0.00000000E+00   # scharm_R decays
 DECAY   1000005     0.00000000E+00   # sbottom1 decays
 DECAY   2000005     0.00000000E+00   # sbottom2 decays
 DECAY   1000006     1.00000000E+00   # stop1 decays
-    0.00000000E+00    4    1000022      5     -1    2  # dummy allowed decay, in order to turn on off-shell decays
-    1.00000000E+00    3    1000022      5   24
+    1.00000000E+00    2    1000024      5
 DECAY   2000006     0.00000000E+00   # stop2 decays
 
 DECAY   1000011     0.00000000E+00   # selectron_L decays
@@ -65,7 +64,9 @@ DECAY   1000016     0.00000000E+00   # snu_tauL decays
 DECAY   1000021     0.00000000E+00   # gluino decays
 DECAY   1000022     0.00000000E+00   # neutralino1 decays
 DECAY   1000023     0.00000000E+00   # neutralino2 decays
-DECAY   1000024     0.00000000E+00   # chargino1+ decays
+DECAY   1000024     1.00000000E+00   # chargino1+ decays
+    0.00000000E+00    3    1000022     -1    2  # dummy allowed decay, in order to turn on off-shell decays
+    1.00000000E+00    2    1000022      24
 DECAY   1000025     0.00000000E+00   # neutralino3 decays
 DECAY   1000035     0.00000000E+00   # neutralino4 decays
 DECAY   1000037     0.00000000E+00   # chargino2+ decays
@@ -88,7 +89,7 @@ class gridBlock:
     self.xstep = xstep
     self.ystep = ystep
     
-model = "T2tt_dM-10to80_genHT-160_genMET-80"
+model = "T2bW_X05_dM-10to80_genHT-160_genMET-80"
 process = "StopStop"
 
 # Number of events: min(goalLumi*xsec, maxEvents) (always in thousands)
@@ -146,6 +147,7 @@ for point in mpoints:
     if mlsp==0: mlsp = 1
     slhatable = baseSLHATable.replace('%MSTOP%','%e' % mstop)
     slhatable = slhatable.replace('%MLSP%','%e' % mlsp)
+    slhatable = slhatable.replace('%MCHI%','%e' % ((mlsp+mstop)/2.))
 
     basePythiaParameters = cms.PSet(
         pythia8CommonSettingsBlock,
