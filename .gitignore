@@ -1,1 +1,3 @@
 GridpackWorkflow/production/*/plots_*
+GridpackWorkflow/production/models/*/*pdf
+GridpackWorkflow/production/models/*/*png
