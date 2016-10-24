@@ -81,7 +81,7 @@ generator = cms.EDFilter("Pythia8GeneratorFilter",
     RandomizedParameters = cms.VPSet(),
 )
 
-model = "T2tt_mStop1250to1500"
+model = "T2tt"
 
 
 def matchParams(mass):
