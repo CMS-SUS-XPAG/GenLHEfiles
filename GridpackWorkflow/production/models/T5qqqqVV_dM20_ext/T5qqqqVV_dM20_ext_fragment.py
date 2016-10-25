@@ -98,7 +98,7 @@ generator = cms.EDFilter("Pythia8GeneratorFilter",
 model = "T5qqqqVV_dM20"
 # weighted average of matching efficiencies for the full scan
 # must equal the number entered in McM generator params
-mcm_eff = 0.281
+mcm_eff = 0.250
 
 # Fit to gluino cross-section in fb
 def xsec(mass):
