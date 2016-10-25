@@ -167,22 +167,19 @@ for block in scanBlocks:
       for my in range(ymin, begDiag, block.ystep):
         if my > ymax: continue
         nev = events(mx)
-        if mx > 1700 or my > 1200: #only add points not included in previous scan
-            col.append([mx,my, nev])
-            Nbulk += nev
+        col.append([mx,my, nev])
+        Nbulk += nev
     # Adding diagonal points
     for my in range(begDiag, mx-minDM+1, block.dstep):
       if my > ymax: continue
       nev = events(mx)
-      if mx > 1700 or my > 1200: #only add points not included in previous scan
-          col.append([mx,my, nev])
-          Ndiag += nev
+      col.append([mx,my, nev])
+      Ndiag += nev
     if(my !=  mx-minDM and mx-minDM <= ymax):
       my = mx-minDM
       nev = events(mx)
-      if mx > 1700 or my > 1200: #only add points not included in previous scan
-          col.append([mx,my, nev])
-          Ndiag += nev
+      col.append([mx,my, nev])
+      Ndiag += nev
     cols.append(col)
   Nevents.append([Nbulk, Ndiag])
 
@@ -224,6 +221,8 @@ for point in mpoints:
             'ResonanceDecayFilter:allNuAsEquivalent = on', #on: treat all three neutrino flavours as equivalent
             #'ResonanceDecayFilter:mothers =', #list of mothers not specified -> count all particles in hard process+resonance decays (better to avoid specifying mothers when including leptons from the lhe in counting, since intermediate resonances are not gauranteed to appear in general
             'ResonanceDecayFilter:daughters = 11',
+            '23:mMin = 0.1',
+            '24:mMin = 0.1',
         ), 
         parameterSets = cms.vstring('pythia8CommonSettings',
                                     'pythia8CUEP8M1Settings',

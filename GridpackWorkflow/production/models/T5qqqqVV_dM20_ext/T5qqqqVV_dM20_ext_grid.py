@@ -67,22 +67,19 @@ for block in scanBlocks:
       for my in range(ymin, begDiag, block.ystep):
         if my > ymax: continue
         nev = events(mx)
-        if mx > 1700 or my > 1200: #only add points not included in previous scan
-            col.append([mx,my, nev])
-            Nbulk += nev
+        col.append([mx,my, nev])
+        Nbulk += nev
     # Adding diagonal points
     for my in range(begDiag, mx-minDM+1, block.dstep):
       if my > ymax: continue
       nev = events(mx)
-      if mx > 1700 or my > 1200: #only add points not included in previous scan
-          col.append([mx,my, nev])
-          Ndiag += nev
+      col.append([mx,my, nev])
+      Ndiag += nev
     if(my !=  mx-minDM and mx-minDM <= ymax):
       my = mx-minDM
       nev = events(mx)
-      if mx > 1700 or my > 1200: #only add points not included in previous scan
-          col.append([mx,my, nev])
-          Ndiag += nev
+      col.append([mx,my, nev])
+      Ndiag += nev
     cols.append(col)
   Nevents.append([Nbulk, Ndiag])
 

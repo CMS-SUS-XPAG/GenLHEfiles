@@ -22,6 +22,10 @@ class model:
 models = {}
 models["T5qqqqVV"] = model(34, 600, 2300, 32, 0, 1600, 500)
 models["T5qqqqVV_dM20"] = model(24, 600, 1800, 26, 0, 1300, 500)
+models["T5qqqqVV_dM15_mLSP-300"] = model(30, 600, 2100, 1, 300, 350, 30)
+models["T5qqqqVV_dM10_mLSP-300"] = model(30, 600, 2100, 1, 300, 350, 30)
+models["T5qqqqVV_dM5_mLSP-300"] = model(30, 600, 2100, 1, 300, 350, 30)
+models["T5qqqqVV_dM20_ext"] = model(30, 600, 2100, 32, 0, 1600, 1000)
 models["T5ZZ"] = model(20, 800, 1800, 36, 0, 1800, 500)
 models["T2bb"] = model(52,300,1600,44,0,1100,500)
 models["T5Wg"] = model(52,800,2100,78,150,2100,500)
@@ -80,7 +84,9 @@ if __name__ == '__main__':
                   ("mlsp:mprod##colztext", "Grid", (m.nbinsx,m.xmin,m.xmax,m.nbinsy,m.ymin,m.ymax)),
                   ]
 
-    if mname in ['T5qqqqVV','T5qqqqVV_dM20','T5ZZ','T5ttcc','TChipmSlepSnu','T6ttWW','TChipmWW']:
+    if mname in ['T5qqqqVV','T5qqqqVV_dM20','T5qqqqVV_dM20_ext','T5ZZ','T5ttcc',
+            'TChipmSlepSnu','T6ttWW','TChipmWW',
+            'T5qqqqVV_dM15_mLSP-300', 'T5qqqqVV_dM5_mLSP-300', 'T5qqqqVV_dM10_mLSP-300',]:
         histparams += [
                   ("mc_mass#abs(mc_id)==24", "W Mass", (100, 0, 150)),
                   ("mc_mass#abs(mc_id)==23", "Z Mass", (100, 0, 150)),
@@ -142,6 +148,7 @@ if __name__ == '__main__':
         hists[params[0]] = rt.TH1F(cleanstring(params[0]),params[1],*params[2])
     for params in histparams2D:
         hists[params[0]] = rt.TH2F(cleanstring(params[0]),params[1],*params[2])
+        hists[params[0]].SetStats(0)
 
     #fill histograms and print
     c = rt.TCanvas("c", "c", 800, 600)
