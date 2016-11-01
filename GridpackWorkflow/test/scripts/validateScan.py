@@ -143,6 +143,10 @@ if __name__ == '__main__':
                 ("mc_id#mc_direct_mom==23", "Z daughters", (30, 0, 30)), # Z daughters
                 ("ntruleps", "Lepton multiplicity", (5, 0, 5)),
                 ]
+    if 'T2bW' in mname:
+        histparams += [
+            ("mc_mass#abs(mc_id)==24", "W Mass", (100, 0., 40.)),
+            ]
 
     hists = {}
     for params in histparams:
