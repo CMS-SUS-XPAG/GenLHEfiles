@@ -1,2 +1,0 @@
-01:/bin/rm -rf tmp/slc6_amd64_gcc530/edmplugins/poison/Configuration/GenProduction
-01:/bin/touch tmp/common/cache/packs/changed
