@@ -1,0 +1,6 @@
+<tool name="lapack" version="3.3.1-giojec">
+  <client>
+    <environment name="LAPACK_BASE" default="/cvmfs/cms.cern.ch/slc6_amd64_gcc530/external/lapack/3.3.1-giojec"/>
+    <environment name="LIBDIR" default="$LAPACK_BASE/lib"/>
+  </client>
+</tool>

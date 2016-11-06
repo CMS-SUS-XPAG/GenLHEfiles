@@ -1,0 +1,2 @@
+ALL_TOOLS      += lapack
+

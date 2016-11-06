@@ -1,0 +1,6 @@
+<tool name="gdb" version="7.10-ikhhed">
+  <client>
+    <environment name="GDB_BASE" default="/cvmfs/cms.cern.ch/slc6_amd64_gcc530/external/gdb/7.10-ikhhed"/>
+  </client>
+  <runtime name="PATH" value="$GDB_BASE/bin" type="path"/>
+</tool>
