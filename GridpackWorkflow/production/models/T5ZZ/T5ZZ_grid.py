@@ -32,8 +32,9 @@ maxDM = 300
 scanBlocks = []
 scanBlocks.append(gridBlock(800, 1000, 100, 100, 100,10))
 scanBlocks.append(gridBlock(1000, 1801, 50, 50, 50,10))
+scanBlocks.append(gridBlock(1850, 2101, 50, 50, 50,10))
 minDM = 10
-ymin, ymed, ymax = 100, 100, 1800
+ymin, ymed, ymax = 100, 100, 2100
 hlines_below_grid = [25,50]
 hline_xmin = 1000
 
