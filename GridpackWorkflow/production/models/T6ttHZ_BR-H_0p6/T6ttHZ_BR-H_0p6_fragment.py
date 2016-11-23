@@ -122,7 +122,7 @@ for mx in range(xmin, xmax+1, xstep):
     ylist.extend(range(ymin, mx - diag_low, ystep_low))
     ylist.extend(range(mx - diag_low, mx-diag_high+1, ystep_high))
   for my in ylist:
-    if mx-my > 200.: mpoints_tmp.append([mx,my,nevt])
+    mpoints_tmp.append([mx,my,nevt])
 
 
 mpoints = []
@@ -141,7 +141,7 @@ for point in mpoints:
     
     if mlsp==0: mlsp = 1
     slhatable = baseSLHATable.replace('%MSTOP1%','%e' % mstop1)
-    slhatable = baseSLHATable.replace('%MSTOP2%','%e' % mstop2)
+    slhatable = slhatable.replace('%MSTOP2%','%e' % mstop2)
     slhatable = slhatable.replace('%MLSP%','%e' % mlsp)
 
     basePythiaParameters = cms.PSet(
