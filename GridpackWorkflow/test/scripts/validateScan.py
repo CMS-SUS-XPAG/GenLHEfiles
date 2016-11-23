@@ -54,6 +54,7 @@ models["TChipmWW"] = model(19, 100., 575.,31 , 0., 310.,264)
 models["TChiNG"] = model(nbinsx=41,xmin=300,xmax=1325,nconfigs=41)
 models["T2bW_X05_dM-10to80"] = model(nbinsx=23,xmin=250,xmax=801,nbinsy=56,ymin=250,ymax=801,nconfigs=184)
 models["T2bW_X05_dM-10to80_2Lfilter"] = model(nbinsx=23,xmin=250,xmax=801,nbinsy=56,ymin=250,ymax=801,nconfigs=184)
+models["T6ttHZ_BR-H_0p6"] = model(nbinsx=29,xmin=300.,xmax=1025.,nbinsy=106,ymin=175.,ymax=725.,nconfigs=154)
 
 if __name__ == '__main__':
     rt.gROOT.SetBatch()
@@ -80,6 +81,8 @@ if __name__ == '__main__':
                   ("mlsp", "LSP mass", (m.nbinsy, m.ymin, m.ymax)),
                   ("gen_cfgid", "Config ID", (m.nconfigs, 0, m.nconfigs)),
                   ("abs(mc_id)-1000000#abs(mc_id)>1000000", "SUSY particles in event", (30, 0, 30)),
+                  ("abs(mc_id)-2000000#abs(mc_id)>2000000", "Other SUSY particles in event", (30, 0, 30)),
+                  ("abs(mc_id)#abs(mc_id)<1000000", "Non-SUSY particles in event", (30, 0, 30)),
                  ]
     histparams2D = [
                   ("mlsp:mprod##colztext", "Grid", (m.nbinsx,m.xmin,m.xmax,m.nbinsy,m.ymin,m.ymax)),
@@ -109,6 +112,12 @@ if __name__ == '__main__':
                 ("mc_mass#abs(mc_id)==23&&mlsp<90", "Z Mass (m_{NLSP} < 90 GeV)", (100, 0, 150)),
                 ("mc_mass#abs(mc_id)==23&&mlsp==25", "Z Mass (m_{NLSP} = 25 GeV)", (100, 0, 150)),
                 ("mc_mass#abs(mc_id)==23&&mlsp==50", "Z Mass (m_{NLSP} = 50 GeV)", (100, 0, 150)),
+                ]
+    if mname == 'T6ttHZ_BR-H_0p6':
+        histparams += [
+                ("mc_mass#abs(mc_id)==23", "Z Mass", (100, 0, 150)),
+                ("mc_mass#abs(mc_id)==25", "Higgs Mass", (50, 115, 135)),
+                ("ntruleps", "Lepton multiplicity", (7, 0, 7)),
                 ]
     if mname == 'T2bt':
         histparams += [
