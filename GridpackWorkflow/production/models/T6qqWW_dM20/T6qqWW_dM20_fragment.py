@@ -230,6 +230,8 @@ for point in mpoints:
             'ResonanceDecayFilter:allNuAsEquivalent = on', #on: treat all three neutrino flavours as equivalent
             #'ResonanceDecayFilter:mothers =', #list of mothers not specified -> count all particles in hard process+resonance decays (better to avoid specifying mothers when including leptons from the lhe in counting, since intermediate resonances are not gauranteed to appear in general
             'ResonanceDecayFilter:daughters = 11',
+           # '23:mMin = 0.1',
+            '24:mMin = 0.1',
         ), 
         parameterSets = cms.vstring('pythia8CommonSettings',
                                     'pythia8CUEP8M1Settings',
