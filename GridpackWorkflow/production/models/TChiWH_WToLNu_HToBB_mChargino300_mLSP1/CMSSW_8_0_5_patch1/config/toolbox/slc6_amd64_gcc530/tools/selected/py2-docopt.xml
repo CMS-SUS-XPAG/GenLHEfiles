@@ -1,0 +1,8 @@
+<tool name="py2-docopt" version="0.6.2-ikhhed">
+  <info url="https://github.com/docopt/docopt"/>
+  <client>
+    <environment name="PY2_DOCOPT" default="/cvmfs/cms.cern.ch/slc6_amd64_gcc530/external/py2-docopt/0.6.2-ikhhed"/>
+    <environment name="LIBDIR" default="$PY2_DOCOPT/lib"/>
+    <runtime name="PYTHONPATH" value="$PY2_DOCOPT/lib/python2.7/site-packages" type="path"/>
+  </client>
+</tool>
