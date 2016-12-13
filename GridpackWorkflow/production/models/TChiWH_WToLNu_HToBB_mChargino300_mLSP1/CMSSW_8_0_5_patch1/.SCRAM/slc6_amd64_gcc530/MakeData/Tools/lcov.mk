@@ -1,2 +1,0 @@
-ALL_TOOLS      += lcov
-

@@ -1,8 +1,0 @@
-<tool name="py2-schema" version="0.3.1-ikhhed">
-  <info url="https://pypi.python.org/pypi/schema"/>
-  <client>
-    <environment name="PY2_SCHEMA" default="/cvmfs/cms.cern.ch/slc6_amd64_gcc530/external/py2-schema/0.3.1-ikhhed"/>
-    <environment name="LIBDIR" default="$PY2_SCHEMA/lib"/>
-    <runtime name="PYTHONPATH" value="$PY2_SCHEMA/lib/python2.7/site-packages" type="path"/>
-  </client>
-</tool>

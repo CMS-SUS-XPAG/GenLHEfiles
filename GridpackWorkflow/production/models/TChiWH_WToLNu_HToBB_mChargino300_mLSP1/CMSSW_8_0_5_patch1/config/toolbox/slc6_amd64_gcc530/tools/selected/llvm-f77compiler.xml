@@ -1,6 +1,0 @@
-  <tool name="llvm-f77compiler" version="3.7.1-giojec" type="compiler">
-    <use name="gcc-f77compiler"/>    
-    <client>
-      <environment name="FC" default="/cvmfs/cms.cern.ch/slc6_amd64_gcc530/external/gcc/5.3.0/bin/gfortran"/>
-    </client>
-  </tool>

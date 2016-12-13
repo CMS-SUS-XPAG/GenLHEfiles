@@ -1,8 +1,0 @@
-<tool name="py2-six" version="1.9.0-ikhhed">
-  <info url="https://pypi.python.org/pypi/six"/>
-  <client>
-    <environment name="PY2_SIX" default="/cvmfs/cms.cern.ch/slc6_amd64_gcc530/external/py2-six/1.9.0-ikhhed"/>
-    <environment name="LIBDIR" default="$PY2_SIX/lib"/>
-    <runtime name="PYTHONPATH" value="$PY2_SIX/lib/python2.7/site-packages" type="path"/>
-  </client>
-</tool>
