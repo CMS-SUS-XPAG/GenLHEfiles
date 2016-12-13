@@ -92,7 +92,7 @@ model = "T8bbllnunu_XCha0p5"
 
 # weighted average of matching efficiencies for the full scan
 # must equal the number entered in McM generator params
-mcm_eff = 0.279
+mcm_eff = 0.277
 
 
 def matchParams(mass):
@@ -112,9 +112,9 @@ def xsec(mass):
 # Number of events: min(goalLumi*xsec, maxEvents) (always in thousands)
 goalLumi = 400
 minLumi = 20 
-minEvents, maxEvents = 20, 500
+minEvents, maxEvents = 50, 100
 bandStep = 50
-minDM, midDM, maxDM = 175, 300, 300
+minDM, midDM, maxDM = 100, 200, 200
 
 # Parameters that define the grid in the bulk and diagonal
 class gridBlock:
@@ -127,7 +127,7 @@ class gridBlock:
     
 scanBlocks = []
 scanBlocks.append(gridBlock(200, 400, 50, 50,50))
-scanBlocks.append(gridBlock(400,  1201, 50, 50, 25))
+scanBlocks.append(gridBlock(400,  1501, 50, 50, 25))
 ymin, ymed, ymax = 0, 150, 650
 hlines_below_grid = [25]
 hline_xmin = 400
@@ -135,9 +135,9 @@ hline_xmin = 400
 
 # Number of events for mass point, in thousands
 def events(mass):
-  xs = xsec(mass)
+  xs = xsec(mass,process)
   nev = min(goalLumi*xs, maxEvents*1000)
-  if nev < xs*minLumi: nev = xs*minLumi
+  # if nev < xs*minLumi: nev = xs*minLumi
   nev = max(nev/1000, minEvents)
   return math.ceil(nev) # Rounds up
 
