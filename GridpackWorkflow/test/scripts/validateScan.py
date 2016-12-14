@@ -55,6 +55,7 @@ models["TChiNG"] = model(nbinsx=41,xmin=300,xmax=1325,nconfigs=41)
 models["T2bW_X05_dM-10to80"] = model(nbinsx=23,xmin=250,xmax=801,nbinsy=56,ymin=250,ymax=801,nconfigs=184)
 models["T2bW_X05_dM-10to80_2Lfilter"] = model(nbinsx=23,xmin=250,xmax=801,nbinsy=56,ymin=250,ymax=801,nconfigs=184)
 models["T6ttHZ_BR-H_0p6"] = model(nbinsx=29,xmin=300.,xmax=1025.,nbinsy=106,ymin=175.,ymax=725.,nconfigs=154)
+models["T8bbllnunu_XCha0p5"] = model(nbinsx=53,xmin=200.,xmax=1501.,nbinsy=27,ymin=0.,ymax=651.,nconfigs=393)
 
 if __name__ == '__main__':
     rt.gROOT.SetBatch()
@@ -99,6 +100,11 @@ if __name__ == '__main__':
                   ("Sum$(abs(mc_id)==23||abs(mc_id)==24)", "Number of bosons in event", (5, 0, 5)),
                   ("ntruleps", "Lepton multiplicity", (5, 0, 5)),
                   ]
+
+    if mname == 'T8bbllnunu_XCha0p5':
+        histparams += [
+            ("Sum$(abs(mc_id)==11||abs(mc_id)==13||abs(mc_id)==15)", "Number of leptons in event (e,mu,taus)", (5, 0, 5)),
+            ]
 
     if mname == 'T5Wg':
         histparams += [
