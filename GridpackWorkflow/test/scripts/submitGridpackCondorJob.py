@@ -35,4 +35,4 @@ if __name__ == '__main__':
     infile = ','.join(infile_list)
 
     options = [proc, out_dir]
-    submitCondorJob(proc, executable, options, infile, label="gridpack", submit=(not args.noSub), proxy=args.proxy)
+    submitCondorJob(proc, executable, options, infile, label="gridpack", submit=(not args.noSub), proxy=args.proxy, isGridpackJob=True)
