@@ -17,7 +17,7 @@ process = "C1N2"
 nevt = 10
 
 diag_low, diag_high = 100, 25
-xmin, xmax, xstep = 100, 1200, 50
+xmin, xmax, xstep = 100, 1300, 50
 ymin, ymax, ystep_low, ystep_high = 0, 800, 50, 25 
 
 # -------------------------------
