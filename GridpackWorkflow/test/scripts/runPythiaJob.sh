@@ -12,6 +12,8 @@ SLHA=$2
 QCUT=$3
 OUTDIR=$4
 INFILES=$5
+NJETMAX=$6
+
 
 echo "Process:"
 echo $PROCESS
@@ -70,7 +72,7 @@ generator = cms.EDFilter(\"Pythia8HadronizerFilter\",
             'JetMatching:slowJetPower = 1',
             'JetMatching:qCut = $QCUT.', #this is the actual merging scale                   
             'JetMatching:nQmatch = 5', #4 corresponds to 4-flavour scheme (no matching of b-quarks), 5 for 5-flavour scheme           
-            'JetMatching:nJetMax = 2', #number of partons in born matrix element for highest multiplicity                             
+            'JetMatching:nJetMax = $NJETMAX', #number of partons in born matrix element for highest multiplicity                             
             'JetMatching:doShowerKt = off', #off for MLM matching, turn on for shower-kT matching 
         ),
         parameterSets = cms.vstring('pythia8CommonSettings',
