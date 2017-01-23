@@ -506,6 +506,7 @@ BLOCK AU Q= 1.000000e+00 #
 BLOCK AD Q= 1.000000e+00 # 
       3 3 -7.972741e+02 # A_b(Q) DRbar
       1 1 0.000000e+00 # A_d(Q) DRbar
+      2 2 0.000000e+00 # A_s(Q) DRbar
 """
 
 generator = cms.EDFilter("Pythia8GeneratorFilter",
@@ -517,32 +518,19 @@ generator = cms.EDFilter("Pythia8GeneratorFilter",
     RandomizedParameters = cms.VPSet(),
 )
 
-def matchParams(mass):
-  if mass < 199: return 76,0.52
-  elif mass<299: return 76,0.524
-  elif mass<399: return 76,0.492
-  elif mass<499: return 76,0.464
-  elif mass<599: return 76,0.451
-  elif mass<699: return 76,0.437
-  elif mass<799: return 76,0.425
-  elif mass<899: return 76,0.413
-  elif mass<999: return 76,0.402
-  elif mass<1099: return 76,0.40
-  else: return 76,0.4
 
 # weighted average of matching efficiencies for the full scan
 # must equal the number entered in McM generator params
-mcm_eff = 0.396
+mcm_eff = 1.
 
-model = "ttH"
-process = "ttH"
+model = "tHq_HtoTT"
+process = "tHq_HtoTT"
 
 
 # Number of events for mass point, in thousands
 nevt = 100
 
 xmin, xmax, xstep = 350, 550, 20
-xmin_high, xmax_high, xstep_high = 600, 900, 50
 
 
 # -------------------------------
@@ -553,15 +541,10 @@ for mx in range(xmin, xmax+1, xstep):
   my = mx
   mpoints.append([mx,my,nevt])
 
-for mx in range(xmin_high, xmax_high+1, xstep_high):
-  my = mx
-  mpoints.append([mx,my,nevt])
-
 
 for point in mpoints:
     mhig = point[0]
-    qcut, tru_eff = matchParams(mhig)
-    wgt = point[2]*(mcm_eff/tru_eff)
+    qcut = 76.
     
     slhatable = baseSLHATable.replace('%MHIG%','%e' % mhig)
 
@@ -569,17 +552,6 @@ for point in mpoints:
         pythia8CommonSettingsBlock,
         pythia8CUEP8M1SettingsBlock,
         JetMatchingParameters = cms.vstring(
-            'JetMatching:setMad = off',
-            'JetMatching:scheme = 1',
-            'JetMatching:merge = on',
-            'JetMatching:jetAlgorithm = 2',
-            'JetMatching:etaJetMax = 5.',
-            'JetMatching:coneRadius = 1.',
-            'JetMatching:slowJetPower = 1',
-            'JetMatching:qCut = %.0f' % qcut, #this is the actual merging scale
-            'JetMatching:nQmatch = 5', #4 corresponds to 4-flavour scheme (no matching of b-quarks), 5 for 5-flavour scheme
-            'JetMatching:nJetMax = 1', #number of partons in born matrix element for highest multiplicity
-            'JetMatching:doShowerKt = off', #off for MLM matching, turn on for shower-kT matching
             '6:m0 = 172.5',
             '25:onMode=off',
             '25:onIfAny=6 -6',
@@ -593,7 +565,7 @@ for point in mpoints:
 
     generator.RandomizedParameters.append(
         cms.PSet(
-            ConfigWeight = cms.double(wgt),
+            ConfigWeight = cms.double(1.), # matching efficiency = 1
             GridpackPath =  cms.string('/cvmfs/cms.cern.ch/phys_generator/gridpacks/slc6_amd64_gcc481/13TeV/madgraph/V5_2.3.3/sus_sms/%s/%s_mH-%s_tarball.tar.xz' % (process,process,mhig)),
             ConfigDescription = cms.string('%s_%i' % (model, mhig)),
             SLHATableForPythia8 = cms.string('%s' % slhatable),

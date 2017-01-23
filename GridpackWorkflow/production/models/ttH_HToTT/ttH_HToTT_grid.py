@@ -10,8 +10,8 @@ import os,sys,math
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from grid_utils import *
 
-model = "ttH"
-process = "ttH"
+model = "ttH_HToTT"
+process = "ttH_HToTT"
 
 # Number of events for mass point, in thousands
 nevt = 100
