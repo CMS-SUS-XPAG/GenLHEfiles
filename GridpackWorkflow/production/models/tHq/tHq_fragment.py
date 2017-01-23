@@ -551,12 +551,12 @@ for point in mpoints:
     basePythiaParameters = cms.PSet(
         pythia8CommonSettingsBlock,
         pythia8CUEP8M1SettingsBlock,
-        # JetMatchingParameters = cms.vstring(
-        #     '6:m0 = 172.5',
-        #     '25:onMode=off',
-        #     '25:onIfAny=6 -6',
-        #     'Check:abortIfVeto = on',
-        # ), 
+        JetMatchingParameters = cms.vstring(
+            '6:m0 = 172.5',
+            '25:onMode=off',
+            '25:onIfAny=6 -6',
+            'Check:abortIfVeto = on',
+        ), 
         parameterSets = cms.vstring('pythia8CommonSettings',
                                     'pythia8CUEP8M1Settings',
                                     'JetMatchingParameters'
