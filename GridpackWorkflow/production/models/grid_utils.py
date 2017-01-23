@@ -18,7 +18,7 @@ def xsec(mass, proc):
   elif proc=="StopStop" or proc=="SbotSbot" or proc=="SqSq":
     if mass < 300: return 319925471928717.38*math.pow(mass, -4.10396285974583*math.exp(mass*0.0001317804474363))
     else: return 6953884830281245*math.pow(mass, -4.7171617288678069*math.exp(mass*6.1752771466190749e-05))
-  elif proc=="C1N2" or proc=="C1C1" or proc=="N2N3" or proc=="StauStau":
+  elif proc=="C1N2" or proc=="C1C1" or proc=="N2N3" or proc=="StauStau" or proc=="ttH" or proc=="tHW" or proc=="tHq":
     return 1.
   else:
     sys.exit("grid_utils::xsec - Unknown process name %s" % proc)
@@ -83,6 +83,13 @@ def matchParams(mass, proc):
     elif mass < 525: return 76,0.47
     elif mass < 725: return 76,0.44
     else: return 76,0.42
+  elif proc=='ttH':
+    if mass < 450.: return 76,0.435
+    elif mass < 550.: return 76,0.409
+    elif mass < 650.: return 76,0.383
+    elif mass < 750.: return 76,0.369
+    elif mass < 850.: return 76,0.355
+    else: return 76,0.348
   else: sys.exit("grid_utils::matchParams - Unknown process name %s" % proc)
  
 def getAveEff(mpoints, proc):
@@ -102,6 +109,7 @@ def makePlot(mpoints, type, model, proc, xmin, xmax, ymin, ymax):
   if("SqSq" in proc): plt.xlabel('$m(\widetilde{q})$ [GeV]', fontsize=18)
   if("C1N2" in proc): plt.xlabel('$m(\chi^{\pm}_{1})$ [GeV]', fontsize=18)
   if("StauStau" in proc): plt.xlabel('$m(\widetilde{\\tau})$ [GeV]', fontsize=18)
+  if("ttH" in proc or "tHW" in proc or "tHq" in proc): plt.xlabel('$m_{H}$ [GeV]', fontsize=18)
 
   plt.ylabel('$m(\chi^0_1)$ [GeV]', fontsize=18)
   if model == 'T6ttWW':  plt.ylabel('$m(\chi^\pm_1)$ [GeV]', fontsize=18)
