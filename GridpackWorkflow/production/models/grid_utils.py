@@ -83,7 +83,7 @@ def matchParams(mass, proc):
     elif mass < 525: return 76,0.47
     elif mass < 725: return 76,0.44
     else: return 76,0.42
-  elif proc=='ttH_HtoTT':
+  elif proc=='ttH_HToTT':
     if mass < 450.: return 76,0.435
     elif mass < 550.: return 76,0.409
     elif mass < 650.: return 76,0.383
