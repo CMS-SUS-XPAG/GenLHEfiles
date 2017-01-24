@@ -535,7 +535,7 @@ def matchParams(mass):
 mcm_eff = 0.396
 
 model = "ttH_HToTT"
-process = "ttH_HToTT"
+process = "ttH"
 
 
 # Number of events for mass point, in thousands

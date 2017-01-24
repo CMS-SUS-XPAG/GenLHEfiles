@@ -524,7 +524,7 @@ generator = cms.EDFilter("Pythia8GeneratorFilter",
 mcm_eff = 1.
 
 model = "tHq_HtoTT"
-process = "tHq_HtoTT"
+process = "tHq"
 
 
 # Number of events for mass point, in thousands
