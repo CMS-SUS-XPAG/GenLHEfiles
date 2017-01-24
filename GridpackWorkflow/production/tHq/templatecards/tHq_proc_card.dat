@@ -1,0 +1,12 @@
+# import model sm-no_b_mass
+import model sm
+
+define p = p b b~
+define j = j b b~
+define tpm = t t~
+define wpm = w+ w-
+define qpm = u u~ d d~ c c~ s s~ b b~
+
+generate p p > tpm qpm h @0
+
+output tHq
