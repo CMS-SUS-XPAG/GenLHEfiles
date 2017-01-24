@@ -57,8 +57,9 @@ models["T2bW_X05_dM-10to80_2Lfilter"] = model(nbinsx=23,xmin=250,xmax=801,nbinsy
 models["T6ttHZ_BR-H_0p6"] = model(nbinsx=29,xmin=300.,xmax=1025.,nbinsy=106,ymin=175.,ymax=725.,nconfigs=154)
 models["T8bbllnunu_XCha0p5"] = model(nbinsx=53,xmin=200.,xmax=1501.,nbinsy=27,ymin=0.,ymax=651.,nconfigs=393)
 models["TChiSlepSnu_x0p5"] = model(nbinsx=25, xmin=100., xmax=1301., nbinsy=33, ymin=0., ymax=800.,nconfigs=336)
-models["ttH"] = model(nbinsx=56, xmin=350., xmax=901., nbinsy=56, ymin=350., ymax=901.,nconfigs=18)
-models["tHq"] = model(nbinsx=11, xmin=350., xmax=551., nbinsy=11, ymin=350., ymax=551.,nconfigs=11)
+models["ttH_HToTT"] = model(nbinsx=56, xmin=350., xmax=901., nbinsy=56, ymin=350., ymax=901.,nconfigs=18)
+models["tHq_HToTT"] = model(nbinsx=11, xmin=350., xmax=551., nbinsy=11, ymin=350., ymax=551.,nconfigs=11)
+models["tHW_HToTT"] = model(nbinsx=11, xmin=350., xmax=551., nbinsy=11, ymin=350., ymax=551.,nconfigs=11)
 
 if __name__ == '__main__':
     rt.gROOT.SetBatch()
