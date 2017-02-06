@@ -8,7 +8,7 @@ define s1 = ul ur dl dr sl sr cl cr
 define s1bar = ul~ ur~ dl~ dr~ sl~ sr~ cl~ cr~
 
 generate p p > g > s1 s1bar a @1
-add process p p > s1 s1bar a j @2
-add process p p > s1 s1bar a j j @3
+add process p p > g > s1 s1bar a j @2
+add process p p > g > s1 s1bar a j j @3
 
 output SMS-SqSqPlusGamma_mSq-%MPROD% -nojpeg
