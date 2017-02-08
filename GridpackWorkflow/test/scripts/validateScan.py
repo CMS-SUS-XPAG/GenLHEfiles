@@ -60,6 +60,7 @@ models["TChiSlepSnu_x0p5"] = model(nbinsx=25, xmin=100., xmax=1301., nbinsy=33, 
 models["ttH_HToTT"] = model(nbinsx=56, xmin=350., xmax=901., nbinsy=56, ymin=350., ymax=901.,nconfigs=18)
 models["tHq_HToTT"] = model(nbinsx=11, xmin=350., xmax=551., nbinsy=11, ymin=350., ymax=551.,nconfigs=11)
 models["tHW_HToTT"] = model(nbinsx=11, xmin=350., xmax=551., nbinsy=11, ymin=350., ymax=551.,nconfigs=11)
+models["T2qqgamma"] = model(nbinsx=7, xmin=200., xmax=501., nbinsy=71, ymin=150., ymax=501.)
 
 if __name__ == '__main__':
     rt.gROOT.SetBatch()
