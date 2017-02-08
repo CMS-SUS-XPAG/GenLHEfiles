@@ -18,7 +18,7 @@ def xsec(mass, proc):
   elif proc=="StopStop" or proc=="SbotSbot" or proc=="SqSq":
     if mass < 300: return 319925471928717.38*math.pow(mass, -4.10396285974583*math.exp(mass*0.0001317804474363))
     else: return 6953884830281245*math.pow(mass, -4.7171617288678069*math.exp(mass*6.1752771466190749e-05))
-  elif proc=="C1N2" or proc=="C1C1" or proc=="N2N3" or proc=="StauStau" or proc=="ttH_HtoTT" or proc=="tHW_HToTT" or proc=="tHq_HToTT":
+  elif proc=="C1N2" or proc=="C1C1" or proc=="N2N3" or proc=="StauStau" or proc=="ttH_HtoTT" or proc=="tHW_HToTT" or proc=="tHq_HToTT" or proc=="SqSqPlusGamma":
     return 1.
   else:
     sys.exit("grid_utils::xsec - Unknown process name %s" % proc)
@@ -46,6 +46,16 @@ def matchParams(mass, proc):
     elif mass<399: return 62., 0.302
     elif mass<499: return 64., 0.275
     elif mass<599: return 64., 0.254
+    elif mass<1299: return 68., 0.237
+    elif mass<1451: return 70., 0.243
+    elif mass<1801: return 74., 0.246
+    else: sys.exit("grid_utils::matchParams - Mass out of range %i" % mass)
+  elif proc=="SqSqPlusGamma":
+    if mass>99 and mass<299: return 62., 0.410 
+    elif mass < 399: return 62., 0.413
+    elif mass < 499: return 62., 0.414
+    elif mass < 599: return 64., 0.416
+    # the following are copied from SqSq
     elif mass<1299: return 68., 0.237
     elif mass<1451: return 70., 0.243
     elif mass<1801: return 74., 0.246
