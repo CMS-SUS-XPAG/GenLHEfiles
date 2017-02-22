@@ -50,6 +50,6 @@ if len(qcutList)>0: qcutRange=qcutList
 for qcut in qcutRange:
     outdir = out_dir+'/'+proc
     outfile = '_'.join(['GEN',proc,str(qcut)+'.root'])
-    options = [proc, os.path.basename(slha), str(qcut), outdir,infile,nJetMax]
+    options = [proc, os.path.basename(slha), str(qcut), outdir,infile,str(nJetMax)]
     submitCondorJob(proc, executable, options, slha, label=str(qcut), #outputToTransfer=outfile,
             submit=(not args.noSub), proxy=args.proxy)
