@@ -18,7 +18,7 @@ def xsec(mass, proc):
   elif proc=="StopStop" or proc=="SbotSbot" or proc=="SqSq":
     if mass < 300: return 319925471928717.38*math.pow(mass, -4.10396285974583*math.exp(mass*0.0001317804474363))
     else: return 6953884830281245*math.pow(mass, -4.7171617288678069*math.exp(mass*6.1752771466190749e-05))
-  elif proc=="C1N2" or proc=="C1C1" or proc=="N2N3" or proc=="StauStau" or proc=="ttH_HtoTT" or proc=="tHW_HToTT" or proc=="tHq_HToTT" or proc=="SqSqPlusGamma":
+  elif proc=="C1N2" or proc=="C1C1" or proc=="N2N3" or proc=="StauStau" or proc=="ttH_HtoTT" or proc=="tHW_HToTT" or proc=="tHq_HToTT" or proc=="SqSqPlusGamma" or "Higgsino" in proc:
     return 1.
   else:
     sys.exit("grid_utils::xsec - Unknown process name %s" % proc)
@@ -100,6 +100,16 @@ def matchParams(mass, proc):
     elif mass < 750.: return 76,0.369
     elif mass < 850.: return 76,0.355
     else: return 76,0.348
+  elif proc=='Higgsino-N2C1':
+    if mass < 101.: return 76,0.644
+    elif mass < 121.: return 76,0.622
+    elif mass < 141.: return 76,0.600
+    elif mass < 161.: return 76,0.584
+    elif mass < 181.: return 76,0.570
+    elif mass < 201.: return 76,0.555
+    elif mass < 221.: return 76,0.543
+    elif mass < 241.: return 76,0.533
+    else: return 76,0.5 # it shouldn't be used anyway
   else: sys.exit("grid_utils::matchParams - Unknown process name %s" % proc)
  
 def getAveEff(mpoints, proc):
@@ -117,7 +127,7 @@ def makePlot(mpoints, type, model, proc, xmin, xmax, ymin, ymax):
   if("StopStop" in proc): plt.xlabel('$m(\widetilde{t})$ [GeV]', fontsize=18)
   if("SbotSbot" in proc): plt.xlabel('$m(\widetilde{b})$ [GeV]', fontsize=18)
   if("SqSq" in proc): plt.xlabel('$m(\widetilde{q})$ [GeV]', fontsize=18)
-  if("C1N2" in proc): plt.xlabel('$m(\chi^{\pm}_{1})$ [GeV]', fontsize=18)
+  if("C1N2" in proc or "N2C1" in proc): plt.xlabel('$m(\chi^{\pm}_{1})$ [GeV]', fontsize=18)
   if("StauStau" in proc): plt.xlabel('$m(\widetilde{\\tau})$ [GeV]', fontsize=18)
   if("ttH" in proc or "tHW" in proc or "tHq" in proc): plt.xlabel('$m_{H}$ [GeV]', fontsize=18)
 
