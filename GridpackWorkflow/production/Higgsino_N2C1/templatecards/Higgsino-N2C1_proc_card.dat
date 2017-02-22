@@ -12,6 +12,6 @@ generate p p >  n2 chi1 @1
 add process p p > n2 chi1 j @2
 add process p p > n2 chi1 j j @3
 
-output Higgsino-N2C1_mN2-%MN2%_mC1-%MN1% -nojpeg
+output Higgsino-N2C1_mN2-%MN2%_mC1-%MC1% -nojpeg
 
 
