@@ -62,7 +62,8 @@ models["ttH_HToTT"] = model(nbinsx=56, xmin=350., xmax=901., nbinsy=56, ymin=350
 models["tHq_HToTT"] = model(nbinsx=11, xmin=350., xmax=551., nbinsy=11, ymin=350., ymax=551.,nconfigs=11)
 models["tHW_HToTT"] = model(nbinsx=11, xmin=350., xmax=551., nbinsy=11, ymin=350., ymax=551.,nconfigs=11)
 models["T2qqgamma"] = model(nbinsx=7, xmin=200., xmax=501., nbinsy=71, ymin=150., ymax=501.)
-models["Higgsino-N2C1"] = model(nbinsx=8, xmin=100., xmax=241., nbinsy=965, ymin=0., ymax=241.,nconfigs=48,scanTup=(("N2",1000023),("C1",1000024)))
+models["SMS-N2C1-higgsino"] = model(nbinsx=8, xmin=100., xmax=241., nbinsy=965, ymin=0., ymax=241.,nconfigs=48,scanTup=(("N2",1000023),("C1",1000024)))
+models["SMS-N2N1-higgsino"] = model(nbinsx=8, xmin=100., xmax=241., nbinsy=965, ymin=0., ymax=241.,nconfigs=48,scanTup=(("N2",1000023),("N1",1000022)))
 
 if __name__ == '__main__':
     rt.gROOT.SetBatch()
