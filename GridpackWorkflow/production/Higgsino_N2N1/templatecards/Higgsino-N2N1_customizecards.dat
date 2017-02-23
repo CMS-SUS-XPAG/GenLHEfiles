@@ -13,7 +13,7 @@ set param_card mass 2000006 100000.0
 set param_card mass 1000021 100000.0
 set param_card mass 1000022 %MN1%
 set param_card mass 1000023 %MN2%
-set param_card mass 1000024 100000.0
+set param_card mass 1000024 %MC1%
 set param_card mass 1000025 100000.0
 set param_card mass 1000035 100000.0
 set param_card mass 1000037 100000.0
