@@ -10,7 +10,7 @@ import os,sys,math
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from grid_utils import *
 
-model = "Higgsino-N2C1"
+model = "SMS-N2C1-higgsino"
 process = "Higgsino-N2C1"
 
 # Number of events for mass point, in thousands

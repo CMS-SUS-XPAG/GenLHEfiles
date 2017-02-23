@@ -97,7 +97,7 @@ def matchParams(mass):
 # must equal the number entered in McM generator params
 mcm_eff = 0.581
 
-model = "Higgsino-N2C1"
+model = "SMS-N2C1-higgsino"
 process = "Higgsino-N2C1"
 
 # Number of events for mass point, in thousands
