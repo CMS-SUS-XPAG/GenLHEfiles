@@ -12,6 +12,7 @@ import optparse
 def parse_args():
     parser = optparse.OptionParser()
     parser.add_option('-m','--model', default=None, help="Model name as specified in the fragment.")
+    parser.add_option('-n','--nfiles', type=int, default=100, help="Number of files in the validation.")
 
     options,args = parser.parse_args()
     return options
@@ -29,11 +30,12 @@ def printPlot(plot):
     c.cd()
     plot.Draw(opt)
     c.SaveAs(name+".pdf")
+    c.SaveAs(name+".root")
     
 
-def loop(model,m):        
+def loop(model,m,nFiles):        
     
-    fileList = [fileBase.format(model,i) for i in range(1,101)]
+    fileList = [fileBase.format(model,i) for i in range(1,nFiles+1)]
     if len(fileList) == 0: raise ValueError("File list is empty!")
 
     plotScan = True
@@ -53,10 +55,14 @@ def loop(model,m):
     # Histograms lumi-block
     histos["lumi_cfgId"]   = r.TH1D("h_lumi_cfgId","Config ID",m.nconfigs,0.,float(m.nconfigs)+0.5)
 
+    nEvts = 0
     # Loop over files
     for file in fileList:
         print '  Running on file {0}'.format(file)
 
+        if not os.path.exists(file): 
+            print "[WARNING] File {0} doesn't exist. Skipping".format(file)
+            continue
         lumis = Lumis(file)
         events = Events(file)
         handle = Handle ('std::vector<reco::GenParticle>')
@@ -75,6 +81,7 @@ def loop(model,m):
 
         # Loop over events
         for iev,ev in enumerate(events):
+            nEvts += 1
             ev.getByLabel(label,handle)
             genps = handle.product()
 
@@ -115,6 +122,8 @@ def loop(model,m):
 
     # Print plots
     for name,histo in histos.iteritems(): printPlot(histo)
+
+    return len(fileList),nEvts
     
 
 if __name__ == "__main__": 
@@ -128,4 +137,9 @@ if __name__ == "__main__":
 
     modelClass = models[opt.model]
     
-    loop(opt.model,modelClass)
+    nFilesRun,nEvtsStored = loop(opt.model,modelClass,opt.nfiles)
+
+    print "*************"
+    print "Run on {0} files ({1} requested)".format(nFilesRun,opt.nfiles)
+    print "{0} events in the trees".format(nEvtsStored)
+    print "*************"
