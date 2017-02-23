@@ -110,6 +110,10 @@ def matchParams(mass, proc):
     elif mass < 221.: return 76,0.543
     elif mass < 241.: return 76,0.533
     else: return 76,0.5 # it shouldn't be used anyway
+  elif proc=='Higgsino-N2N1':
+    if mass < 221.: return 76,0.513
+    elif mass < 241.: return 76,0.474
+    else: return 76,0.5 # it shouldn't be used anyway
   else: sys.exit("grid_utils::matchParams - Unknown process name %s" % proc)
  
 def getAveEff(mpoints, proc):
