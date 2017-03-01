@@ -16,13 +16,17 @@ generator = cms.EDFilter("Pythia8GeneratorFilter",
 )
 
 def matchParams(mass):
-    if mass < 221.: return 76,0.513
-    elif mass < 241.: return 76,0.474
-    else: return 76,0.5 # it shouldn't be used anyway
+    if mass < 110.: return 76,0.645
+    elif mass < 130.: return 76,0.617
+    elif mass < 150.: return 76,0.591
+    elif mass < 170.: return 76,0.581
+    elif mass < 190.: return 76,0.562
+    elif mass < 210.: return 76,0.543
+    else: return 76,0.529
 
 # weighted average of matching efficiencies for the full scan
 # must equal the number entered in McM generator params
-mcm_eff = 0.508
+mcm_eff = 0.575
 
 model = "MSSM-higgsino"
 process = "Higgsino_Full"
@@ -51,7 +55,7 @@ for point in mpoints:
     wgt = point[2]*(mcm_eff/tru_eff)
    
     with open('/cvmfs/cms.cern.ch/phys_generator/gridpacks/slc6_amd64_gcc481/13TeV/madgraph/V5_2.3.3/sus_sms/slha/Higgsino_Full/susyhit_slha_%d_%d.out' % (mu, m1)) as f:
-        slhaTable = f.read()
+        slhatable = f.read()
 
     basePythiaParameters = cms.PSet(
         pythia8CommonSettingsBlock,
