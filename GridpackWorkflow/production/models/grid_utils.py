@@ -103,6 +103,14 @@ def matchParams(mass, proc):
     elif mass < 750.: return 76,0.369
     elif mass < 850.: return 76,0.355
     else: return 76,0.348
+  elif proc=='Higgsino_Full':
+    if mass < 110.: return 76,0.645
+    elif mass < 130.: return 76,0.617
+    elif mass < 150.: return 76,0.591
+    elif mass < 170.: return 76,0.581
+    elif mass < 190.: return 76,0.562
+    elif mass < 210.: return 76,0.543
+    else: return 76,0.529
   elif proc=='Higgsino-N2C1':
     if mass < 101.: return 76,0.644
     elif mass < 121.: return 76,0.622
