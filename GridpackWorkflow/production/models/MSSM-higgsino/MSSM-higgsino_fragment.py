@@ -53,7 +53,8 @@ for point in mpoints:
 
     qcut, tru_eff = matchParams(mu)
     wgt = point[2]*(mcm_eff/tru_eff)
-   
+  
+    slhaTable = '' 
     with open('/cvmfs/cms.cern.ch/phys_generator/gridpacks/slc6_amd64_gcc481/13TeV/madgraph/V5_2.3.3/sus_sms/slha/Higgsino_Full/susyhit_slha_%d_%d.out' % (mu, m1)) as f:
         slhatable = f.read()
 
