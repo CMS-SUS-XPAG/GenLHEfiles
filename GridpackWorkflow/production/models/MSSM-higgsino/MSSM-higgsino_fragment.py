@@ -32,7 +32,7 @@ model = "MSSM-higgsino"
 process = "Higgsino_Full"
 
 # Number of events for mass point, in thousands
-nevt = 100
+nevt = 500
 
 MUs = [100., 120., 140., 160., 180., 200., 220., 240. ]
 M1s  = [300., 400., 500., 600., 800., 1000., 1200. ]
@@ -82,7 +82,7 @@ for point in mpoints:
             'ResonanceDecayFilter:eMuTauAsEquivalent = on', #on: treat electrons, muons , and taus as equivalent
             'ResonanceDecayFilter:allNuAsEquivalent = on', #on: treat all three neutrino flavours as equivalent
             #'ResonanceDecayFilter:mothers =', #list of mothers not specified -> count all particles in hard process+resonance decays (better to avoid specifying mothers when including leptons from the lhe in counting, since intermediate resonances are not gauranteed to appear in general
-            'ResonanceDecayFilter:daughters = 11,11',
+            'ResonanceDecayFilter:daughters = 11', #filtering on 2 leptons does not work since some initial final states cannot yield 2 leptons, e.g. c1n1
             'Check:abortIfVeto = on',
         ), 
         parameterSets = cms.vstring('pythia8CommonSettings',
