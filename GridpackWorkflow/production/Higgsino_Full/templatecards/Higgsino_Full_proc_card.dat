@@ -15,8 +15,8 @@ define excl = firstgen secondgen thirdgen go sleptons higgses
 #add process p p > go go j $ excl @1
 #add process p p > go go j j $ excl @2
 
-generate p p > ewkinos ewkinos / excl @0
-add process p p > ewkinos ewkinos j / excl @1
-add process p p > ewkinos ewkinos j j / excl @2
+generate p p > ewkinos ewkinos / excl @1
+add process p p > ewkinos ewkinos j / excl @2
+add process p p > ewkinos ewkinos j j / excl @3
 
 output Higgsino_Full_MU-%MU%_M1-%M1% -nojpeg

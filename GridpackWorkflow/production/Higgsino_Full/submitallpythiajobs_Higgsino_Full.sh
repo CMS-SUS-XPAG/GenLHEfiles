@@ -14,6 +14,6 @@ for MU in 100 120 140 160 180 200 220 240; do
         MUSTR=${MU/./p}
         M1STR=${M1/./p}
         MODEL=${PROC}${PARTMU}${MUSTR}${PARTM1}${M1STR}
-        python ${SCRIPT} ${MODEL} --in-dir /hadoop/cms/store/user/${USER}/mcProduction/LHE/${MODEL} --slha slha/susyhit_slha_${MUSTR}_${M1STR}.out --qcut-range 76 76 --proxy ${vomsdir} --nJetMax 2
+        python ${SCRIPT} ${MODEL} --in-dir /hadoop/cms/store/user/${USER}/mcProduction/LHE/${MODEL} --slha /home/users/lshchuts/GenLHEfiles/GridpackWorkflow/production/Higgsino_Full/slha/susyhit_slha_${MUSTR}_${M1STR}.out --qcut-range 76 76 --proxy ${vomsdir} --nJetMax 2
     done
 done

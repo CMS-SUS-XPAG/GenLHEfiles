@@ -16,6 +16,6 @@ for MU in 100 120 140 160 180 200 220 240; do
 	cp ${TEMP}/${PROC}_run_card.dat "${JOBS}/${MODEL}/${MODEL}_run_card.dat"
 	sed "s/%MU%/${MUSTR}/g;s/%M1%/${M1STR}/g" ${TEMP}/${PROC}_proc_card.dat > "${JOBS}/${MODEL}/${MODEL}_proc_card.dat"
 	cp slha/susyhit_slha_${MUSTR}_${M1STR}.out "${JOBS}/${MODEL}/${MODEL}_param_card.dat"
-	cp slha/susyhit_slha_${MUSTR}_${M1STR}.out ${JOBS}/${MODEL}/${MODEL}.slha
+#	cp slha/susyhit_slha_${MUSTR}_${M1STR}.out ${JOBS}/${MODEL}/${MODEL}.slha
     done
 done
