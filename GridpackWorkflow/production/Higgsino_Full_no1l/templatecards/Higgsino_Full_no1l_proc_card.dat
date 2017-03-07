@@ -1,0 +1,26 @@
+import model mssm
+
+define p = p b b~
+define j = j b b~
+
+define ewkinos_no_n1 = x1+ x2+ x1- x2- n2 n3 n4
+define ewkinos_no_n1x1 = x2+ x2- n2 n3 n4
+define firstgen = ul ul~ ur ur~ dl dl~ dr dr~
+define secondgen = sl sl~ sr sr~ cl cl~ cr cr~
+define thirdgen = t1 t1~ t2 t2~ b1 b1~ b2 b2~
+define sleptons = sve sve~ svm svm~ svt svt~ el- el+ er- er+ mul- mul+ mur- mur+ ta1- ta1+ ta2- ta2+
+define higgses h1 h2 h3 h- h+
+define excl = firstgen secondgen thirdgen go sleptons higgses
+
+#generate p p > go go $ excl @0
+#add process p p > go go j $ excl @1
+#add process p p > go go j j $ excl @2
+
+generate p p > ewkinos_no_n1 ewkinos_no_n1 / excl @1
+add process p p > ewkinos_no_n1 ewkinos_no_n1 j / excl @2
+add process p p > ewkinos_no_n1 ewkinos_no_n1 j j / excl @3
+add process p p > ewkinos_no_n1x1 n1 / excl @4
+add process p p > ewkinos_no_n1x1 n1 j / excl @5
+add process p p > ewkinos_no_n1x1 n1 j j / excl @6
+
+output Higgsino_Full_no1l_MU-%MU%_M1-%M1% -nojpeg

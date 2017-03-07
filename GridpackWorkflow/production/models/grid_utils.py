@@ -33,6 +33,7 @@ def matchParams(mass, proc):
     elif mass<1799: return 150., 0.267
     elif mass<2099: return 156., 0.290
     elif mass<2301: return 160., 0.315
+    elif mass<2551: return 164., 0.333
     else: sys.exit("grid_utils::matchParams - Mass out of range %i" % mass)
   elif proc=="StauStau":
     if mass < 199: return 76,0.608
@@ -49,6 +50,8 @@ def matchParams(mass, proc):
     elif mass<1299: return 68., 0.237
     elif mass<1451: return 70., 0.243
     elif mass<1801: return 74., 0.246
+    elif mass<2000: return 76., 0.267
+    elif mass<2051: return 78., 0.273
     else: sys.exit("grid_utils::matchParams - Mass out of range %i" % mass)
   elif proc=="SqSqPlusGamma":
     if mass>99 and mass<299: return 62., 0.410 
@@ -100,6 +103,14 @@ def matchParams(mass, proc):
     elif mass < 750.: return 76,0.369
     elif mass < 850.: return 76,0.355
     else: return 76,0.348
+  elif proc=='Higgsino_Full':
+    if mass < 110.: return 76,0.645
+    elif mass < 130.: return 76,0.617
+    elif mass < 150.: return 76,0.591
+    elif mass < 170.: return 76,0.581
+    elif mass < 190.: return 76,0.562
+    elif mass < 210.: return 76,0.543
+    else: return 76,0.529
   elif proc=='Higgsino-N2C1':
     if mass < 101.: return 76,0.644
     elif mass < 121.: return 76,0.622

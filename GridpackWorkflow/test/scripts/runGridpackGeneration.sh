@@ -27,6 +27,7 @@ mkdir -p cards/${PROCESS}
 cp ${WORKDIR}/${PROCESS}_run_card.dat cards/${PROCESS}
 cp ${WORKDIR}/${PROCESS}_proc_card.dat cards/${PROCESS}
 cp ${WORKDIR}/${PROCESS}_customizecards.dat cards/${PROCESS}
+cp ${WORKDIR}/${PROCESS}_param_card.dat cards/${PROCESS}
 
 #run script
 echo "Running gridpack generation"
