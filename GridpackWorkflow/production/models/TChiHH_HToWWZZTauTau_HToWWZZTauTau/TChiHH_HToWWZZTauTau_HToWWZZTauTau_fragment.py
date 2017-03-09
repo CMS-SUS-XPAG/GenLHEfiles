@@ -148,6 +148,8 @@ for point in mpoints:
             'JetMatching:nJetMax = 2', #number of partons in born matrix element for highest multiplicity
             'JetMatching:doShowerKt = off', #off for MLM matching, turn on for shower-kT matching
             '6:m0 = 172.5',
+            '23:mMin = 0.1',
+            '24:mMin = 0.1',
             '25:onMode = off',
             '25:onIfAny = 24 23 15',
             'Check:abortIfVeto = on',
@@ -161,7 +163,7 @@ for point in mpoints:
     generator.RandomizedParameters.append(
         cms.PSet(
             ConfigWeight = cms.double(wgt),
-            GridpackPath =  cms.string('/cvmfs/cms.cern.ch/phys_generator/gridpacks/slc6_amd64_gcc481/13TeV/madgraph/V5_2.3.3/sus_sms/SMS-%s/SMS-%s_mN-%i_tarball.tar.xz' % (process,process,mchi)),
+            GridpackPath =  cms.string('/cvmfs/cms.cern.ch/phys_generator/gridpacks/slc6_amd64_gcc481/13TeV/madgraph/V5_2.3.3/sus_sms/SMS-%s/v2/SMS-%s_mN-%i_tarball.tar.xz' % (process,process,mchi)),
             ConfigDescription = cms.string('%s_%i' % (model, mchi)),
             SLHATableForPythia8 = cms.string('%s' % slhatable),
             PythiaParameters = basePythiaParameters,

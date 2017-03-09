@@ -157,7 +157,7 @@ for point in mpoints:
     generator.RandomizedParameters.append(
         cms.PSet(
             ConfigWeight = cms.double(wgt),
-            GridpackPath =  cms.string('/cvmfs/cms.cern.ch/phys_generator/gridpacks/slc6_amd64_gcc481/13TeV/madgraph/V5_2.3.3/sus_sms/%s/%s_mN2-%s_mN1-%s_tarball.tar.xz' % (process,process,mn2Str,mn1Str)),
+            GridpackPath =  cms.string('/cvmfs/cms.cern.ch/phys_generator/gridpacks/slc6_amd64_gcc481/13TeV/madgraph/V5_2.3.3/sus_sms/%s/v2/%s_mN2-%s_mN1-%s_tarball.tar.xz' % (process,process,mn2Str,mn1Str)),
             ConfigDescription = cms.string('%s_%s_%s' % (model, mn2Str,mn1Str)),
             SLHATableForPythia8 = cms.string('%s' % slhatable),
             PythiaParameters = basePythiaParameters,
