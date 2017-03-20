@@ -4,6 +4,7 @@ from Configuration.Generator.Pythia8CommonSettings_cfi import *
 from Configuration.Generator.Pythia8CUEP8M1Settings_cfi import *
 
 import math
+
 baseSLHATable="""
 BLOCK MASS  # Mass Spectrum
 # PDG code           mass       particle
@@ -28,14 +29,13 @@ BLOCK MASS  # Mass Spectrum
    1000015     1.00000000E+05   # ~tau_1
    2000015     1.00000000E+05   # ~tau_2
    1000016     1.00000000E+05   # ~nu_tauL
-   1000021     1.00000000E+05   # ~g
-   1000022     1.00000000E+00   # ~chi_10
-   1000023     %MCHI%           # ~chi_20
-   1000025     %MCHI%           # ~chi_30
+   1000021     %MGLU%           # ~g
+   1000022     %MLSP%           # ~chi_10
+   1000023     1.00000000E+05   # ~chi_20
+   1000025     1.00000000E+05   # ~chi_30
    1000035     1.00000000E+05   # ~chi_40
-   1000024     1.00000000E+05   # ~chi_1+
+   1000024     %MCHI%           # ~chi_1+
    1000037     1.00000000E+05   # ~chi_2+
-   1000039     1.00000000E+05   # ~gravitino
 
 # DECAY TABLE
 #         PDG            Width
@@ -51,6 +51,7 @@ DECAY   1000005     0.00000000E+00   # sbottom1 decays
 DECAY   2000005     0.00000000E+00   # sbottom2 decays
 DECAY   1000006     0.00000000E+00   # stop1 decays
 DECAY   2000006     0.00000000E+00   # stop2 decays
+
 DECAY   1000011     0.00000000E+00   # selectron_L decays
 DECAY   2000011     0.00000000E+00   # selectron_R decays
 DECAY   1000012     0.00000000E+00   # snu_elL decays
@@ -60,19 +61,21 @@ DECAY   1000014     0.00000000E+00   # snu_muL decays
 DECAY   1000015     0.00000000E+00   # stau_1 decays
 DECAY   2000015     0.00000000E+00   # stau_2 decays
 DECAY   1000016     0.00000000E+00   # snu_tauL decays
-DECAY   1000021     0.00000000E+00   # gluino decays
+DECAY   1000021     1.00000000E+00   # gluino decays
+    0.00000000E+00    3    1000024     -1    1 # dummy allowed decay, in order to turn on off-shell decays
+    0.25000000E+00    3    1000024     -6    5
+    0.25000000E+00    3    -1000024    6    -5
+    0.25000000E+00    3    1000022    6    -6
+    0.25000000E+00    3    1000022    5    -5
 DECAY   1000022     0.00000000E+00   # neutralino1 decays
-DECAY   1000023     0.10000000E+00   # neutralino2 decays
-    0.00000000E+00   3    1000022   22   22  #dummy decay
-    1.00000000E+00   2    1000022   23
-DECAY   1000024     0.00000000E+00   # chargino1+ decays
-DECAY   1000025     0.10000000E+00   # neutralino3 decays
-    0.00000000E+00   3    1000022   22   22  #dummy decay
-    1.00000000E+00   2    1000022   23
+DECAY   1000023     0.00000000E+00   # neutralino2 decays
+DECAY   1000024     1.00000000E+00   # chargino1+ decays
+    0.00000000E+00    3    1000022     -1    2 # dummy allowed decay, in order to turn on off-shell decays
+    1.00000000E+00    2    1000022    24
+DECAY   1000025     0.00000000E+00   # neutralino3 decays
 DECAY   1000035     0.00000000E+00   # neutralino4 decays
 DECAY   1000037     0.00000000E+00   # chargino2+ decays
 """
-
 
 generator = cms.EDFilter("Pythia8GeneratorFilter",
     maxEventsToPrint = cms.untracked.int32(1),
@@ -83,51 +86,110 @@ generator = cms.EDFilter("Pythia8GeneratorFilter",
     RandomizedParameters = cms.VPSet(),
 )
 
-
-def matchParams(mass):
-  if mass < 199: return 76,0.52
-  elif mass<299: return 76,0.524
-  elif mass<399: return 76,0.492
-  elif mass<499: return 76,0.464
-  elif mass<599: return 76,0.451
-  elif mass<699: return 76,0.437
-  elif mass<799: return 76,0.425
-  elif mass<899: return 76,0.413
-  elif mass<999: return 76,0.402
-  elif mass<1099: return 76,0.40
-  else: return 76,0.4
-
-
+model = "T1ttbb"
+process = "GlGl"
 # weighted average of matching efficiencies for the full scan
 # must equal the number entered in McM generator params
-mcm_eff = 0.457
+mcm_eff = 0.268
 
-model = "TChiZZ_ZToLL_ZToLL"
-process = "N2N3"
+
+# Parameters that define the grid in the bulk and diagonal
+class gridBlock:
+  def __init__(self, xmin, xmax, xstep, ystep, maxDM, dstep, minEvents):
+    self.xmin = xmin
+    self.xmax = xmax
+    self.xstep = xstep
+    self.ystep = ystep
+    self.maxDM = maxDM
+    self.dstep = dstep
+    self.minEvents = minEvents
+
+# Fit to gluino cross-section in fb
+def xsec(mass):
+    return 4.563e+17*math.pow(mass, -4.761*math.exp(5.848e-05*mass))
+
+def matchParams(mass):
+    if   mass<799: return 118., 0.235
+    elif mass<999: return 128., 0.235
+    elif mass<1199: return 140., 0.235
+    elif mass<1399: return 143., 0.245
+    elif mass<1499: return 147., 0.255
+    elif mass<1799: return 150., 0.267
+    elif mass<2099: return 156., 0.290
+    else: return 160., 0.315
+
+# Number of events: min(goalLumi*xsec, maxEvents) (always in thousands)
+goalLumi, minLumi, maxEvents = 800, 20, 150
+
+scanBlocks = []
+scanBlocks.append(gridBlock(800,  1200, 100, 5, 1000, 100, 10))
+scanBlocks.append(gridBlock(1200, 2301, 50, 5, 1000, 50, 40))
+minDM = 225
+ymin, ymed, ymax = 0, 25, 25
 
 # Number of events for mass point, in thousands
-nevt = 10
-
-xmin, xmax, xstep = 100, 1000, 25
-ymin, ymax, ystep = 100, 1000, 25
-
+def events(mass):
+  xs = xsec(mass)
+  nev = min(goalLumi*xs, maxEvents*1000)
+  if nev < xs*minLumi: nev = xs*minLumi
+  nev = max(nev/1000, minEvents)
+  return math.ceil(nev) # Rounds up
 
 # -------------------------------
 #    Constructing grid
 
+cols = []
+Nevents = []
+xmin, xmax = 9999, 0
+for block in scanBlocks:
+  Nbulk, Ndiag = 0, 0
+  minEvents = block.minEvents
+  for mx in range(block.xmin, block.xmax, block.dstep):
+    xmin = min(xmin, block.xmin)
+    xmax = max(xmax, block.xmax)
+    col = []
+    my = 0
+    begDiag = max(ymed, mx-block.maxDM)
+    # Adding bulk points
+    if (mx-block.xmin)%block.xstep == 0 :
+      # adding extra horizontal lines
+      for my in range(ymin, begDiag, block.ystep):
+        if my > ymax: continue
+        nev = events(mx)
+        col.append([mx,my, nev])
+        Nbulk += nev
+    # Adding diagonal points
+    yrange = []
+    yrange.extend(range(begDiag, mx-minDM+1, block.dstep))
+    for my in yrange:
+      if my > ymax: continue
+      nev = events(mx)
+      col.append([mx,my, nev])
+      Ndiag += nev
+    if(my !=  mx-minDM and mx-minDM <= ymax):
+      my = mx-minDM
+      nev = events(mx)
+      col.append([mx,my, nev])
+      Ndiag += nev
+    cols.append(col)
+  Nevents.append([Nbulk, Ndiag])
+
 mpoints = []
-for mx in range(xmin, xmax+1, xstep):
-  my = mx
-  mpoints.append([mx,my,nevt])
+
+
+for col in cols: mpoints.extend(col)
 
 
 for point in mpoints:
-    mchi = point[0]
-    mlsp = 1.
-    qcut, tru_eff = matchParams(mchi)
+    mglu, mlsp = point[0], point[1]
+    qcut, tru_eff = matchParams(mglu)
     wgt = point[2]*(mcm_eff/tru_eff)
     
-    slhatable = baseSLHATable.replace('%MCHI%','%e' % mchi)
+    if mlsp==0: mlsp = 1
+    slhatable = baseSLHATable.replace('%MGLU%','%e' % mglu)
+    slhatable = slhatable.replace('%MLSP%','%e' % mlsp)
+    slhatable = slhatable.replace('%MCHI%','%e' % (mlsp+5.))
+
 
     basePythiaParameters = cms.PSet(
         pythia8CommonSettingsBlock,
@@ -145,8 +207,7 @@ for point in mpoints:
             'JetMatching:nJetMax = 2', #number of partons in born matrix element for highest multiplicity
             'JetMatching:doShowerKt = off', #off for MLM matching, turn on for shower-kT matching
             '6:m0 = 172.5',
-            '23:onMode = off',
-            '23:onIfAny = 15 13 11',
+            '24:mMin = 0.1',
             'Check:abortIfVeto = on',
         ), 
         parameterSets = cms.vstring('pythia8CommonSettings',
@@ -158,8 +219,8 @@ for point in mpoints:
     generator.RandomizedParameters.append(
         cms.PSet(
             ConfigWeight = cms.double(wgt),
-            GridpackPath =  cms.string('/cvmfs/cms.cern.ch/phys_generator/gridpacks/slc6_amd64_gcc481/13TeV/madgraph/V5_2.3.3/sus_sms/SMS-%s/v2/SMS-%s_mN-%i_tarball.tar.xz' % (process,process,mchi)),
-            ConfigDescription = cms.string('%s_%i' % (model, mchi)),
+            GridpackPath =  cms.string('/cvmfs/cms.cern.ch/phys_generator/gridpacks/slc6_amd64_gcc481/13TeV/madgraph/V5_2.3.3/sus_sms/SMS-GlGl/SMS-GlGl_mGl-%i_tarball.tar.xz' % mglu),
+            ConfigDescription = cms.string('%s_%i_%i' % (model, mglu, mlsp)),
             SLHATableForPythia8 = cms.string('%s' % slhatable),
             PythiaParameters = basePythiaParameters,
         ),

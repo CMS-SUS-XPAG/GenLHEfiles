@@ -148,7 +148,7 @@ for point in mpoints:
             '6:m0 = 172.5',
             '24:onMode = off',
             '24:onIfAny = 11 13 15', # W to leptons
-            '24:mMin = 7.',
+            '24:mMin = 0.1',
             'Check:abortIfVeto = on',
         ), 
         parameterSets = cms.vstring('pythia8CommonSettings',
@@ -160,7 +160,7 @@ for point in mpoints:
     generator.RandomizedParameters.append(
         cms.PSet(
             ConfigWeight = cms.double(wgt),
-            GridpackPath =  cms.string('/cvmfs/cms.cern.ch/phys_generator/gridpacks/slc6_amd64_gcc481/13TeV/madgraph/V5_2.3.3/sus_sms/SMS-C1C1/SMS-C1C1_mC1-%i_tarball.tar.xz' % mc1),
+            GridpackPath =  cms.string('/cvmfs/cms.cern.ch/phys_generator/gridpacks/slc6_amd64_gcc481/13TeV/madgraph/V5_2.3.3/sus_sms/SMS-C1C1/v2/SMS-C1C1_mC1-%i_tarball.tar.xz' % mc1),
             ConfigDescription = cms.string('%s_%i_%i' % (model, mc1, mlsp)),
             SLHATableForPythia8 = cms.string('%s' % slhatable),
             PythiaParameters = basePythiaParameters,
