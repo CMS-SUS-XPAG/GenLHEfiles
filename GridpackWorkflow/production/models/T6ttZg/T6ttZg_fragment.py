@@ -134,7 +134,7 @@ hline_xmin = 800
 
 # Number of events for mass point, in thousands
 def events(mass):
-  xs = xsec(mass,process)
+  xs = xsec(mass)
   nev = min(goalLumi*xs, maxEvents*1000)
   if nev < xs*minLumi: nev = xs*minLumi
   nev = max(nev/1000, minEvents)
