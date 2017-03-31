@@ -90,7 +90,7 @@ model = "T1ttbb"
 process = "GlGl"
 # weighted average of matching efficiencies for the full scan
 # must equal the number entered in McM generator params
-mcm_eff = 0.268
+mcm_eff = 0.261
 
 
 # Parameters that define the grid in the bulk and diagonal
