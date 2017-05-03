@@ -103,7 +103,7 @@ mpoints.append([150, 30, 100])
 for point in mpoints:
     mn2, mlsp = point[0],point[0] - point[1]
     qcut, tru_eff = matchParams(mn2)
-    wgt = point[2]*(tru_eff)
+    wgt = point[2]/tru_eff
 
     slhatable = baseSLHATable.replace('%MN2%','%e' % mn2)
     slhatable = slhatable.replace('%MLSP%','%e' % mlsp)
