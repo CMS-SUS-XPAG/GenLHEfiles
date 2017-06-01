@@ -11,8 +11,8 @@ import argparse
 def submitCondorJob(proc, executable, options, infile, label, outputToTransfer=None, submit=False, proxy="/tmp/x509up_u31156", isGridpackJob=False):
     subfile = "condor_"+proc +"_"+label+".cmd"
     f = open(subfile,"w")
-    f.write("Universe = grid\n")
-    f.write("Grid_Resource = condor cmssubmit-r1.t2.ucsd.edu glidein-collector.t2.ucsd.edu\n")
+    f.write("Universe = vanilla\n")
+    #f.write("Grid_Resource = condor cmssubmit-r1.t2.ucsd.edu glidein-collector.t2.ucsd.edu\n")
     f.write("x509userproxy={0}\n".format(proxy))
     f.write("+DESIRED_Sites=\"T2_US_UCSD\"\n")
     if isGridpackJob :
