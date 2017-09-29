@@ -43,7 +43,8 @@ echo "Running event generation..."
 ./runcmsgrid.sh $NEVENTS $RANDOM_SEED $(getconf _NPROCESSORS_ONLN)
 
 echo "Generation finished. Copy output..."
-lcg-cp -v -b -D srmv2 --vo cms file:cmsgrid_final.lhe srm://bsrm-3.t2.ucsd.edu:8443/srm/v2/server?SFN=${OUTDIR}/${PROCESS}_${RANDOM_SEED}.lhe
+#lcg-cp -v -b -D srmv2 --vo cms file:cmsgrid_final.lhe srm://bsrm-3.t2.ucsd.edu:8443/srm/v2/server?SFN=${OUTDIR}/${PROCESS}_${RANDOM_SEED}.lhe
+gfal-copy -p -f -t 4200 cmsgrid_final.lhe gsiftp://gftp.t2.ucsd.edu/${OUTDIR}/${PROCESS}_${RANDOM_SEED}.lhe --checksum ADLER32
 #cp cmsgrid_final.lhe ${WORKDIR}/${PROCESS}_${RANDOM_SEED}.lhe #for copying file back to submission directory
 
 echo "ls in cmssw src dir"

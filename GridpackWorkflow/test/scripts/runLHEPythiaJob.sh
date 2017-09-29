@@ -51,7 +51,8 @@ echo "Running event generation..."
 
 echo "Generation finished. Copy output..."
 LHEFILE='LHE_'${PROCESS}'_'${RANDOM_SEED}'.lhe'
-lcg-cp -v -b -D srmv2 --vo cms file:cmsgrid_final.lhe srm://bsrm-3.t2.ucsd.edu:8443/srm/v2/server?SFN=${OUTDIR}/$LHEFILE
+#lcg-cp -v -b -D srmv2 --vo cms file:cmsgrid_final.lhe srm://bsrm-3.t2.ucsd.edu:8443/srm/v2/server?SFN=${OUTDIR}/$LHEFILE
+gfal-copy -p -f -t 4200 cmsgrid_final.lhe gsiftp://gftp.t2.ucsd.edu/${OUTDIR}/${LHEFILE} --checksum ADLER32
 
 echo "Fragment:"
 cat Configuration/GenProduction/python/genfragment.py
@@ -73,7 +74,8 @@ cmsDriver.py \
   -n -1
 
 echo "Hadronization finished. Copy output..."
-lcg-cp -v -b -D srmv2 --vo cms file:`pwd`/${GENFILE} srm://bsrm-3.t2.ucsd.edu:8443/srm/v2/server?SFN=${OUTDIR}/${GENFILE}
+#lcg-cp -v -b -D srmv2 --vo cms file:`pwd`/${GENFILE} srm://bsrm-3.t2.ucsd.edu:8443/srm/v2/server?SFN=${OUTDIR}/${GENFILE}
+gfal-copy -p -f -t 4200 ${GENFILE} gsiftp://gftp.t2.ucsd.edu/${OUTDIR}/${GENFILE} --checksum ADLER32
 
 echo "ls in cmssw src dir"
 ls

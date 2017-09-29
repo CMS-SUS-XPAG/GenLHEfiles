@@ -48,7 +48,8 @@ cmsDriver.py Configuration/GenProduction/python/${FRAGMENT} \
 cmsRun jobcfg.py
 
 if [[ "${LOCAL_TEST}" != 'local' ]]; then 
-   lcg-cp -v -b -D srmv2 --vo cms file:`pwd`/${OUTPUT} srm://bsrm-3.t2.ucsd.edu:8443/srm/v2/server?SFN=${OUTDIR}/${OUTPUT}    
+   #lcg-cp -v -b -D srmv2 --vo cms file:`pwd`/${OUTPUT} srm://bsrm-3.t2.ucsd.edu:8443/srm/v2/server?SFN=${OUTDIR}/${OUTPUT}    
+   gfal-copy -p -f -t 4200 ${OUTPUT} gsiftp://gftp.t2.ucsd.edu/${OUTDIR}/${OUTPUT} --checksum ADLER32
    cd ../
    rm -rf CMSSW_8_0_5_patch1
    rm -rf test
