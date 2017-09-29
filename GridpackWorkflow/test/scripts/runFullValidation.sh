@@ -60,7 +60,8 @@ cmsDriver.py  Configuration/GenProduction/python/${FRAGMENT} \
 cmsRun jobcfg.py
 
 if [[ "${LOCAL_TEST}" != 'local' ]]; then 
-   lcg-cp -v -b -D srmv2 --vo cms file:`pwd`/${OUTPUT} srm://bsrm-3.t2.ucsd.edu:8443/srm/v2/server?SFN=${OUTDIR}/${OUTPUT}    
+   #lcg-cp -v -b -D srmv2 --vo cms file:`pwd`/${OUTPUT} srm://bsrm-3.t2.ucsd.edu:8443/srm/v2/server?SFN=${OUTDIR}/${OUTPUT}    
+   gfal-copy -p -f -t 4200 ${OUTPUT} gsiftp://gftp.t2.ucsd.edu/${OUTDIR}/${OUTPUT} --checksum ADLER32
 fi
 
 cmsDriver.py step1 \
@@ -82,7 +83,8 @@ cmsDriver.py step1 \
 cmsRun mini_cfg.py
 
 if [[ "${LOCAL_TEST}" != 'local' ]]; then 
-   lcg-cp -v -b -D srmv2 --vo cms file:`pwd`/${MINI} srm://bsrm-3.t2.ucsd.edu:8443/srm/v2/server?SFN=${OUTDIR}/${MINI}
+   #lcg-cp -v -b -D srmv2 --vo cms file:`pwd`/${MINI} srm://bsrm-3.t2.ucsd.edu:8443/srm/v2/server?SFN=${OUTDIR}/${MINI}
+   gfal-copy -p -f -t 4200 ${MINI} gsiftp://gftp.t2.ucsd.edu/${OUTDIR}/${MINI} --checksum ADLER32
    if ! [[ "${OUTDIR_EOS}" == "" ]]; then
        xrdcp ${MINI} root://eoscms.cern.ch//eos/cms/${OUTDIR_EOS}/${MINI}
    fi

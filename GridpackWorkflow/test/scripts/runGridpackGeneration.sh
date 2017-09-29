@@ -35,8 +35,10 @@ echo "Running gridpack generation"
 
 #copy output
 echo "Copy output"
-lcg-cp -v -b -D srmv2 --vo cms file:${PROCESS}_tarball.tar.xz srm://bsrm-3.t2.ucsd.edu:8443/srm/v2/server?SFN=${OUTDIR}/${PROCESS}_tarball.tar.xz
-lcg-cp -v -b -D srmv2 --vo cms file:${PROCESS}.log srm://bsrm-3.t2.ucsd.edu:8443/srm/v2/server?SFN=${OUTDIR}/${PROCESS}.log
+#lcg-cp -v -b -D srmv2 --vo cms file:${PROCESS}_tarball.tar.xz srm://bsrm-3.t2.ucsd.edu:8443/srm/v2/server?SFN=${OUTDIR}/${PROCESS}_tarball.tar.xz
+gfal-copy -p -f -t 4200 ${PROCESS}_tarball.tar.xz gsiftp://gftp.t2.ucsd.edu/${OUTDIR}/${PROCESS}_tarball.tar.xz --checksum ADLER32
+#lcg-cp -v -b -D srmv2 --vo cms file:${PROCESS}.log srm://bsrm-3.t2.ucsd.edu:8443/srm/v2/server?SFN=${OUTDIR}/${PROCESS}.log
+gfal-copy -p -f -t 4200 ${PROCESS}.log gsiftp://gftp.t2.ucsd.edu/${OUTDIR}/${PROCESS}.log --checksum ADLER32
 
 echo "ls in production dir"
 ls
