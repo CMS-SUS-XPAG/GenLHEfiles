@@ -7,6 +7,7 @@
 import os
 import sys
 import argparse
+import shutil
 
 from submitLHECondorJob import submitCondorJob
 
@@ -34,6 +35,14 @@ if __name__ == '__main__':
     #need to transfer input tarball and gen fragment
     infiles = infile+','+fragment
     fragfile = os.path.basename(fragment)
+
+    logDir = os.path.join("logs",proc)
+    if not os.path.isdir(logDir):
+        os.makedirs(logDir)
+    else:
+        shutil.rmtree(logDir)
+        os.makedirs(logDir)
+
 
     outdir = out_dir+'/'+proc
     options = [proc, str(nevents), fragfile, outdir]
