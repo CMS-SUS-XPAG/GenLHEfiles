@@ -28,7 +28,7 @@ if __name__ == '__main__':
 
     script_dir = os.path.dirname(os.path.realpath(__file__))
     executable = script_dir+'/runLHEPythiaJob.sh'
-    out_dir='/hadoop/cms/store/user/'+os.environ['USER']+'/mcProduction/LHERAWSIM'
+    out_dir='/hadoop/cms/store/user/'+os.environ['USER']+'/mcProduction/devel/'
     print "Will generate LHE events using tarball",infile,"and shower them using Pythia"
 
     #need to transfer input tarball and gen fragment

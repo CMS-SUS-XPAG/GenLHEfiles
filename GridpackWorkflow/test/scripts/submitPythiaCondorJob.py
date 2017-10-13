@@ -24,7 +24,7 @@ parser.add_argument('--qcut-list', dest='qcutList', nargs='+', type=int, default
 parser.add_argument('--qcut-step', dest='qcutStep', type=int, default=2)
 parser.add_argument('--nJetMax', help="nJetMax argument in the fragment", default=2)
 parser.add_argument('--no-sub', dest='noSub', action='store_true', help='Do not submit jobs')
-parser.add_argument('--proxy', dest="proxy", help="Path to proxy", default='/tmp/x509up_u31156')
+parser.add_argument('--proxy', dest="proxy", help="Path to proxy", default='/tmp/submitPythiaCondorJob.py')
 parser.add_argument('--executable', help='Path to executable that should be run', 
         default = script_dir+'/runPythiaJob.sh')
 args = parser.parse_args()
