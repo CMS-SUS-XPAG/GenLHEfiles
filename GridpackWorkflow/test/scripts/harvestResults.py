@@ -38,8 +38,9 @@ for inFile in inputFiles:
     else:
         print "No result found..."
 
-format_str = "{:40}{:10}"
+format_str = "{0:40}{1:10}"
 
+print totalEvents
 print "### RESULTS ###"
 print "Found %s files to scan."%len(inputFiles)
 print format_str.format("Total events:",totalEvents)
