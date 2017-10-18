@@ -27,14 +27,17 @@ for inFile in inputFiles:
     resultsLine = None
     line = ''
     with open(os.path.join(args.logDir,inFile),'r') as f:
+        first = True
         while True:
             if line.startswith('Process'): header = line.replace('\n','')
             line = f.readline()
             if line.startswith("Total"):
                 resultsLine = line
-            if line.startswith(" - Avg event:"):
-                timeline = line
-                break
+            if line.startswith(" - Total loop"):
+                if not first:
+                    timeline = line
+                    break
+                first = False
             if line == '': break
     if resultsLine:
         if args.verbose:
@@ -60,4 +63,4 @@ print format_str.format("Passed events:",passedEvents)
 print format_str.format("Events w/ neg weight:",negWeightEvents)
 print format_str.format("Fraction passed:","%s +/- %s"%(round(float(passedEvents)/totalEvents,4), round(math.sqrt(float(passedEvents))/totalEvents,4)))
 print format_str.format("Out of which with neg weight:",round(float(negWeightEvents)/passedEvents,4))
-print format_str.format("Avg. Time:",round(float(avgTime)/nResults,1))
+print format_str.format("Avg. Time:",round(float(avgTime)/totalEvents,1))
