@@ -13,12 +13,13 @@ files = os.listdir(args.logDir)
 
 inputFiles = [ f for f in files if 'err' in f ]
 
-totalEvents = 0
-passedEvents = 0
+totalEvents     = 0
+passedEvents    = 0
 negWeightEvents = 0
 
-nResults = 0
-avgTime = 0
+nResults        = 0
+avgTime         = 0
+matchingEffs    = 0
 
 for inFile in inputFiles:
     if args.verbose:
@@ -48,6 +49,8 @@ for inFile in inputFiles:
         passedEvents += int(res[4])
         negWeightEvents += int(res[6])
         avgTime += float(timeline.split()[3])
+        matchingEffs += float(res[10])/float(res[1])
+        inputXSec = float(res[1])
         nResults += 1
     else:
         if args.verbose:
@@ -64,3 +67,6 @@ print format_str.format("Events w/ neg weight:",negWeightEvents)
 print format_str.format("Fraction passed:","%s +/- %s"%(round(float(passedEvents)/totalEvents,4), round(math.sqrt(float(passedEvents))/totalEvents,4)))
 print format_str.format("Out of which with neg weight:",round(float(negWeightEvents)/passedEvents,4))
 print format_str.format("Avg. Time:",round(float(avgTime)/totalEvents,1))
+print format_str.format("x-sec(before) [pb]:",inputXSec)
+print format_str.format("x-sec(after) [pb]:",round(matchingEffs/nResults * inputXSec,4))
+
