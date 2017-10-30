@@ -16,26 +16,38 @@ from ROOT import *
 def parseQcuts(proc, infile_path):
     #get files from input directory and read the qcuts from the filenames
     infiles = glob.glob(infile_path+'/GEN_'+proc+'*.root')
-    qcuts = []
+    qcuts = {}
 
     #get the qcut from each input filename
     for infile in infiles:
         try:
             qcut = os.path.basename(infile).split('_')[-1].replace('.root','')
-            qcuts.append((int(qcut),infile))
+            if qcuts.has_key(int(qcut)):
+                qcuts[int(qcut)].append(infile)
+            else:
+                qcuts[int(qcut)] = [infile]
             print "qcut",qcut,"from file",infile
         except IndexError:
             print "Unable to parse qcut from filename:",infile
 
+    #merge multiple input files for the same qcut value
+    merged = []
+
+    for qcut,files in qcuts.iteritems():
+        filelist = [file.replace('/hadoop/cms','') for file in files]
+        outfile = 'GEN_'+proc+'_'+str(qcut)+'.root'
+        os.system('edmCopyPickMerge inputFiles='+','.join(filelist)+' outputFile='+outfile)
+        os.system('mv '+outfile+' '+infile_path+'/'+outfile)
+        merged.append((qcut,infile_path+'/'+outfile))
+
     #sort by qcut
-    qcuts.sort(key=itemgetter(0))
+    merged.sort(key=itemgetter(0))
+    return merged
 
-    return qcuts
-
-def makeDJRPlots(f, proc, qcuts, texOnly=False, qmin=0, qmax=200):
+def makeDJRPlots(f, proc, qcuts, texOnly=False, qmin=0, qmax=200, njetmax=2):
     #load libraries
     gSystem.Load("libFWCoreFWLite.so")
-    AutoLibraryLoader.enable()
+    FWLiteEnabler.enable()
     gSystem.Load("libDataFormatsFWLite.so")
     gSystem.Load("libDataFormatsPatCandidates.so")
     gROOT.LoadMacro(os.environ['CMSSW_BASE']+"/src/plotdjr.C")
@@ -55,13 +67,20 @@ def makeDJRPlots(f, proc, qcuts, texOnly=False, qmin=0, qmax=200):
         qcut = str(iqcut) 
         fout = proc+"_"+qcut
         if not texOnly: #create the pdf
+            print 'making DJR plots with input',fin,'and output',fout
             plotdjr(fin, fout)
 
         #include in TeX file
         f.write("\\begin{frame} \n")
         f.write("\\frametitle{"+proc.replace("_"," ") +" qCut = "+ qcut+"} \n")
-        f.write("\\includegraphics[width=0.5\\textwidth]{"+proc+"_"+qcut+"_djr0.pdf} \n")
-        f.write("\\includegraphics[width=0.5\\textwidth]{"+proc+"_"+qcut+"_djr1.pdf}\\\\ \n")
+        if njetmax < 3:
+            f.write("\\includegraphics[width=0.5\\textwidth]{"+proc+"_"+qcut+"_djr0.pdf} \n")
+            f.write("\\includegraphics[width=0.5\\textwidth]{"+proc+"_"+qcut+"_djr1.pdf}\\\\ \n")
+        else:
+            f.write("\\includegraphics[width=0.5\\textwidth]{"+proc+"_"+qcut+"_djr0.pdf} \n")
+            f.write("\\includegraphics[width=0.5\\textwidth]{"+proc+"_"+qcut+"_djr1.pdf}\\\\ \n")
+            f.write("\\includegraphics[width=0.5\\textwidth]{"+proc+"_"+qcut+"_djr2.pdf} \n")
+            f.write("\\includegraphics[width=0.5\\textwidth]{"+proc+"_"+qcut+"_djr3.pdf}\\\\ \n")
         f.write("\\end{frame} \n")
 
 if __name__ == '__main__':
@@ -72,6 +91,7 @@ if __name__ == '__main__':
             help='only write latex document, skip making pdfs')
     parser.add_argument('--qcut-range', dest='qcutRange', nargs=2, type=int, default=[50,100], 
             help="Range of qcuts to consider")
+    parser.add_argument('--nJetMax', help="nJetMax argument in the fragment", default=2)
     args = parser.parse_args()
 
     proc = args.proc
@@ -79,6 +99,7 @@ if __name__ == '__main__':
     qcuts = parseQcuts(proc, infile_path)
     qmin = args.qcutRange[0]
     qmax = args.qcutRange[1]
+    njetmax = args.nJetMax
 
     fname = "plots_"+proc+".tex"
     f = open(fname,'w')
@@ -86,7 +107,7 @@ if __name__ == '__main__':
     f.write("\\beamertemplatenavigationsymbolsempty\n")
     f.write("\\usepackage{graphicx}\n")
     f.write("\\begin{document}\n")
-    makeDJRPlots(f, proc, qcuts, texOnly=args.texOnly, qmin=qmin, qmax=qmax)
+    makeDJRPlots(f, proc, qcuts, texOnly=args.texOnly, qmin=qmin, qmax=qmax, njetmax=njetmax)
     f.write("\\end{document}\n")
     f.close()
     subprocess.call(['pdflatex', fname])
