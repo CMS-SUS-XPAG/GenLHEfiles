@@ -13,7 +13,7 @@ FRAGMENT=$3
 OUTDIR=$4
 RANDOM_SEED=$5
 
-CMSSW_REL="CMSSW_7_1_30"
+CMSSW_REL="CMSSW_9_3_1"
 
 echo "Process:"
 echo $PROCESS
@@ -26,7 +26,7 @@ echo "Output directory set to: "
 echo $OUTDIR
 
 source /cvmfs/cms.cern.ch/cmsset_default.sh  
-export SCRAM_ARCH=slc6_amd64_gcc481
+export SCRAM_ARCH=slc6_amd64_gcc630
 echo $SCRAM_ARCH
 echo $HOSTNAME
 echo "Setting up a CMSSW release..."
@@ -43,39 +43,44 @@ eval "scramv1 build"
 
 echo "-----------> Let's begin...EVENT GENERATION"
 
-echo "Unpacking gridpack tarball..."
-tar -xaf $WORKDIR/${PROCESS}_tarball.tar.xz                                                    
-
-echo "Running event generation..."
-./runcmsgrid.sh $NEVENTS $RANDOM_SEED $(getconf _NPROCESSORS_ONLN)
-
-echo "Generation finished. Copy output..."
-LHEFILE='LHE_'${PROCESS}'_'${RANDOM_SEED}'.lhe'
-#lcg-cp -v -b -D srmv2 --vo cms file:cmsgrid_final.lhe srm://bsrm-3.t2.ucsd.edu:8443/srm/v2/server?SFN=${OUTDIR}/$LHEFILE
-gfal-copy -p -f -t 4200 cmsgrid_final.lhe gsiftp://gftp.t2.ucsd.edu/${OUTDIR}/${LHEFILE} --checksum ADLER32
-
 echo "Fragment:"
 cat Configuration/GenProduction/python/genfragment.py
 
 #             SHOWER
 #--------------------------------
 GENFILE='GEN_'${PROCESS}'_'${FRAGMENT/.py/}'_'${RANDOM_SEED}'.root'
+XMLFILE='GEN_'${PROCESS}'_'${FRAGMENT/.py/}'_'${RANDOM_SEED}'.xml'
+
 
 echo "--------------> Let's begin... SHOWER"
 cmsDriver.py \
   Configuration/GenProduction/python/genfragment.py \
   --mc \
-  --eventcontent RAWSIM \
-  --datatier GEN-SIM \
-  --conditions auto:run2_mc \
-  --step GEN \
-  --filein file:cmsgrid_final.lhe \
+  --eventcontent RAWSIM,LHE \
+  --datatier GEN-SIM,LHE \
+  --conditions 93X_mc2017_realistic_v3 \
+  --step LHE,GEN,SIM \
+  --nThreads $(getconf _NPROCESSORS_ONLN) \
   --fileout file:${GENFILE} \
-  -n -1
+  --beamspot Realistic25ns13TeVEarly2017Collision \
+  --geometry DB:Extended \
+  --era Run2_2017 \
+  --python_filename LHEGS_cfg.py \
+  --customise Configuration/DataProcessing/Utils.addMonitoring \
+  --no_exec \
+  -n $NEVENTS || exit $? ;
+
+echo "process.RandomNumberGeneratorService.generator.initialSeed = $RANDOM_SEED" >> LHEGS_cfg.py
+echo "process.RandomNumberGeneratorService.externalLHEProducer.initialSeed = $RANDOM_SEED" >> LHEGS_cfg.py
+
+cmsRun -e -j $XMLFILE LHEGS_cfg.py || exit $? ;
+
 
 echo "Hadronization finished. Copy output..."
 #lcg-cp -v -b -D srmv2 --vo cms file:`pwd`/${GENFILE} srm://bsrm-3.t2.ucsd.edu:8443/srm/v2/server?SFN=${OUTDIR}/${GENFILE}
 gfal-copy -p -f -t 4200 ${GENFILE} gsiftp://gftp.t2.ucsd.edu/${OUTDIR}/${GENFILE} --checksum ADLER32
+gfal-copy -p -f -t 4200 ${XMLFILE} gsiftp://gftp.t2.ucsd.edu/${OUTDIR}/${XMLFILE} --checksum ADLER32
+
 
 echo "ls in cmssw src dir"
 ls

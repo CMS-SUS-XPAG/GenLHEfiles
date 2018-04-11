@@ -8,7 +8,8 @@ import os
 import sys
 import argparse
 
-def submitCondorJob(proc, executable, options, infile, label, outputToTransfer=None, submit=False, proxy="/tmp/x509up_u31156", isGridpackJob=False):
+def submitCondorJob(proc, executable, options, infile, label, outputToTransfer=None, submit=False, proxy=os.environ["X509_USER_PROXY"], isGridpackJob=False):
+    logDir = os.path.join("logs",proc)
     subfile = "condor_"+proc +"_"+label+".cmd"
     f = open(subfile,"w")
     f.write("Universe = vanilla\n")
@@ -26,9 +27,9 @@ def submitCondorJob(proc, executable, options, infile, label, outputToTransfer=N
         f.write("transfer_Output_files = "+outputToTransfer+"\n")
         f.write("WhenToTransferOutput  = ON_EXIT\n")
     f.write("Notification = Never\n")
-    f.write("Log=gen_"+proc+"_"+label+".log.$(Cluster).$(Process)\n")
-    f.write("output=gen_"+proc+"_"+label+".out.$(Cluster).$(Process)\n")
-    f.write("error=gen_"+proc+"_"+label+".err.$(Cluster).$(Process)\n")
+    f.write("Log=%s/gen_%s_%s.log.$(Cluster).$(Process)\n"%(logDir, proc, label))
+    f.write("output=%s/gen_%s_%s.out.$(Cluster).$(Process)\n"%(logDir, proc, label))
+    f.write("error=%s/gen_%s_%s.err.$(Cluster).$(Process)\n"%(logDir, proc, label))
     f.write("queue 1\n")
     f.close()
 
@@ -44,7 +45,7 @@ if __name__ == '__main__':
     parser.add_argument('--nevents', '-n', help="Number of events per job", type=int, default=25000)
     parser.add_argument('--njobs', '-j', help="Number of condor jobs", type=int, default=1)
     parser.add_argument('--no-sub', dest='noSub', action='store_true', help='Do not submit jobs')
-    parser.add_argument('--proxy', dest="proxy", help="Path to proxy", default='/tmp/x509up_u31156')
+    parser.add_argument('--proxy', dest="proxy", help="Path to proxy", default=os.environ["X509_USER_PROXY"])
     parser.add_argument('--rseed-start', dest='rseedStart', help='Initial value for random seed', 
             type=int, default=500)
     args = parser.parse_args()
