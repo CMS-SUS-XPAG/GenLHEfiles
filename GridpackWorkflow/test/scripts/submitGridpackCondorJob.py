@@ -26,13 +26,15 @@ if __name__ == '__main__':
     infile_list.append(genproductions_dir+'/bin/MadGraph5_aMCatNLO/runcmsgrid_LO.sh')
     infile_list.append(genproductions_dir+'/bin/MadGraph5_aMCatNLO/cleangridmore.sh')
     #patches needed by gridpack generation script
-    infile_list.append(script_dir+'/ucsd.patch') #use the patch committed in this repository
-    infile_list.append(genproductions_dir+'/bin/MadGraph5_aMCatNLO/patches/mgfixes.patch')
-    infile_list.append(genproductions_dir+'/bin/MadGraph5_aMCatNLO/patches/models.patch')
+    #infile_list.append(script_dir+'/ucsdMG5_242.patch') #use the patch committed in this repository
+    infile_list.append(script_dir+'/ucsd_total.patch') #use the patch committed in this repository
+    patches = glob.glob(genproductions_dir+'/bin/MadGraph5_aMCatNLO/patches/*.patch')
+    infile_list += patches
+    #infile_list.append(genproductions_dir+'/bin/MadGraph5_aMCatNLO/patches/mgfixes.patch')
+    #infile_list.append(genproductions_dir+'/bin/MadGraph5_aMCatNLO/patches/models.patch')
     #madgraph cards
     infile_list += glob.glob(cards_dir+'/*.dat')
 
     infile = ','.join(infile_list)
-
     options = [proc, out_dir]
     submitCondorJob(proc, executable, options, infile, label="gridpack", submit=(not args.noSub), proxy=args.proxy, isGridpackJob=True)

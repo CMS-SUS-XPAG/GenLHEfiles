@@ -13,7 +13,7 @@ FRAGMENT=$3
 OUTDIR=$4
 RANDOM_SEED=$5
 
-CMSSW_REL="CMSSW_7_1_21_patch2"
+CMSSW_REL="CMSSW_7_1_30"
 
 echo "Process:"
 echo $PROCESS
