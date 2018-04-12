@@ -203,7 +203,7 @@ if [ ! -d ${AFS_GEN_FOLDER}/${name}_gridpack ]; then
   ls -la $PRODHOME/patches/
   cat $PRODHOME/patches/00*.patch | patch -p1
   echo "Applying patches needed for running with Condor"
-  patch -p1 $PRODHOME/patches/ucsd_total.patch
+  cat $PRODHOME/patches/ucsd_total.patch | patch -p1
 
 
   #if lhapdf6 external is available then above points to lhapdf5 and needs to be overridden

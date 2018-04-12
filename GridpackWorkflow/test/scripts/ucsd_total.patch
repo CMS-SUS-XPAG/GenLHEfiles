@@ -1,7 +1,7 @@
-diff --git a/MG5_aMC_v2_4_2/madgraph/various/cluster.py b/MG242/MG5_aMC_v2_4_2/madgraph/various/cluster.py
+diff --git a/madgraph/various/cluster.py b/madgraph/various/cluster.py
 index e697dd7..34f40ad 100755
---- a/MG5_aMC_v2_4_2/madgraph/various/cluster.py
-+++ b/MG242/MG5_aMC_v2_4_2/madgraph/various/cluster.py
+--- a/madgraph/various/cluster.py
++++ b/madgraph/various/cluster.py
 @@ -974,26 +974,38 @@ class CondorCluster(Cluster):
  
          return 0
