@@ -10,6 +10,8 @@ TChiwg, TChiNg
 
 # Recipe for Fall17 branch to create Fall17 signal requests
 
+Please be careful to insert your username and proxy id accordingly.
+
 ### make a dedicated directory for signal production
 
 ```
