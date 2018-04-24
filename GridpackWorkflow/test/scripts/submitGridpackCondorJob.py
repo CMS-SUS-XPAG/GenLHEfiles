@@ -34,7 +34,8 @@ if __name__ == '__main__':
     #infile_list.append(genproductions_dir+'/bin/MadGraph5_aMCatNLO/patches/models.patch')
     #madgraph cards
     infile_list += glob.glob(cards_dir+'/*.dat')
-    os.makedirs("logs/%s"%proc)
+    if not os.path.isdir("logs/%s"%proc):
+        os.makedirs("logs/%s"%proc)
 
     infile = ','.join(infile_list)
     options = [proc, out_dir]

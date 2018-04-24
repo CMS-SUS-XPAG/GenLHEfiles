@@ -50,7 +50,8 @@ def makeDJRPlots(f, proc, qcuts, texOnly=False, qmin=0, qmax=200, njetmax=2):
     FWLiteEnabler.enable()
     gSystem.Load("libDataFormatsFWLite.so")
     gSystem.Load("libDataFormatsPatCandidates.so")
-    gROOT.LoadMacro(os.environ['CMSSW_BASE']+"/src/plotdjr.C")
+    #gROOT.LoadMacro(os.environ['CMSSW_BASE']+"/src/plotdjr.C")
+    gROOT.LoadMacro("../../../test/scripts/plotdjr.C")
     gROOT.SetBatch(kTRUE)
 
     #TeX header
