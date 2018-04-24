@@ -50,6 +50,10 @@ cd GridpackWorkflow/production/SMS-StopStop/
 source writeallcards_SMS-StopStop.sh
 python ../../test/scripts/submitGridpackCondorJob.py SMS-StopStop_mStop-650 --cards-dir jobs/SMS-StopStop_mStop-650 --genproductions-dir /home/users/YOURUSER/SUSYsignalProduction/genproductions/
 ```
+If you submit from node 10 of UCSD you can check the status of the gridpack production with the command
+```
+condor_tail JOBID
+```
 At the moment, the gridpack will be transferred to the directory from which the job was submitted.
 I'll update that so that the gridpack gets transfered to hadoop asap.
 
