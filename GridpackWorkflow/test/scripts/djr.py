@@ -13,6 +13,15 @@ import argparse
 from operator import itemgetter
 from ROOT import *
 
+def wrapper(args):
+    infile_path, files, qcut, proc  = args
+    filelist = [file.replace('/hadoop/cms','') for file in files]
+    outfile = 'GEN_'+proc+'_'+str(qcut)+'.root'
+    os.system('edmCopyPickMerge inputFiles='+','.join(filelist)+' outputFile='+outfile)
+    os.system('mv '+outfile+' '+infile_path+'/'+outfile)
+    #results[qcut:infile_path+'/'+outfile]
+    return (qcut, infile_path+'/'+outfile)
+
 def parseQcuts(proc, infile_path):
     #get files from input directory and read the qcuts from the filenames
     infiles = glob.glob(infile_path+'/GEN_'+proc+'*.root')
@@ -31,14 +40,31 @@ def parseQcuts(proc, infile_path):
             print "Unable to parse qcut from filename:",infile
 
     #merge multiple input files for the same qcut value
+    jobs = []
     merged = []
+    results = {}
 
     for qcut,files in qcuts.iteritems():
-        filelist = [file.replace('/hadoop/cms','') for file in files]
         outfile = 'GEN_'+proc+'_'+str(qcut)+'.root'
-        os.system('edmCopyPickMerge inputFiles='+','.join(filelist)+' outputFile='+outfile)
-        os.system('mv '+outfile+' '+infile_path+'/'+outfile)
-        merged.append((qcut,infile_path+'/'+outfile))
+        jobs.append((infile_path, files, qcut, proc))
+        merged.append((qcut, infile_path+'/'+outfile))
+    
+
+    print jobs[0][0]
+    print jobs[0][1]
+    print jobs[0][2]
+    print jobs[0][3]
+
+
+    from multiprocessing import Pool
+    pool = Pool(processes=6)
+    res = pool.map(wrapper, jobs)
+    pool.close()
+    pool.join()
+
+    #for r in results.keys():
+    #    print "Adding merged files to list:", r, results[r]
+    #    merged.append((r, results[r]))
 
     #sort by qcut
     merged.sort(key=itemgetter(0))
