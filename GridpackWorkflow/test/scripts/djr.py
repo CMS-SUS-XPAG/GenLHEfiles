@@ -17,8 +17,8 @@ def wrapper(args):
     infile_path, files, qcut, proc  = args
     filelist = [file.replace('/hadoop/cms','') for file in files]
     outfile = 'GEN_'+proc+'_'+str(qcut)+'.root'
-    os.system('edmCopyPickMerge inputFiles='+','.join(filelist)+' outputFile='+outfile)
-    os.system('mv '+outfile+' '+infile_path+'/'+outfile)
+    #os.system('edmCopyPickMerge inputFiles='+','.join(filelist)+' outputFile='+outfile)
+    #os.system('mv '+outfile+' '+infile_path+'/'+outfile)
     #results[qcut:infile_path+'/'+outfile]
     return (qcut, infile_path+'/'+outfile)
 
