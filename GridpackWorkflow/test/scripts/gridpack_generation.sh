@@ -512,7 +512,7 @@ if grep -q -e "\$DEFAULT_PDF_SETS" -e "\$DEFAULT_PDF_MEMBERS" $CARDSDIR/${name}_
     elif [ "$isnlo" -eq "0" ]; then
         # 5F PDF
         if [ $is5FlavorScheme -eq 1 ]; then
-            sed "s/\$DEFAULT_PDF_SETS/306000/g" $CARDSDIR/${name}_run_card.dat > ./Cards/run_card.dat
+            sed "s/\$DEFAULT_PDF_SETS/315200/g" $CARDSDIR/${name}_run_card.dat > ./Cards/run_card.dat
         else
             sed "s/\$DEFAULT_PDF_SETS/320900/g" $CARDSDIR/${name}_run_card.dat > ./Cards/run_card.dat
         # 4F PDF
