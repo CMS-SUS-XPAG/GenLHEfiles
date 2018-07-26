@@ -61,6 +61,13 @@ if __name__ == '__main__':
     out_dir='/hadoop/cms/store/user/'+os.environ['USER']+'/mcProduction/LHE'
     print "Will generate LHE events using tarball",infile
 
+    logDir = os.path.join("logs",proc)
+    if not os.path.isdir(logDir):
+        os.makedirs(logDir)
+    else:
+        shutil.rmtree(logDir)
+        os.makedirs(logDir)
+
     outdir = out_dir+'/'+proc
     options = [proc, str(nevents), outdir]
     print "Options:",(' '.join(options))

@@ -26,7 +26,7 @@ if __name__ == '__main__':
     parser.add_argument('--nevents', '-n', help="Number of events per job", type=int, default=25000)
     parser.add_argument('--njobs', '-j', help="Number of condor jobs", type=int, default=1)
     parser.add_argument('--no-sub', dest='noSub', action='store_true', help='Do not submit jobs')
-    parser.add_argument('--proxy', dest="proxy", help="Path to proxy", default='/tmp/x509up_u31156')
+    parser.add_argument('--proxy', dest="proxy", help="Path to proxy", default=os.environ["X509_USER_PROXY"])
     parser.add_argument('--rseed-start', dest='rseedStart', help='Initial value for random seed', 
             type=int, default=500)
     parser.add_argument('--executable', help='Path to executable that should be run', 
@@ -47,7 +47,7 @@ if __name__ == '__main__':
     script_dir = os.path.dirname(os.path.realpath(__file__))
     #executable = script_dir+'/runLHEPythiaJob.sh'
     out_dir='/hadoop/cms/store/user/'+os.environ['USER']+'/mcProduction/RAWSIM/'
-    print "Will generate LHE events using tarball and shower them using Pythia"
+    print "Will generate LHE events using tarball",infile,"and shower them using Pythia"
 
     #need to transfer gen fragment
     fragfile = os.path.basename(fragment)
