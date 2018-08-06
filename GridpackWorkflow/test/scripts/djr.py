@@ -76,8 +76,7 @@ def makeDJRPlots(f, proc, qcuts, texOnly=False, qmin=0, qmax=200, njetmax=2):
     FWLiteEnabler.enable()
     gSystem.Load("libDataFormatsFWLite.so")
     gSystem.Load("libDataFormatsPatCandidates.so")
-    #gROOT.LoadMacro(os.environ['CMSSW_BASE']+"/src/plotdjr.C")
-    gROOT.LoadMacro("../../../test/scripts/plotdjr.C")
+    gROOT.LoadMacro(os.path.join(os.path.abspath('.').split('GridpackWorkflow')[0],'GridpackWorkflow/test/scripts/plotdjr.C')) # probably not the most beautiful way to get the right plotdjr.C macro
     gROOT.SetBatch(kTRUE)
 
     #TeX header
