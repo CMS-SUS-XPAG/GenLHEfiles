@@ -7,6 +7,7 @@
 import os
 import sys
 import argparse
+import shutil
 
 def submitCondorJob(proc, executable, options, infile, label, outputToTransfer=None, submit=False, proxy=os.environ["X509_USER_PROXY"], isGridpackJob=False):
     logDir = os.path.join("logs",proc)

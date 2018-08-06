@@ -92,7 +92,7 @@ void makeplot(const char *name, TTree *tree, TCut weight, const char *drawstring
 
   TCanvas* c = new TCanvas(name,name);
   c->cd();
-  TLegend *legend=new TLegend(0.67,0.87-4*0.06,0.87,0.87);
+  TLegend *legend=new TLegend(0.1,0.87-4*0.06,0.3,0.87);
   setlegend(legend, hall, hmult0, hmult1, hmult2, hmult3);
   
   hall->Draw("EHIST");
@@ -114,7 +114,7 @@ void plotdjr(const TString & infile, const TString & outputbase) {
   TChain *tree = new TChain("Events");
   tree->Add(infile);
   
-  tree->SetAlias("GenEvent","GenEventInfoProduct_generator__SIM.obj");
+  tree->SetAlias("GenEvent","GenEventInfoProduct_generator__GEN.obj"); //GenEventInfoProduct_generator__SIM or GenEventInfoProduct_generator__GEN depending on CMSSW release
   
   TCut weight = "GenEvent.weight()";
   int nbins = 50.;
