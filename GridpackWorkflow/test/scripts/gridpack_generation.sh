@@ -142,8 +142,8 @@ if [ ! -d ${AFS_GEN_FOLDER}/${name}_gridpack ]; then
 
   patch -l -p0 -i $PRODHOME/patches/mgfixes.patch
   patch -l -p0 -i $PRODHOME/patches/models.patch
-  echo "Applying patches needed for running with Condor"
-  patch -l -p0 -i $PRODHOME/patches/ucsd.patch
+  #echo "Applying patches needed for running with Condor"
+  #patch -l -p0 -i $PRODHOME/patches/ucsd.patch
 
   cd $MGBASEDIRORIG
 
