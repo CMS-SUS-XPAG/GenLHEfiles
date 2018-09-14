@@ -17,7 +17,7 @@ prefix='root://eoscms.cern.ch/'
 
 
 #count=-1
-for gp in gridpacks[1:]:
+for gp in gridpacks:
     #count+=1
     #if count > 16: continue
     os.system('xrdcp -f %s/%s %s/%s' % (prefix,gp,prefix,eos_dir+'/old/'))
