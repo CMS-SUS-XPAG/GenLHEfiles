@@ -4,8 +4,8 @@ MODEL='SMS-StopStop_mStop-'
 OUTMODEL='SMS-StopStop'
 PART='_mStop-'
 
-for (( MASS=1450; MASS<=1500; MASS+=50 )); do
-    echo "Copying ${GRIDPACKDIR}/${MODEL}${MASS}/${MODEL}${MASS}_tarball.tar.xz to the following directory on EOS:"
-    echo "/store/group/phys_generator/cvmfs/gridpacks/slc6_amd64_gcc481/13TeV/madgraph/V5_2.3.3/sus_sms/${OUTMODEL}/${OUTMODEL}${PART}${MASS}_tarball.tar.xz"
-    xrdcp ${GRIDPACKDIR}/${MODEL}${MASS}/${MODEL}${MASS}_tarball.tar.xz root://eoscms.cern.ch///eos/cms/store/group/phys_generator/cvmfs/gridpacks/slc6_amd64_gcc481/13TeV/madgraph/V5_2.3.3/sus_sms/${OUTMODEL}/${OUTMODEL}${PART}${MASS}_tarball.tar.xz
+for MASS in {300..900..50} ; do
+    echo "Copying ${GRIDPACKDIR}/${MODEL}${MASS}/${MODEL}${MASS}_slc6_amd64_gcc481_CMSSW_7_1_30_tarball.tar.gz to the following directory on EOS:"
+    echo "/phys_generator/gridpacks/2017/13TeV/madgraph/V5_2.4.2/sus_sms/LO_PDF/SMS-StopStop/v1/${OUTMODEL}/${OUTMODEL}${PART}${MASS}_slc6_amd64_gcc481_CMSSW_7_1_30_tarball.tar.xz"
+    xrdcp ${MODEL}${MASS}_slc6_amd64_gcc481_CMSSW_7_1_30_tarball.tar.xz root://eoscms.cern.ch///eos/cms/store/group/phys_generator/cvmfs/gridpacks/2017/13TeV/madgraph/V5_2.4.2/sus_sms/LO_PDF/${OUTMODEL}/v1/${OUTMODEL}${PART}${MASS}_slc6_amd64_gcc481_CMSSW_7_1_30_tarball.tar.xz
 done
