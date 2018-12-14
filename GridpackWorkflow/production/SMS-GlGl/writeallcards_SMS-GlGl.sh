@@ -7,7 +7,7 @@ PART="_mGl-"
 ### Create cards and SLHAs for all mass points
 
 #for MGL in {600..750..50} {800..1600..25} {1650..2300..50}; do
-for MGL in {600..2800..25}; do
+for MGL in {600..2850..25}; do
     MODEL=${PROC}${PART}${MGL}
     mkdir -p "${JOBS}/${MODEL}"
     cp ${TEMP}/${PROC}_run_card.dat "${JOBS}/${MODEL}/${MODEL}_run_card.dat"

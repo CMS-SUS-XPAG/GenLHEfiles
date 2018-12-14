@@ -31,6 +31,7 @@ if __name__ == '__main__':
             type=int, default=500)
     parser.add_argument('--executable', help='Path to executable that should be run', 
         default = script_dir+'/runLHEPythiaJob.sh')
+    parser.add_argument('--mass', default=0)
     args = parser.parse_args()
 
     proc = args.proc
@@ -42,7 +43,7 @@ if __name__ == '__main__':
     qcutRange = range(args.qcutRange[0], args.qcutRange[1]+1, args.qcutStep)
     qcutList = args.qcutList
     nJetMax = args.nJetMax
-
+    mass = args.mass
 
     script_dir = os.path.dirname(os.path.realpath(__file__))
     #executable = script_dir+'/runLHEPythiaJob.sh'
@@ -69,7 +70,10 @@ if __name__ == '__main__':
         for j in range(0,njobs):
             rseed = str(rseedStart+j)
             print "Random seed",rseed
-            options = [proc, str(nevents), fragfile, str(qcut), str(nJetMax), outdir, str(j+1)]
+            if mass:
+                options = [proc, str(nevents), fragfile, str(qcut), str(nJetMax), str(mass), outdir, str(j+1)]
+            else:
+                options = [proc, str(nevents), fragfile, str(qcut), str(nJetMax), outdir, str(j+1)]
             print "Options:",(' '.join(options))
             submitCondorJob(proc, executable, options+[rseed], fragment, 
                 label=str(qcut)+'_'+rseed, submit=(not args.noSub), proxy=args.proxy)

@@ -14,11 +14,13 @@ from operator import itemgetter
 from ROOT import *
 
 def wrapper(args):
+    print "Will do edmPickMerge for the following files"
     infile_path, files, qcut, proc  = args
+    print files
     filelist = [file.replace('/hadoop/cms','') for file in files]
     outfile = 'GEN_'+proc+'_'+str(qcut)+'.root'
-    #os.system('edmCopyPickMerge inputFiles='+','.join(filelist)+' outputFile='+outfile)
-    #os.system('mv '+outfile+' '+infile_path+'/'+outfile)
+    os.system('edmCopyPickMerge inputFiles='+','.join(filelist)+' outputFile='+outfile)
+    os.system('mv '+outfile+' '+infile_path+'/'+outfile)
     #results[qcut:infile_path+'/'+outfile]
     return (qcut, infile_path+'/'+outfile)
 
@@ -50,10 +52,10 @@ def parseQcuts(proc, infile_path):
         merged.append((qcut, infile_path+'/'+outfile))
     
 
-    print jobs[0][0]
-    print jobs[0][1]
-    print jobs[0][2]
-    print jobs[0][3]
+    #print jobs[0][0]
+    #print jobs[0][1]
+    #print jobs[0][2]
+    #print jobs[0][3]
 
 
     from multiprocessing import Pool

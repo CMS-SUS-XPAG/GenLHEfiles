@@ -33,7 +33,8 @@ def matchParams(mass, proc):
     elif mass<1799: return 150., 0.267
     elif mass<2099: return 156., 0.290
     elif mass<2301: return 160., 0.315
-    elif mass<2551: return 164., 0.333
+    elif mass<2601: return 162., 0.340
+    elif mass<2851: return 168, 0.364
     else: sys.exit("grid_utils::matchParams - Mass out of range %i" % mass)
   elif proc=="StauStau":
     if mass < 199: return 76,0.608
@@ -62,6 +63,7 @@ def matchParams(mass, proc):
     elif mass<1801: return 74., 0.246
     elif mass<2000: return 76., 0.267
     elif mass<2051: return 78., 0.273
+    #elif mass<2401: return -99, 0. # to be determined
     else: sys.exit("grid_utils::matchParams - Mass out of range %i" % mass)
   elif proc=="SqSqPlusGamma":
     if mass>99 and mass<299: return 62., 0.410 
