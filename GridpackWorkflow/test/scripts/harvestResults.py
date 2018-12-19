@@ -29,6 +29,7 @@ for inFile in inputFiles:
     line = ''
     with open(os.path.join(args.logDir,inFile),'r') as f:
         first = True
+        timeline = None
         while True:
             if line.startswith('Process'): header = line.replace('\n','')
             line = f.readline()
@@ -48,7 +49,8 @@ for inFile in inputFiles:
         totalEvents += int(res[7])
         passedEvents += int(res[4])
         negWeightEvents += int(res[6])
-        avgTime += float(timeline.split()[3])
+        if timeline:
+            avgTime += float(timeline.split()[3])
         matchingEffs += float(res[10])/float(res[1])
         inputXSec = float(res[1])
         nResults += 1
@@ -66,7 +68,7 @@ print format_str.format("Passed events:",passedEvents)
 print format_str.format("Events w/ neg weight:",negWeightEvents)
 print format_str.format("Fraction passed:","%s +/- %s"%(round(float(passedEvents)/totalEvents,4), round(math.sqrt(float(passedEvents))/totalEvents,4)))
 print format_str.format("Out of which with neg weight:",round(float(negWeightEvents)/passedEvents,4))
-print format_str.format("Avg. Time:",round(float(avgTime)/totalEvents,1))
+if timeline: print format_str.format("Avg. Time:",round(float(avgTime)/totalEvents,1))
 print format_str.format("x-sec(before) [pb]:",inputXSec)
 print format_str.format("x-sec(after) [pb]:",round(matchingEffs/nResults * inputXSec,4))
 
